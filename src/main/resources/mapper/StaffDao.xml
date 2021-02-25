@@ -1,0 +1,137 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.pzh.zp.dao.StaffDao">
+
+    <resultMap type="com.pzh.zp.entity.Staff" id="StaffMap">
+        <result property="id" column="id" jdbcType="INTEGER"/>
+        <result property="name" column="name" jdbcType="VARCHAR"/>
+        <result property="gender" column="gender" jdbcType="OTHER"/>
+        <result property="email" column="email" jdbcType="VARCHAR"/>
+        <result property="phone" column="phone" jdbcType="VARCHAR"/>
+        <result property="position" column="position" jdbcType="VARCHAR"/>
+        <result property="conferenceId" column="conference_id" jdbcType="INTEGER"/>
+    </resultMap>
+
+    <!--查询单个-->
+    <select id="queryById" resultMap="StaffMap">
+        select
+          id, name, gender, email, phone, position, conference_id
+        from pzh_meeting_management.staff
+        where id = #{id}
+    </select>
+
+    <!--查询指定行数据-->
+    <select id="queryAllByLimit" resultMap="StaffMap">
+        select
+          id, name, gender, email, phone, position, conference_id
+        from pzh_meeting_management.staff
+        limit #{offset}, #{limit}
+    </select>
+
+    <!--通过实体作为筛选条件查询-->
+    <select id="queryAll" resultMap="StaffMap">
+        select
+        id, name, gender, email, phone, position, conference_id
+        from pzh_meeting_management.staff
+        <where>
+            <if test="id != null">
+                and id = #{id}
+            </if>
+            <if test="name != null and name != ''">
+                and name = #{name}
+            </if>
+            <if test="gender != null">
+                and gender = #{gender}
+            </if>
+            <if test="email != null and email != ''">
+                and email = #{email}
+            </if>
+            <if test="phone != null and phone != ''">
+                and phone = #{phone}
+            </if>
+            <if test="position != null and position != ''">
+                and position = #{position}
+            </if>
+            <if test="conferenceId != null">
+                and conference_id = #{conferenceId}
+            </if>
+        </where>
+    </select>
+
+    <!--新增所有列-->
+    <insert id="insert" keyProperty="id" useGeneratedKeys="true">
+        insert into pzh_meeting_management.staff(name, gender, email, phone, position, conference_id)
+        values (#{name}, #{gender}, #{email}, #{phone}, #{position}, #{conferenceId})
+    </insert>
+
+    <insert id="insertBatch" keyProperty="id" useGeneratedKeys="true">
+        insert into pzh_meeting_management.staff(name, gender, email, phone, position, conference_id)
+        values
+        <foreach collection="entities" item="entity" separator=",">
+            (#{entity.name}, #{entity.gender}, #{entity.email}, #{entity.phone}, #{entity.position},
+            #{entity.conferenceId})
+        </foreach>
+    </insert>
+
+    <insert id="insertOrUpdateBatch" keyProperty="id" useGeneratedKeys="true">
+        insert into pzh_meeting_management.staff(name, gender, email, phone, position, conference_id)
+        values
+        <foreach collection="entities" item="entity" separator=",">
+            (#{entity.name}, #{entity.gender}, #{entity.email}, #{entity.phone}, #{entity.position},
+            #{entity.conferenceId})
+        </foreach>
+        on duplicate key update
+        name = values(name) , gender = values(gender) , email = values(email) , phone = values(phone) , position =
+        values(position) , conference_id = values(conference_id)
+    </insert>
+
+    <!--通过主键修改数据-->
+    <update id="update">
+        update pzh_meeting_management.staff
+        <set>
+            <if test="name != null and name != ''">
+                name = #{name},
+            </if>
+            <if test="gender != null">
+                gender = #{gender},
+            </if>
+            <if test="email != null and email != ''">
+                email = #{email},
+            </if>
+            <if test="phone != null and phone != ''">
+                phone = #{phone},
+            </if>
+            <if test="position != null and position != ''">
+                position = #{position},
+            </if>
+            <if test="conferenceId != null">
+                conference_id = #{conferenceId},
+            </if>
+        </set>
+        where id = #{id}
+    </update>
+
+    <!--通过主键删除-->
+    <delete id="deleteById">
+        delete from pzh_meeting_management.staff where id = #{id}
+    </delete>
+
+    <select id="fuzzySearch" resultMap="StaffMap" parameterType="String">
+        select id, name, gender, email, phone, position, conference_id
+        from pzh_meeting_management.staff
+        <where>
+            <if test="name!=null and name!=''">
+                name like concat('%',#{name},'%')
+            </if>
+            <if test="email!=null and email!=''">
+                or email like concat('%',#{email},'%')
+            </if>
+            <if test="phone!=null and phone!=''">
+                or phone like concat('%',#{phone},'%')
+            </if>
+            <if test="position!=null and position!=''">
+                or position like concat('%',#{position},'%')
+            </if>
+        </where>
+    </select>
+</mapper>

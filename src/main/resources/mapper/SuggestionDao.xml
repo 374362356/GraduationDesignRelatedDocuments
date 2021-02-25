@@ -1,0 +1,103 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.pzh.zp.dao.SuggestionDao">
+
+    <resultMap type="com.pzh.zp.entity.Suggestion" id="SuggestionMap">
+        <result property="id" column="id" jdbcType="INTEGER"/>
+        <result property="suggTime" column="sugg_time" jdbcType="TIMESTAMP"/>
+        <result property="content" column="content" jdbcType="OTHER"/>
+        <result property="personId" column="person_id" jdbcType="INTEGER"/>
+        <result property="staffId" column="staff_id" jdbcType="INTEGER"/>
+    </resultMap>
+
+    <!--查询单个-->
+    <select id="queryById" resultMap="SuggestionMap">
+        select
+          id, sugg_time, content, person_id, staff_id
+        from pzh_meeting_management.suggestion
+        where id = #{id}
+    </select>
+
+    <!--查询指定行数据-->
+    <select id="queryAllByLimit" resultMap="SuggestionMap">
+        select
+          id, sugg_time, content, person_id, staff_id
+        from pzh_meeting_management.suggestion
+        limit #{offset}, #{limit}
+    </select>
+
+    <!--通过实体作为筛选条件查询-->
+    <select id="queryAll" resultMap="SuggestionMap">
+        select
+        id, sugg_time, content, person_id, staff_id
+        from pzh_meeting_management.suggestion
+        <where>
+            <if test="id != null">
+                and id = #{id}
+            </if>
+            <if test="suggTime != null">
+                and sugg_time = #{suggTime}
+            </if>
+            <if test="content != null">
+                and content = #{content}
+            </if>
+            <if test="personId != null">
+                and person_id = #{personId}
+            </if>
+            <if test="staffId != null">
+                and staff_id = #{staffId}
+            </if>
+        </where>
+    </select>
+
+    <!--新增所有列-->
+    <insert id="insert" keyProperty="id" useGeneratedKeys="true">
+        insert into pzh_meeting_management.suggestion(sugg_time, content, person_id, staff_id)
+        values (#{suggTime}, #{content}, #{personId}, #{staffId})
+    </insert>
+
+    <insert id="insertBatch" keyProperty="id" useGeneratedKeys="true">
+        insert into pzh_meeting_management.suggestion(sugg_time, content, person_id, staff_id)
+        values
+        <foreach collection="entities" item="entity" separator=",">
+            (#{entity.suggTime}, #{entity.content}, #{entity.personId}, #{entity.staffId})
+        </foreach>
+    </insert>
+
+    <insert id="insertOrUpdateBatch" keyProperty="id" useGeneratedKeys="true">
+        insert into pzh_meeting_management.suggestion(sugg_time, content, person_id, staff_id)
+        values
+        <foreach collection="entities" item="entity" separator=",">
+            (#{entity.suggTime}, #{entity.content}, #{entity.personId}, #{entity.staffId})
+        </foreach>
+        on duplicate key update
+        sugg_time = values(sugg_time) , content = values(content) , person_id = values(person_id) , staff_id =
+        values(staff_id)
+    </insert>
+
+    <!--通过主键修改数据-->
+    <update id="update">
+        update pzh_meeting_management.suggestion
+        <set>
+            <if test="suggTime != null">
+                sugg_time = #{suggTime},
+            </if>
+            <if test="content != null">
+                content = #{content},
+            </if>
+            <if test="personId != null">
+                person_id = #{personId},
+            </if>
+            <if test="staffId != null">
+                staff_id = #{staffId},
+            </if>
+        </set>
+        where id = #{id}
+    </update>
+
+    <!--通过主键删除-->
+    <delete id="deleteById">
+        delete from pzh_meeting_management.suggestion where id = #{id}
+    </delete>
+
+</mapper>

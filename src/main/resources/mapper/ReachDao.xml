@@ -1,0 +1,103 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.pzh.zp.dao.ReachDao">
+
+    <resultMap type="com.pzh.zp.entity.Reach" id="ReachMap">
+        <result property="id" column="id" jdbcType="INTEGER"/>
+        <result property="reachTime" column="reach_time" jdbcType="TIMESTAMP"/>
+        <result property="confirm" column="confirm" jdbcType="OTHER"/>
+        <result property="personId" column="person_id" jdbcType="INTEGER"/>
+        <result property="staffId" column="staff_id" jdbcType="INTEGER"/>
+    </resultMap>
+
+    <!--查询单个-->
+    <select id="queryById" resultMap="ReachMap">
+        select
+          id, reach_time, confirm, person_id, staff_id
+        from pzh_meeting_management.reach
+        where id = #{id}
+    </select>
+
+    <!--查询指定行数据-->
+    <select id="queryAllByLimit" resultMap="ReachMap">
+        select
+          id, reach_time, confirm, person_id, staff_id
+        from pzh_meeting_management.reach
+        limit #{offset}, #{limit}
+    </select>
+
+    <!--通过实体作为筛选条件查询-->
+    <select id="queryAll" resultMap="ReachMap">
+        select
+        id, reach_time, confirm, person_id, staff_id
+        from pzh_meeting_management.reach
+        <where>
+            <if test="id != null">
+                and id = #{id}
+            </if>
+            <if test="reachTime != null">
+                and reach_time = #{reachTime}
+            </if>
+            <if test="confirm != null">
+                and confirm = #{confirm}
+            </if>
+            <if test="personId != null">
+                and person_id = #{personId}
+            </if>
+            <if test="staffId != null">
+                and staff_id = #{staffId}
+            </if>
+        </where>
+    </select>
+
+    <!--新增所有列-->
+    <insert id="insert" keyProperty="id" useGeneratedKeys="true">
+        insert into pzh_meeting_management.reach(reach_time, confirm, person_id, staff_id)
+        values (#{reachTime}, #{confirm}, #{personId}, #{staffId})
+    </insert>
+
+    <insert id="insertBatch" keyProperty="id" useGeneratedKeys="true">
+        insert into pzh_meeting_management.reach(reach_time, confirm, person_id, staff_id)
+        values
+        <foreach collection="entities" item="entity" separator=",">
+            (#{entity.reachTime}, #{entity.confirm}, #{entity.personId}, #{entity.staffId})
+        </foreach>
+    </insert>
+
+    <insert id="insertOrUpdateBatch" keyProperty="id" useGeneratedKeys="true">
+        insert into pzh_meeting_management.reach(reach_time, confirm, person_id, staff_id)
+        values
+        <foreach collection="entities" item="entity" separator=",">
+            (#{entity.reachTime}, #{entity.confirm}, #{entity.personId}, #{entity.staffId})
+        </foreach>
+        on duplicate key update
+        reach_time = values(reach_time) , confirm = values(confirm) , person_id = values(person_id) , staff_id =
+        values(staff_id)
+    </insert>
+
+    <!--通过主键修改数据-->
+    <update id="update">
+        update pzh_meeting_management.reach
+        <set>
+            <if test="reachTime != null">
+                reach_time = #{reachTime},
+            </if>
+            <if test="confirm != null">
+                confirm = #{confirm},
+            </if>
+            <if test="personId != null">
+                person_id = #{personId},
+            </if>
+            <if test="staffId != null">
+                staff_id = #{staffId},
+            </if>
+        </set>
+        where id = #{id}
+    </update>
+
+    <!--通过主键删除-->
+    <delete id="deleteById">
+        delete from pzh_meeting_management.reach where id = #{id}
+    </delete>
+
+</mapper>

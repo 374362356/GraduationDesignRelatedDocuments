@@ -1,0 +1,143 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.pzh.zp.dao.UserDao">
+
+    <resultMap type="com.pzh.zp.entity.User" id="UserMap">
+        <result property="id" column="id" jdbcType="INTEGER"/>
+        <result property="nickName" column="nick_name" jdbcType="VARCHAR"/>
+        <result property="userName" column="user_name" jdbcType="VARCHAR"/>
+        <result property="password" column="password" jdbcType="VARCHAR"/>
+        <result property="createTime" column="create_time" jdbcType="TIMESTAMP"/>
+        <result property="gender" column="gender" jdbcType="OTHER"/>
+        <result property="phone" column="phone" jdbcType="VARCHAR"/>
+    </resultMap>
+
+    <!--查询单个-->
+    <select id="queryById" resultMap="UserMap">
+        select
+          id, nick_name, user_name, password, create_time, gender, phone
+        from pzh_meeting_management.user
+        where id = #{id}
+    </select>
+
+    <!--查询指定行数据-->
+    <select id="queryAllByLimit" resultMap="UserMap">
+        select
+          id, nick_name, user_name, password, create_time, gender, phone
+        from pzh_meeting_management.user
+        limit #{offset}, #{limit}
+    </select>
+
+    <!--通过实体作为筛选条件查询-->
+    <select id="queryAll" resultMap="UserMap">
+        select
+        id, nick_name, user_name, password, create_time, gender, phone
+        from pzh_meeting_management.user
+        <where>
+            <if test="id != null">
+                and id = #{id}
+            </if>
+            <if test="nickName != null and nickName != ''">
+                and nick_name = #{nickName}
+            </if>
+            <if test="userName != null and userName != ''">
+                and user_name = #{userName}
+            </if>
+            <if test="password != null and password != ''">
+                and password = #{password}
+            </if>
+            <if test="createTime != null">
+                and create_time = #{createTime}
+            </if>
+            <if test="gender != null">
+                and gender = #{gender}
+            </if>
+            <if test="phone != null and phone != ''">
+                and phone = #{phone}
+            </if>
+        </where>
+    </select>
+
+    <!--新增所有列-->
+    <insert id="insert" keyProperty="id" useGeneratedKeys="true">
+        insert into pzh_meeting_management.user(nick_name, user_name, password, create_time, gender, phone)
+        values (#{nickName}, #{userName}, #{password}, #{createTime}, #{gender}, #{phone})
+    </insert>
+
+    <insert id="insertBatch" keyProperty="id" useGeneratedKeys="true">
+        insert into pzh_meeting_management.user(nick_name, user_name, password, create_time, gender, phone)
+        values
+        <foreach collection="entities" item="entity" separator=",">
+            (#{entity.nickName}, #{entity.userName}, #{entity.password}, #{entity.createTime}, #{entity.gender},
+            #{entity.phone})
+        </foreach>
+    </insert>
+
+    <insert id="insertOrUpdateBatch" keyProperty="id" useGeneratedKeys="true">
+        insert into pzh_meeting_management.user(nick_name, user_name, password, create_time, gender, phone)
+        values
+        <foreach collection="entities" item="entity" separator=",">
+            (#{entity.nickName}, #{entity.userName}, #{entity.password}, #{entity.createTime}, #{entity.gender},
+            #{entity.phone})
+        </foreach>
+        on duplicate key update
+        nick_name = values(nick_name) , user_name = values(user_name) , password = values(password) , create_time =
+        values(create_time) , gender = values(gender) , phone = values(phone)
+    </insert>
+
+    <!--通过主键修改数据-->
+    <update id="update">
+        update pzh_meeting_management.user
+        <set>
+            <if test="nickName != null and nickName != ''">
+                nick_name = #{nickName},
+            </if>
+            <if test="userName != null and userName != ''">
+                user_name = #{userName},
+            </if>
+            <if test="password != null and password != ''">
+                password = #{password},
+            </if>
+            <if test="createTime != null">
+                create_time = #{createTime},
+            </if>
+            <if test="gender != null">
+                gender = #{gender},
+            </if>
+            <if test="phone != null and phone != ''">
+                phone = #{phone},
+            </if>
+        </set>
+        where id = #{id}
+    </update>
+
+    <!--通过主键删除-->
+    <delete id="deleteById">
+        delete from pzh_meeting_management.user where id = #{id}
+    </delete>
+
+    <!--模糊查询  -->
+    <select id="fuzzySearch" resultMap="UserMap" parameterType="String">
+        select id, nick_name, user_name, password, create_time, gender, phone
+        from pzh_meeting_management.user
+        <where>
+            <if test="nickName!=null and nickName!=''">
+                nick_name like concat('%',#{nickName},'%')
+            </if>
+            <if test="phone!=null and phone!=''">
+               or phone like concat('%',#{phone},'%')
+            </if>
+        </where>
+    </select>
+
+    <!--通过用户名查询-->
+    <select id="queryByuserName" parameterType="String" resultMap="UserMap">
+        select id, nick_name, user_name, password, create_time, gender, phone
+        from pzh_meeting_management.user
+        <where>
+            <if test="userName != null and userName != ''">
+                 user_name = #{userName}
+            </if>
+        </where>
+    </select>
+</mapper>

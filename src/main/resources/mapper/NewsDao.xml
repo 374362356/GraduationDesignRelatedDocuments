@@ -1,0 +1,117 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.pzh.zp.dao.NewsDao">
+
+    <resultMap type="com.pzh.zp.entity.News" id="NewsMap">
+        <result property="id" column="id" jdbcType="INTEGER"/>
+        <result property="newTime" column="new_time" jdbcType="TIMESTAMP"/>
+        <result property="contentTitle" column="content_title" jdbcType="VARCHAR"/>
+        <result property="content" column="content" jdbcType="VARCHAR"/>
+        <result property="staffId" column="staff_id" jdbcType="INTEGER"/>
+    </resultMap>
+
+    <!--查询单个-->
+    <select id="queryById" resultMap="NewsMap">
+        select
+          id, new_time, content_title, content, staff_id
+        from pzh_meeting_management.news
+        where id = #{id}
+    </select>
+
+    <!--查询指定行数据-->
+    <select id="queryAllByLimit" resultMap="NewsMap">
+        select
+          id, new_time, content_title, content, staff_id
+        from pzh_meeting_management.news
+        limit #{offset}, #{limit}
+    </select>
+
+    <!--通过实体作为筛选条件查询-->
+    <select id="queryAll" resultMap="NewsMap">
+        select
+        id, new_time, content_title, content, staff_id
+        from pzh_meeting_management.news
+        <where>
+            <if test="id != null">
+                and id = #{id}
+            </if>
+            <if test="newTime != null">
+                and new_time = #{newTime}
+            </if>
+            <if test="contentTitle != null and contentTitle != ''">
+                and content_title = #{contentTitle}
+            </if>
+            <if test="content != null and content != ''">
+                and content = #{content}
+            </if>
+            <if test="staffId != null">
+                and staff_id = #{staffId}
+            </if>
+        </where>
+    </select>
+
+    <!--新增所有列-->
+    <insert id="insert" keyProperty="id" useGeneratedKeys="true">
+        insert into pzh_meeting_management.news(new_time, content_title, content, staff_id)
+        values (#{newTime}, #{contentTitle}, #{content}, #{staffId})
+    </insert>
+
+    <insert id="insertBatch" keyProperty="id" useGeneratedKeys="true">
+        insert into pzh_meeting_management.news(new_time, content_title, content, staff_id)
+        values
+        <foreach collection="entities" item="entity" separator=",">
+            (#{entity.newTime}, #{entity.contentTitle}, #{entity.content}, #{entity.staffId})
+        </foreach>
+    </insert>
+
+    <insert id="insertOrUpdateBatch" keyProperty="id" useGeneratedKeys="true">
+        insert into pzh_meeting_management.news(new_time, content_title, content, staff_id)
+        values
+        <foreach collection="entities" item="entity" separator=",">
+            (#{entity.newTime}, #{entity.contentTitle}, #{entity.content}, #{entity.staffId})
+        </foreach>
+        on duplicate key update
+        new_time = values(new_time) , content_title = values(content_title) , content = values(content) , staff_id =
+        values(staff_id)
+    </insert>
+
+    <!--通过主键修改数据-->
+    <update id="update">
+        update pzh_meeting_management.news
+        <set>
+            <if test="newTime != null">
+                new_time = #{newTime},
+            </if>
+            <if test="contentTitle != null and contentTitle != ''">
+                content_title = #{contentTitle},
+            </if>
+            <if test="content != null and content != ''">
+                content = #{content},
+            </if>
+            <if test="staffId != null">
+                staff_id = #{staffId},
+            </if>
+        </set>
+        where id = #{id}
+    </update>
+
+    <!--通过主键删除-->
+    <delete id="deleteById">
+        delete from pzh_meeting_management.news where id = #{id}
+    </delete>
+    
+    <!-- 模糊查询-->
+    <select id="fuzzySearch" parameterType="String" resultMap="NewsMap">
+        select id, new_time, content_title, content, staff_id
+        from pzh_meeting_management.news
+        <where>
+            <if test="newTime!=null and newTime!=''">
+                new_time like concat('%',#{newTime},'%')
+            </if>
+            <if test="contentTitle!=null and contentTitle!=''">
+                or content_title like concat('%',#{contentTitle},'%')
+            </if>
+        </where>
+    </select>
+    
+</mapper>
