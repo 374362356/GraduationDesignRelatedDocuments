@@ -92,4 +92,6 @@ public interface StaffDao {
      */
     List<Staff> fuzzySearch(String name,String email,String phone,String position);
 
+    Integer counting();
+
 }

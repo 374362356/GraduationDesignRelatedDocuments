@@ -78,4 +78,9 @@ public class SuggestionServiceImpl implements SuggestionService {
     public boolean deleteById(Integer id) {
         return this.suggestionDao.deleteById(id) > 0;
     }
+
+    @Override
+    public List<Suggestion> fuzzyInfo(String suggestionTitle) {
+        return suggestionDao.fuzzyInfo(suggestionTitle);
+    }
 }

@@ -2,7 +2,10 @@ package com.pzh.zp.service;
 
 import com.pzh.zp.entity.News;
 import com.pzh.zp.entity.Staff;
+import com.pzh.zp.entity.User;
 
+import javax.servlet.http.HttpServletRequest;
+import java.text.ParseException;
 import java.util.List;
 
 
@@ -37,7 +40,7 @@ public interface NewsService {
      * @param news 实例对象
      * @return 实例对象
      */
-    News insert(News news);
+    News insert(HttpServletRequest request, News news) throws ParseException;
 
     /**
      * 修改数据
@@ -72,4 +75,7 @@ public interface NewsService {
      */
     List<News> fuzzySearch(String newTime, String contentTitle);
 
+    User findPublishName(Integer id, Integer stateId);
+
+    String InsertTiming(HttpServletRequest request,News news,String timeSelect) throws ParseException;
 }

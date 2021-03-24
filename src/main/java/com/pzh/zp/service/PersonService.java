@@ -1,5 +1,7 @@
 package com.pzh.zp.service;
 
+import com.pzh.zp.VO.PersonVo;
+import com.pzh.zp.entity.Conference;
 import com.pzh.zp.entity.Person;
 
 import java.util.List;
@@ -22,6 +24,8 @@ public interface PersonService {
      */
     Person queryById(Integer id);
 
+    PersonVo toUpdate(Integer id);
+
     /**
      * 查询多条数据
      *
@@ -34,18 +38,18 @@ public interface PersonService {
     /**
      * 新增数据
      *
-     * @param person 实例对象
+     * @param personVo 实例对象
      * @return 实例对象
      */
-    Person insert(Person person);
+    Person insert(PersonVo personVo);
 
     /**
      * 修改数据
      *
-     * @param person 实例对象
+     * @param personVo 实例对象
      * @return 实例对象
      */
-    Person update(Person person);
+    Person update(PersonVo personVo);
 
     /**
      * 通过主键删除数据
@@ -55,4 +59,18 @@ public interface PersonService {
      */
     boolean deleteById(Integer id);
 
+    /**
+     *
+     * @return
+     */
+    List<PersonVo> queryAllInfoPerson();
+
+    /**
+     *
+     * @param pname
+     * @param name
+     * @param phone
+     * @return
+     */
+    List<Person> fuzzySearchPerson(String pname,String name,String phone);
 }

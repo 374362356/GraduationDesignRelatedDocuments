@@ -1,13 +1,17 @@
 package com.pzh.zp.service.impl;
 
+import com.pzh.zp.VO.StaffVo;
+import com.pzh.zp.dao.ConferenceDao;
 import com.pzh.zp.dao.StaffDao;
+import com.pzh.zp.entity.Conference;
 import com.pzh.zp.entity.Staff;
 import com.pzh.zp.service.StaffService;
 import org.springframework.stereotype.Service;
 
 import javax.annotation.Resource;
+import java.util.ArrayList;
 import java.util.List;
-
+import java.util.stream.Collectors;
 
 
 /**
@@ -21,6 +25,8 @@ public class StaffServiceImpl implements StaffService {
     @Resource
     private StaffDao staffDao;
 
+    @Resource
+    private ConferenceDao conferenceDao;
     /**
      * 通过ID查询单条数据
      *
@@ -40,8 +46,24 @@ public class StaffServiceImpl implements StaffService {
      * @return 对象列表
      */
     @Override
-    public List<Staff> queryAllByLimit(int offset, int limit) {
-        return this.staffDao.queryAllByLimit(offset, limit);
+    public List<StaffVo> queryAllByLimit(int offset, int limit) {
+        List<StaffVo> staffVos = new ArrayList<>();
+        List<Staff> staff = this.staffDao.queryAllByLimit(offset, limit);
+        //System.out.println("================>"+staff);
+        List<Integer> conferenceId = staff.stream().map(s -> s.getConferenceId()).collect(Collectors.toList());
+        for (Integer id:conferenceId) {
+            String name = conferenceDao.queryById(id).getName();
+            for (Staff s: staff) {
+                if(s.getConferenceId().equals(id)) {
+                    StaffVo vo = new StaffVo(s.getId(), s.getName(), s.getGender(), s.getEmail(), s.getPhone(), s.getPosition(), name);
+                    staffVos.add(vo);
+                }
+            }
+            if(staffVos.size()==staff.size()){      //还有问题
+                break;
+            }
+        }
+        return staffVos;
     }
 
     /**
@@ -51,19 +73,25 @@ public class StaffServiceImpl implements StaffService {
      * @return 实例对象
      */
     @Override
-    public Staff insert(Staff staff) {
-        this.staffDao.insert(staff);
-        return staff;
+    public Staff insert(StaffVo staff) {
+        String conferenceName = staff.getConferenceName();
+        int id = conferenceDao.queryIdByName(conferenceName);
+        Staff newStaff = new Staff(0, staff.getName(), staff.getGender(), staff.getEmail(), staff.getPhone(), staff.getPosition(), id);
+        this.staffDao.insert(newStaff);
+        return newStaff;
     }
 
     /**
      * 修改数据
      *
-     * @param staff 实例对象
+     * @param staffVo 实例对象
      * @return 实例对象
      */
     @Override
-    public Staff update(Staff staff) {
+    public Staff update(StaffVo staffVo) {
+        int conferenceId = conferenceDao.queryIdByName(staffVo.getConferenceName());
+        Staff staff = new Staff(staffVo.getId(), staffVo.getName(), staffVo.getGender(), staffVo.getEmail(), staffVo.getPhone(),
+                staffVo.getPosition(), conferenceId);
         this.staffDao.update(staff);
         return this.queryById(staff.getId());
     }

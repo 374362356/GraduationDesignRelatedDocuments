@@ -88,4 +88,15 @@ public interface ConferenceDao {
      * @return 对象列表
      */
     List<Conference> fuzzySearch(String name, String place,String host);
+
+    List<String> queryAllName();
+
+    /**
+     *
+     * @param name
+     * @return
+     */
+    int queryIdByName(String name);
+
+    Integer counting();
 }

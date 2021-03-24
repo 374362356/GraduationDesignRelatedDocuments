@@ -1,7 +1,7 @@
-package com.pzh.zp.controller;
+package com.pzh.zp.controller.DbController;
 
-import com.pzh.zp.entity.Reach;
-import com.pzh.zp.service.ReachService;
+import com.pzh.zp.entity.Role;
+import com.pzh.zp.service.RoleService;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
@@ -10,19 +10,19 @@ import javax.annotation.Resource;
 
 
 /**
- * 到会时间表(Reach)表控制层
+ * 角色表(Role)表控制层
  *
  * @author makejava
- * @since 2021-01-25 16:45:31
+ * @since 2021-01-25 16:45:32
  */
 @RestController
-@RequestMapping("reach")
-public class ReachController {
+@RequestMapping("role")
+public class RoleController {
     /**
      * 服务对象
      */
     @Resource
-    private ReachService reachService;
+    private RoleService roleService;
 
     /**
      * 通过主键查询单条数据
@@ -31,8 +31,8 @@ public class ReachController {
      * @return 单条数据
      */
     @GetMapping("selectOne")
-    public Reach selectOne(Integer id) {
-        return this.reachService.queryById(id);
+    public Role selectOne(Integer id) {
+        return this.roleService.queryById(id);
     }
 
 }

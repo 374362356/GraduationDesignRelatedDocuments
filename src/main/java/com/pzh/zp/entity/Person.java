@@ -18,11 +18,20 @@ import java.io.Serializable;
 public class Person implements Serializable {
     private static final long serialVersionUID = 770480769859064856L;
 
+    public Person(String pName, Integer age, Object gender, String email, String phone, String title) {
+        this.pName = pName;
+        this.age = age;
+        this.gender = gender;
+        this.email = email;
+        this.phone = phone;
+        this.title = title;
+    }
+
     private Integer id;
     /**
      * 姓名
      */
-    private String name;
+    private String pName;
     /**
      * 年龄
      */

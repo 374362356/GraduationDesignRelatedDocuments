@@ -1,6 +1,7 @@
 package com.pzh.zp.dao;
 
 import com.pzh.zp.entity.News;
+import com.pzh.zp.entity.User;
 import org.apache.ibatis.annotations.Param;
 
 import java.util.List;
@@ -88,4 +89,11 @@ public interface NewsDao {
      * @return 对象列表
      */
     List<News> fuzzySearch(String newTime, String contentTitle);
+
+    /**
+     * 根据公告id和state_id得到发布人的id和nickname
+     */
+    User findPublishName(Integer id,Integer stateId);
+
+    Integer counting();
 }

@@ -1,4 +1,4 @@
-package com.pzh.zp.controller;
+package com.pzh.zp.controller.DbController;
 
 import com.pzh.zp.VO.ResultVo;
 import com.pzh.zp.entity.Conference;
@@ -18,6 +18,14 @@ import java.util.List;
 @RestController
 @RequestMapping("conference")
 public class ConferenceController {
+    /**
+     * 会议还存在会议地点是选择还是输入问题
+     * 会议的在结束时间后便不能选择的问题
+     * 会议的容纳人数上限
+     * 前端会议添加空值判断
+     */
+
+
     /**
      * 服务对象
      */
@@ -70,11 +78,26 @@ public class ConferenceController {
         return ResultVo.success(insert);
     }
 
-    
-    @PutMapping("/update")
-    public ResultVo updateConference(@RequestBody Conference conference){
+    /**
+     * 会议信息修改
+     * @param conferenceId
+     * @param conference
+     * @return
+     */
+    @PutMapping("/conference_update/{conferenceId}")
+    public ResultVo updateConference(@PathVariable Integer conferenceId, @RequestBody Conference conference){
         System.out.println("========update========>"+conference);
+        conference.setId(conferenceId);
         Conference update = conferenceService.update(conference);
         return ResultVo.success(update);
+    }
+
+    @DeleteMapping("/conference_delete")
+    public ResultVo deleteConference(@RequestParam Integer id){
+        boolean b = conferenceService.deleteById(id);
+        if (b){
+            return ResultVo.success(b);
+        }
+        return ResultVo.fail("删除失败");
     }
 }

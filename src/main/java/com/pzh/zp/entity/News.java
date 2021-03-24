@@ -1,5 +1,6 @@
 package com.pzh.zp.entity;
 
+import com.fasterxml.jackson.annotation.JsonFormat;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
@@ -19,10 +20,15 @@ import java.util.Date;
 public class News implements Serializable {
     private static final long serialVersionUID = -20161982728838032L;
 
+    public News(String contentTitle,String content){
+        this.contentTitle=contentTitle;
+        this.content=content;
+    }
     private Integer id;
     /**
      * 发布时间
      */
+    @JsonFormat(pattern="yyyy-MM-dd HH:mm",timezone="GMT+8")
     private Date newTime;
     /**
      * 发布标题
@@ -33,8 +39,8 @@ public class News implements Serializable {
      */
     private String content;
     /**
-     * 发布人员id
+     * 发布人id
      */
-    private Integer staffId;
+    private Integer stateId;
 
 }

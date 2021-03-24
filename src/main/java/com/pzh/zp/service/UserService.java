@@ -2,6 +2,7 @@ package com.pzh.zp.service;
 
 import com.pzh.zp.entity.User;
 
+import java.text.ParseException;
 import java.util.List;
 
 
@@ -37,7 +38,7 @@ public interface UserService {
      * @param user 实例对象
      * @return 实例对象
      */
-    User insert(User user);
+    User insert(User user) throws ParseException;
 
     /**
      * 修改数据
@@ -45,7 +46,7 @@ public interface UserService {
      * @param user 实例对象
      * @return 实例对象
      */
-    User update(User user);
+    User update(User user) throws ParseException;
 
     /**
      * 通过主键删除数据

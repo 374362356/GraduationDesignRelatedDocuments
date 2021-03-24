@@ -1,4 +1,4 @@
-package com.pzh.zp.controller;
+package com.pzh.zp.controller.DbController;
 
 import com.pzh.zp.VO.ResultVo;
 import com.pzh.zp.entity.User;
@@ -6,8 +6,8 @@ import com.pzh.zp.service.UserService;
 import org.springframework.web.bind.annotation.*;
 
 import javax.annotation.Resource;
+
 import java.text.ParseException;
-import java.text.SimpleDateFormat;
 import java.util.Date;
 import java.util.List;
 
@@ -21,6 +21,11 @@ import java.util.List;
 @RestController
 @RequestMapping("user")
 public class UserController {
+    /**
+     * 增加一个标识字段表明是管理员还是用户，注册时默认是用户
+     * 管理员通过页面的按钮来决定用户状态，是否冻结
+     */
+
     /**
      * 服务对象
      */
@@ -60,18 +65,12 @@ public class UserController {
      * 插入用户
      * @param user
      * @return
-     * @throws ParseException
      */
     @PostMapping("/user_insert")
     public ResultVo insertUser(@RequestBody User user) throws ParseException {
-        SimpleDateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
-        String format = dateFormat.format(new Date());
-        Date date = dateFormat.parse(format);
-        //插入时间
-        user.setCreateTime(date);
         User insert = userService.insert(user);
         //System.out.println("------------------>"+insert);
-        return ResultVo.success(null);
+        return ResultVo.success(insert);
     }
 
     /**
@@ -107,11 +106,6 @@ public class UserController {
      */
     @PutMapping("/update")
     public ResultVo updateUser(@RequestBody User user) throws ParseException {
-        SimpleDateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
-        String format = dateFormat.format(new Date());
-        Date date = dateFormat.parse(format);
-        user.setCreateTime(date);
-
         //System.out.println("--------------------->"+user);
         User update = userService.update(user);
         return ResultVo.success(update);

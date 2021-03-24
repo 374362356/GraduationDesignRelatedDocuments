@@ -134,4 +134,9 @@
             </if>
         </where>
     </select>
+
+    <select id="counting" resultType="Integer">
+        select count(1)
+        from pzh_meeting_management.staff;
+    </select>
 </mapper>

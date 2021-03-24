@@ -1,5 +1,7 @@
 package com.pzh.zp.dao;
 
+import com.pzh.zp.VO.PersonVo;
+import com.pzh.zp.entity.Conference;
 import com.pzh.zp.entity.Person;
 import org.apache.ibatis.annotations.Param;
 
@@ -80,4 +82,34 @@ public interface PersonDao {
      */
     int deleteById(Integer id);
 
+    /**
+     * 获取参会人员的全信息
+     * @return
+     */
+    List<PersonVo> queryAllInfoPerson();
+
+    /**
+     *
+     * @param pname
+     * @param name
+     * @param phone
+     * @return
+     */
+    List<Person> fuzzySearchPerson(String pname,String name,String phone);
+
+    /**
+     *
+     * @param conference_id
+     * @param person_id
+     * @return
+     */
+    int insertActivity_person(Integer conference_id,Integer person_id);
+
+    int updateActivity_person(Integer conference_id,Integer person_id,Integer id);
+
+    Integer findIdByP_id(Integer person_id);
+
+    int findC_idByP_id(Integer person_id);
+
+    int deleteActivity_person(Integer id);
 }

@@ -4,18 +4,17 @@
 
     <resultMap type="com.pzh.zp.entity.Person" id="PersonMap">
         <result property="id" column="id" jdbcType="INTEGER"/>
-        <result property="name" column="name" jdbcType="VARCHAR"/>
+        <result property="pName" column="p_name" jdbcType="VARCHAR"/>
         <result property="age" column="age" jdbcType="INTEGER"/>
         <result property="gender" column="gender" jdbcType="OTHER"/>
         <result property="email" column="email" jdbcType="VARCHAR"/>
         <result property="phone" column="phone" jdbcType="VARCHAR"/>
         <result property="title" column="title" jdbcType="VARCHAR"/>
     </resultMap>
-
     <!--查询单个-->
     <select id="queryById" resultMap="PersonMap">
         select
-          id, name, age, gender, email, phone, title
+          id, p_name, age, gender, email, phone, title
         from pzh_meeting_management.person
         where id = #{id}
     </select>
@@ -23,7 +22,7 @@
     <!--查询指定行数据-->
     <select id="queryAllByLimit" resultMap="PersonMap">
         select
-          id, name, age, gender, email, phone, title
+          id, p_name, age, gender, email, phone, title
         from pzh_meeting_management.person
         limit #{offset}, #{limit}
     </select>
@@ -31,14 +30,14 @@
     <!--通过实体作为筛选条件查询-->
     <select id="queryAll" resultMap="PersonMap">
         select
-        id, name, age, gender, email, phone, title
+        id, p_name, age, gender, email, phone, title
         from pzh_meeting_management.person
         <where>
             <if test="id != null">
                 and id = #{id}
             </if>
-            <if test="name != null and name != ''">
-                and name = #{name}
+            <if test="pName != null and pName != ''">
+                and p_name = #{pName}
             </if>
             <if test="age != null">
                 and age = #{age}
@@ -60,26 +59,26 @@
 
     <!--新增所有列-->
     <insert id="insert" keyProperty="id" useGeneratedKeys="true">
-        insert into pzh_meeting_management.person(name, age, gender, email, phone, title)
-        values (#{name}, #{age}, #{gender}, #{email}, #{phone}, #{title})
+        insert into pzh_meeting_management.person(p_name, age, gender, email, phone, title)
+        values (#{pName}, #{age}, #{gender}, #{email}, #{phone}, #{title})
     </insert>
 
     <insert id="insertBatch" keyProperty="id" useGeneratedKeys="true">
-        insert into pzh_meeting_management.person(name, age, gender, email, phone, title)
+        insert into pzh_meeting_management.person(p_name, age, gender, email, phone, title)
         values
         <foreach collection="entities" item="entity" separator=",">
-            (#{entity.name}, #{entity.age}, #{entity.gender}, #{entity.email}, #{entity.phone}, #{entity.title})
+            (#{entity.pName}, #{entity.age}, #{entity.gender}, #{entity.email}, #{entity.phone}, #{entity.title})
         </foreach>
     </insert>
 
     <insert id="insertOrUpdateBatch" keyProperty="id" useGeneratedKeys="true">
-        insert into pzh_meeting_management.person(name, age, gender, email, phone, title)
+        insert into pzh_meeting_management.person(p_name, age, gender, email, phone, title)
         values
         <foreach collection="entities" item="entity" separator=",">
-            (#{entity.name}, #{entity.age}, #{entity.gender}, #{entity.email}, #{entity.phone}, #{entity.title})
+            (#{entity.pName}, #{entity.age}, #{entity.gender}, #{entity.email}, #{entity.phone}, #{entity.title})
         </foreach>
         on duplicate key update
-        name = values(name) , age = values(age) , gender = values(gender) , email = values(email) , phone =
+        p_name = values(pName) , age = values(age) , gender = values(gender) , email = values(email) , phone =
         values(phone) , title = values(title)
     </insert>
 
@@ -87,8 +86,8 @@
     <update id="update">
         update pzh_meeting_management.person
         <set>
-            <if test="name != null and name != ''">
-                name = #{name},
+            <if test="pName != null and pName != ''">
+                p_name = #{pName},
             </if>
             <if test="age != null">
                 age = #{age},
@@ -114,4 +113,66 @@
         delete from pzh_meeting_management.person where id = #{id}
     </delete>
 
+    <!--得到人员的详细信息-->
+    <select id="queryAllInfoPerson" resultType="com.pzh.zp.VO.PersonVo">
+        select p.*,c.name
+        from person p
+        left join activity_person ap on p.id = ap.person_id
+        left join conference c on c.id = ap.conference_id
+    </select>
+
+    <!--模糊查询  -->
+    <select id="fuzzySearchPerson" resultType="com.pzh.zp.VO.PersonVo">
+        select p.*,c.name
+        from person p
+        left join activity_person ap on p.id = ap.person_id
+        left join conference c on c.id = ap.conference_id
+        <where>
+            <if test="pname != null and pname != ''">
+                p_name like concat('%',#{pname},'%')
+            </if>
+            <if test="name !=null and name != ''">
+                or name like  concat('%',#{name},'%')
+            </if>
+            <if test="phone !=null and phone != ''">
+                or phone like concat('%',#{phone},'%')
+            </if>
+        </where>
+    </select>
+    
+    <insert id="insertActivity_person" parameterType="Integer">
+        insert into pzh_meeting_management.activity_person(conference_id,person_id)
+        values (#{conference_id},#{person_id})
+    </insert>
+
+    <update id="updateActivity_person" parameterType="Integer">
+        update pzh_meeting_management.activity_person
+        <set>
+            <if test="conference_id !=null and conference_id != ''">
+                conference_id = #{conference_id},
+            </if>
+            <if test="person_id != null and person_id != ''">
+                person_id = #{person_id}
+            </if>
+        </set>
+            where id = #{id}
+    </update>
+
+    <!-- 通过person_id得到id  -->
+    <select id="findIdByP_id" parameterType="Integer" resultType="Integer">
+        select id
+        from pzh_meeting_management.activity_person
+        where person_id = #{person_id}
+    </select>
+
+    <select id="findC_idByP_id" parameterType="Integer" resultType="int">
+        select conference_id
+        from pzh_meeting_management.activity_person
+        where person_id = #{person_id}
+    </select>
+
+    <delete id="deleteActivity_person">
+        delete from pzh_meeting_management.activity_person
+        where id = #{id}
+    </delete>
 </mapper>

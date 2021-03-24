@@ -72,4 +72,10 @@ public interface ConferenceService {
      * @return 对象列表
      */
     List<Conference> queryAll(Conference conference);
+
+    /**
+     *
+     * @return
+     */
+    List<String> queryAllName();
 }

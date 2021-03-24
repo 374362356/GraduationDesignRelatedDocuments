@@ -24,6 +24,11 @@ public class Suggestion implements Serializable {
      * 时间
      */
     private Date suggTime;
+
+    /**
+     * 建议主题
+     */
+    private String suggestionTitle;
     /**
      * 建议内容
      */

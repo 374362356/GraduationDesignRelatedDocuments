@@ -47,4 +47,8 @@ public class User implements Serializable {
      */
     private String phone;
 
+    /**
+     * 状态 -1 超管 0 管理员  1 普通用户
+     */
+    private Integer status;
 }

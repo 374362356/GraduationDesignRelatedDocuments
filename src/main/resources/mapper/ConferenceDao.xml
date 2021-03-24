@@ -123,4 +123,25 @@
             </if>
         </where>
     </select>
+
+    <!-- 查找所有的会议名   -->
+    <select id="queryAllName" resultType="String">
+        select name
+        from pzh_meeting_management.conference
+    </select>
+
+    <select id="queryIdByName" parameterType="String" resultType="Integer">
+        select id
+        from pzh_meeting_management.conference
+        <where>
+            <if test="name!=null and name!=''">
+                name = #{name}
+            </if>
+        </where>
+    </select>
+
+    <select id="counting" resultType="Integer">
+        select count(1)
+        from pzh_meeting_management.conference;
+    </select>
 </mapper>

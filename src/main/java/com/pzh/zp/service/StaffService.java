@@ -1,5 +1,6 @@
 package com.pzh.zp.service;
 
+import com.pzh.zp.VO.StaffVo;
 import com.pzh.zp.entity.Staff;
 
 import java.util.List;
@@ -27,7 +28,7 @@ public interface StaffService {
      * @param limit  查询条数
      * @return 对象列表
      */
-    List<Staff> queryAllByLimit(int offset, int limit);
+    List<StaffVo> queryAllByLimit(int offset, int limit);
 
     /**
      * 新增数据
@@ -35,15 +36,15 @@ public interface StaffService {
      * @param staff 实例对象
      * @return 实例对象
      */
-    Staff insert(Staff staff);
+    Staff insert(StaffVo staff);
 
     /**
      * 修改数据
      *
-     * @param staff 实例对象
+     * @param staffVo 实例对象
      * @return 实例对象
      */
-    Staff update(Staff staff);
+    Staff update(StaffVo staffVo);
 
     /**
      * 通过主键删除数据

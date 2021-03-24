@@ -8,12 +8,13 @@
         <result property="content" column="content" jdbcType="OTHER"/>
         <result property="personId" column="person_id" jdbcType="INTEGER"/>
         <result property="staffId" column="staff_id" jdbcType="INTEGER"/>
+        <result property="suggestionTitle" column="suggestion_title" jdbcType="VARCHAR"/>
     </resultMap>
 
     <!--查询单个-->
     <select id="queryById" resultMap="SuggestionMap">
         select
-          id, sugg_time, content, person_id, staff_id
+          id, sugg_time, content, person_id, staff_id, suggestion_title
         from pzh_meeting_management.suggestion
         where id = #{id}
     </select>
@@ -21,7 +22,7 @@
     <!--查询指定行数据-->
     <select id="queryAllByLimit" resultMap="SuggestionMap">
         select
-          id, sugg_time, content, person_id, staff_id
+          id, sugg_time, content, person_id, staff_id, suggestion_title
         from pzh_meeting_management.suggestion
         limit #{offset}, #{limit}
     </select>
@@ -29,7 +30,7 @@
     <!--通过实体作为筛选条件查询-->
     <select id="queryAll" resultMap="SuggestionMap">
         select
-        id, sugg_time, content, person_id, staff_id
+        id, sugg_time, content, person_id, staff_id, suggestion_title
         from pzh_meeting_management.suggestion
         <where>
             <if test="id != null">
@@ -47,32 +48,35 @@
             <if test="staffId != null">
                 and staff_id = #{staffId}
             </if>
+            <if test="suggestionTitle !=null">
+                and suggestion_title = #{suggestionTitle}
+            </if>
         </where>
     </select>
 
     <!--新增所有列-->
     <insert id="insert" keyProperty="id" useGeneratedKeys="true">
-        insert into pzh_meeting_management.suggestion(sugg_time, content, person_id, staff_id)
-        values (#{suggTime}, #{content}, #{personId}, #{staffId})
+        insert into pzh_meeting_management.suggestion(sugg_time, content, person_id, staff_id, suggestion_title)
+        values (#{suggTime}, #{content}, #{personId}, #{staffId}, #{suggestionTitle})
     </insert>
 
     <insert id="insertBatch" keyProperty="id" useGeneratedKeys="true">
-        insert into pzh_meeting_management.suggestion(sugg_time, content, person_id, staff_id)
+        insert into pzh_meeting_management.suggestion(sugg_time, content, person_id, staff_id, suggestion_title)
         values
         <foreach collection="entities" item="entity" separator=",">
-            (#{entity.suggTime}, #{entity.content}, #{entity.personId}, #{entity.staffId})
+            (#{entity.suggTime}, #{entity.content}, #{entity.personId}, #{entity.staffId}, #{entity.suggestionTitle})
         </foreach>
     </insert>
 
     <insert id="insertOrUpdateBatch" keyProperty="id" useGeneratedKeys="true">
-        insert into pzh_meeting_management.suggestion(sugg_time, content, person_id, staff_id)
+        insert into pzh_meeting_management.suggestion(sugg_time, content, person_id, staff_id, suggestion_title)
         values
         <foreach collection="entities" item="entity" separator=",">
-            (#{entity.suggTime}, #{entity.content}, #{entity.personId}, #{entity.staffId})
+            (#{entity.suggTime}, #{entity.content}, #{entity.personId}, #{entity.staffId}, #{entity.suggestionTitle})
         </foreach>
         on duplicate key update
         sugg_time = values(sugg_time) , content = values(content) , person_id = values(person_id) , staff_id =
-        values(staff_id)
+        values(staff_id) , suggestion_title = values (suggestion_title)
     </insert>
 
     <!--通过主键修改数据-->
@@ -91,6 +95,9 @@
             <if test="staffId != null">
                 staff_id = #{staffId},
             </if>
+            <if test="suggestionTitle != null">
+                suggestion_title = #{suggestionTitle}
+            </if>
         </set>
         where id = #{id}
     </update>
@@ -100,4 +107,19 @@
         delete from pzh_meeting_management.suggestion where id = #{id}
     </delete>
 
+    <select id="fuzzyInfo" parameterType="String" resultMap="SuggestionMap">
+        select
+            id, sugg_time, content, person_id, staff_id, suggestion_title
+        from pzh_meeting_management.suggestion
+         <where>
+             <if test="suggestionTitle != null and suggestionTitle != ''">
+                 suggestion_title like concat('%',#{suggestionTitle},'%')
+             </if>
+         </where>
+    </select>
+
+    <select id="counting" resultType="Integer">
+        select count(1)
+        from pzh_meeting_management.suggestion;
+    </select>
 </mapper>

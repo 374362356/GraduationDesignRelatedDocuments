@@ -1,7 +1,7 @@
-package com.pzh.zp.controller;
+package com.pzh.zp.controller.DbController;
 
-import com.pzh.zp.entity.Message;
-import com.pzh.zp.service.MessageService;
+import com.pzh.zp.entity.Reach;
+import com.pzh.zp.service.ReachService;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
@@ -10,19 +10,19 @@ import javax.annotation.Resource;
 
 
 /**
- * 信息表(Message)表控制层
+ * 到会时间表(Reach)表控制层
  *
  * @author makejava
- * @since 2021-01-25 16:45:27
+ * @since 2021-01-25 16:45:31
  */
 @RestController
-@RequestMapping("message")
-public class MessageController {
+@RequestMapping("reach")
+public class ReachController {
     /**
      * 服务对象
      */
     @Resource
-    private MessageService messageService;
+    private ReachService reachService;
 
     /**
      * 通过主键查询单条数据
@@ -31,8 +31,8 @@ public class MessageController {
      * @return 单条数据
      */
     @GetMapping("selectOne")
-    public Message selectOne(Integer id) {
-        return this.messageService.queryById(id);
+    public Reach selectOne(Integer id) {
+        return this.reachService.queryById(id);
     }
 
 }

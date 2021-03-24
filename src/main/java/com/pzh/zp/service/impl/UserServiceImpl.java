@@ -5,7 +5,11 @@ import com.pzh.zp.entity.User;
 import com.pzh.zp.service.UserService;
 import org.springframework.stereotype.Service;
 
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
+
 import javax.annotation.Resource;
+import java.util.Date;
 import java.util.List;
 
 
@@ -51,7 +55,13 @@ public class UserServiceImpl implements UserService {
      * @return 实例对象
      */
     @Override
-    public User insert(User user) {
+    public User insert(User user) throws ParseException {
+        SimpleDateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
+        String format = dateFormat.format(new Date());
+        Date date = dateFormat.parse(format);
+        //插入时间
+        user.setCreateTime(date);
+        user.setStatus(1);      //enum
         this.userDao.insert(user);
         return user;
     }
@@ -63,7 +73,13 @@ public class UserServiceImpl implements UserService {
      * @return 实例对象
      */
     @Override
-    public User update(User user) {
+    public User update(User user) throws ParseException {
+        /*SimpleDateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
+        String format = dateFormat.format(new Date());
+        Date date = dateFormat.parse(format);*/
+        user.setCreateTime(user.getCreateTime());
+        user.setStatus(1);
+
         this.userDao.update(user);
         return this.queryById(user.getId());
     }

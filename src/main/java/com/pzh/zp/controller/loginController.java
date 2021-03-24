@@ -5,7 +5,7 @@
  * ----  -----------  ---------------  ------------------------------------------
  * 1.0   2021-02-05        赵鹏
  ********************************************************************************/
-package com.pzh.zp.controller.loginController;
+package com.pzh.zp.controller;
 
 import com.alibaba.druid.util.StringUtils;
 import com.pzh.zp.VO.ResultVo;
@@ -26,7 +26,6 @@ public class loginController {
 
     //登录密码加密
     //private PasswordEncoder passwordEncoder = new BCryptPasswordEncoder();
-
     @Autowired
     private UserService userService;
 
@@ -37,7 +36,7 @@ public class loginController {
         //密码匹配
         boolean matches = StringUtils.equals(user.getPassword(), queryUser.getPassword());
         //
-        UserVo userVo = new UserVo(queryUser.getId(),queryUser.getUserName(),queryUser.getNickName());
+        UserVo userVo = new UserVo(queryUser.getId(),queryUser.getUserName(),queryUser.getNickName(),queryUser.getStatus());
         String token = JWTUtil.generateToken(userVo);
         System.out.println("========Token=========>"+token);
         HashMap<String, Object> hs = new HashMap<>();

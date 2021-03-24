@@ -100,4 +100,9 @@ public class ConferenceServiceImpl implements ConferenceService {
     public List<Conference> queryAll(Conference conference) {
         return conferenceDao.queryAll(conference);
     }
+
+    @Override
+    public List<String> queryAllName() {
+        return conferenceDao.queryAllName();
+    }
 }
