@@ -2,14 +2,25 @@
   <div class="login_bac">
     <div class="box">
       <div class="img">
-        <img src="@/assets/img/download.jpg" alt />
+        <img src="@/assets/img/rose.jpg" alt />
       </div>
       <el-form label-width="0px" class="form" :model="form" :rules="rules" ref="loginRef">
-        <el-form-item prop="username">
-          <el-input prefix-icon="iconfont icon-user" v-model="form.username"></el-input>
+        <el-form-item prop="userName">
+          <el-input prefix-icon="iconfont icon-user" v-model="form.userName"></el-input>
         </el-form-item>
         <el-form-item prop="password">
           <el-input prefix-icon="iconfont icon-lock_fill" v-model="form.password" type="password"></el-input>
+        </el-form-item>
+        <!-- 角色下拉选择-->
+        <el-form-item prop="roles">
+            <el-select v-model="value" placeholder="请选择">
+              <el-option
+                v-for="item in options"
+                :key="item.value"
+                :label="item.label"
+                :value="item.value">
+              </el-option>
+            </el-select>
         </el-form-item>
         <el-form-item class="itemBtn">
           <el-button type="primary" @click="login">登录</el-button>
@@ -21,16 +32,29 @@
 </template>
 
 <script>
+//import {getNewLists, choiceOthers} from '../../../api/api'
 export default {
   name: "Login",
   data: function () {
     return {
       form: {
-        username: "admin",
+        userName: "admin",
         password: "admin",
       },
+      //headers:{'Access-Control-Expose-Headers':'token'},
+      options: [{
+          value: '选项1',
+          label: '黄金糕'
+        }, {
+          value: '选项2',
+          label: '双皮奶'
+        }, {
+          value: '选项3',
+          label: '蚵仔煎'
+        }],
+        value: '',
       rules: {
-        username: [
+        userName: [
           { required: true, message: "请输用户名称", trigger: "blur" },
           {
             min: 2,
@@ -57,19 +81,21 @@ export default {
     },
     login() {
          this.$axios
-              .post("/login",this.form)
-              .then((response)=> {
-                if(response.data.code==200){
+              .post("login",this.form)
+              .then((res)=> {
+                if(res.data.code===200){
                   this.$message.success('登录成功')
-                  window.sessionStorage.setItem('token',response.data.data.token)
+                  window.localStorage.setItem('token',res.data.data.token)
+                  window.localStorage.setItem('userName',this.form.userName)
+                  alert(res.data.data.token)
 
                   this.$router.push('/home')
                 }else{
                 this.$message.error('登录失败')
                 }
               })
-              .catch((error)=>{
-                this.$message.error(error)
+              .catch(()=>{
+                this.$message.error("Error!")
               });
      /* this.$refs.loginRef.validate((boo) => {
         if (!boo) return;
@@ -128,4 +154,4 @@ export default {
   display: flex;
   justify-content: flex-end;
 }
-</style>>
+</style>

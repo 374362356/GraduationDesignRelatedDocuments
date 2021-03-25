@@ -51,8 +51,8 @@
             </template>
           </el-table-column>
           <el-table-column type="index"></el-table-column>
-          <el-table-column prop="roleName" label="角色名称"> </el-table-column>
-          <el-table-column prop="roleDesc" label="角色概述"> </el-table-column>
+          <el-table-column prop="name" label="角色名称"> </el-table-column>
+          <el-table-column prop="description" label="角色概述"> </el-table-column>
           <el-table-column label="操作" width="300">
             <template slot-scope="scope">
               <el-button
@@ -166,10 +166,19 @@ export default {
   },
   methods: {
     getRolesList() {
-      this.$axios
-        .get('/book/findAll')
+      // this.$axios
+        // .get('power/role_list')
+      let _this = this;
+      this.$axios({
+        method:'get',
+        url:'power/role_list',
+        // url:'list',
+        headers:{
+          'token':window.sessionStorage['token']
+        }
+      })
         .then((res) => {
-          this.tableData = res.data.data
+          _this.tableData = res.data.data
         })
         .catch(() => {
           this.$message.error('获取角色列表失败')

@@ -4,9 +4,15 @@
     <el-header>
       <div>
         <img src alt />
-        <span>电商后台管理系统</span>
+        <span>会议信息管理系统</span>
       </div>
-      <el-button type="info" @click="logout">退出</el-button>
+      <div>
+        <span >欢迎您，{{userName}}</span>
+      </div>
+      <div>
+        <el-button type="primary">设置</el-button>
+        <el-button type="info" @click="logout">退出</el-button>
+      </div>
     </el-header>
     <!-- 内容 -->
     <el-container>
@@ -64,6 +70,12 @@ export default {
                     id:110,
                     order:null,
                     path:"users"
+             },{
+               authName:"参会人员列表",         /* 修改*/ 
+                    children:[],
+                    id:101,
+                    order:null,
+                    path:"person"
              }],
             id: 125,
             order:1,
@@ -86,56 +98,71 @@ export default {
                     order:null,
                     path:"rights"}],
               id:103,
-              order:1,
+              order:2,
               path:"rights"},
         {
-          authName:"商品管理",
+          authName:"信息管理",
           children:[
                 {
-                    authName:"商品列表",
+                    authName:"会议列表",
                     children:[],
                     id:104,
                     order:1,
-                    path:"goods"
+                    path:"conference"
             },{
-                    authName: "分类参数",
+                    authName: "公告管理",
                     children: [],
                     id: 115,
                     order: 2,
-                    path: "params"
+                    path: "news"
             },{
-                    authName: "商品分类",
+                    authName: "建议管理",
                     children: [] ,
                     id: 121,
                     order: 3,
-                    path: "categories"
+                    path: "suggestion"
             }],
                 id: 101,
                 order: 3,
-                path: "goods"
+                path: "conference"
         },
         {
-            authName:"订单管理",
+            authName:"工作信息管理",
             children:[
             {
-                authName: "订单列表",
+                authName: "工作人员列表",
                 children: [],
                 id: 107,
                 order: null,
-                path: "orders"
-            }],
+                path: "staff"
+            },
+            {
+                authName: "会议文件列表",
+                children: [],
+                id: 107,
+                order: null,
+                path: "upload"
+            },
+            ],
             id: 102,
             order: 4,
-            path: "orders"
+            path: "staff"
         },
         {
             authName:"数据统计",
             children: [{
-                authName: "数据报表",
+                authName: "数据报表类型1",
                 children: [],
                 id: 146,
                 order: null,
                 path:"reports"
+            },
+            {
+                authName: "数据报表类型2",
+                children: [],
+                id: 147,
+                order: null,
+                path:"reports2"
             }],
             id:145,
             order:5,
@@ -151,17 +178,22 @@ export default {
       },
       isCollapse: false,
       defaultActive: '',
+      userName:''
     }
   },
   created() {
     this.$axios
       .get('menus')
       .then((res) => {
+        
         if (res.data.meta.status === 200) {
           this.asideList = res.data.data
         }
       })
       .catch((err) => {
+        //取出浏览器里的用户名
+        //alert(localStorage.getItem("userName"))
+        this.userName = localStorage.getItem("userName");
         console.log(err)
       })
   },
@@ -212,5 +244,8 @@ export default {
 }
 .el-main {
   background-color: #eaedf1;
+}
+.el-header button:first-child{
+    margin-right: 2px;
 }
 </style>

@@ -8,6 +8,14 @@ import './axios'
 import './assets/css/global.css'
 import './assets/fonts/iconfont.css'
 
+import VueKindEditor from './plugin/kindeditor.js'
+import '../static/kindeditor/themes/default/default.css'
+import '../static/kindeditor/kindeditor-all-min.js'
+import '../static/kindeditor/lang/zh-CN.js'
+
+import * as echarts from 'echarts';
+Vue.use(VueKindEditor)
+
 Vue.use(ElementUI)
 Vue.config.productionTip = false
 
