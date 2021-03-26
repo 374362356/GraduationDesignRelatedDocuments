@@ -48,7 +48,7 @@
             formatter: "{a} <br/>{b} : {c} ({d}%)",
           },
           legend: {
-            data: this.names,//['开展会议', '公告发布', '用户人数', '建议条数', '工作人员'],
+            data: ['开展会议', '公告发布', '用户人数', '建议条数', '工作人员'],
             left:"center",                              
             top:"bottom",                              
             orient:"horizontal",                        

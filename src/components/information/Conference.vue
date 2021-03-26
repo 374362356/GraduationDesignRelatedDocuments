@@ -230,11 +230,11 @@ export default {
     getConferenceByfuzzy(){
       let _this = this;
         this.$axios({
-          method:'',
+          method:'get',
           url:'conference/fuzzy?name='+this.queryInfo.query+'&place='+this.queryInfo.query+'&host='+this.queryInfo.query
         }).then((res)=>{
          _this.tableData = res.data
-         alert(_this.tableData)   
+         //alert(_this.tableData)   
         }).catch(()=>{
           this.$message.error('模糊查询失败')
         })
@@ -347,7 +347,7 @@ export default {
     },
     //删除会议
     delConference(row) {
-      this.$confirm('此操作将永久删除该角色, 是否继续?', '提示', {
+      this.$confirm('此操作将永久删除该会议, 是否继续?', '提示', {
         confirmButtonText: '确定',
         cancelButtonText: '取消',
         type: 'warning',

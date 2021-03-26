@@ -1,65 +1,120 @@
 <template>
-  <el-container class="home_container">
-    <!-- 头部 -->
-    <el-header>
-      <div>
-        <img src alt />
-        <span>会议信息管理系统</span>
-      </div>
-      <div>
-        <span >欢迎您，{{userName}}</span>
-      </div>
-      <div>
-        <el-button type="primary">设置</el-button>
-        <el-button type="info" @click="logout">退出</el-button>
-      </div>
-    </el-header>
-    <!-- 内容 -->
-    <el-container>
-      <!-- 侧边栏 -->
-      <el-aside :width="isCollapse ? '64px' : '200px'">
-        <div class="toggle-button" @click="toggleCollapse">|||</div>
-        <el-menu
-          background-color="#333744"
-          text-color="#fff"
-          active-text-color="#2020ff"
-          unique-opened
-          :collapse="isCollapse"
-          :collapse-transition="false"
-          router
-          :default-active="defaultActive"
-        >
-          <el-submenu
-            :index="item.id + ''"
-            v-for="item in asideList"
-            :key="item.id"
-          >
-            <template slot="title">
-              <i :class="fontsobj[item.id]"></i>
-              <span>{{ item.authName }}</span>
-            </template>
-            <el-menu-item
-              :index="'/' + subitem.path"
-              v-for="subitem in item.children"
-              :key="subitem.id"
-              @click="secondaryMenu('/' + subitem.path)"
+    <div>
+      <el-container class="home_container">
+        <!-- 头部 -->
+        <el-header>
+          <div>
+            <img src alt />
+            <span>会议信息管理系统</span>
+          </div>
+          <div>
+            <span >欢迎您，{{userName}}</span>
+          </div>
+          <div>
+            <el-button type="primary" @click="fitDialogVisible = true">设置</el-button>
+            <el-button type="info" @click="logout">退出</el-button>
+          </div>
+        </el-header>
+        <!-- 内容 -->
+        <el-container>
+          <!-- 侧边栏 -->
+          <el-aside :width="isCollapse ? '64px' : '200px'">
+            <div class="toggle-button" @click="toggleCollapse">|||</div>
+            <el-menu
+              background-color="#333744"
+              text-color="#fff"
+              active-text-color="#2020ff"
+              unique-opened
+              :collapse="isCollapse"
+              :collapse-transition="false"
+              router
+              :default-active="defaultActive"
             >
-              <i class="el-icon-menu"></i>
-              <span>{{ subitem.authName }}</span>
-            </el-menu-item>
-          </el-submenu>
-        </el-menu>
-      </el-aside>
-      <!-- 主要内容 -->
-      <el-main><router-view></router-view></el-main>
-    </el-container>
-  </el-container>
+              <el-submenu
+                :index="item.id + ''"
+                v-for="item in asideList"
+                :key="item.id"
+              >
+                <template slot="title">
+                  <i :class="fontsobj[item.id]"></i>
+                  <span>{{ item.authName }}</span>
+                </template>
+                <el-menu-item
+                  :index="'/' + subitem.path"
+                  v-for="subitem in item.children"
+                  :key="subitem.id"
+                  @click="secondaryMenu('/' + subitem.path)"
+                >
+                  <i class="el-icon-menu"></i>
+                  <span>{{ subitem.authName }}</span>
+                </el-menu-item>
+              </el-submenu>
+            </el-menu>
+          </el-aside>
+          <!-- 主要内容 -->
+          <el-main><router-view></router-view></el-main>
+        </el-container>
+      </el-container>
+
+    <el-dialog title="设置信息" :visible.sync="fitDialogVisible" width="50%">
+      <el-form :model="ruleForm" status-icon :rules="rules" ref="ruleForm" label-width="100px" class="demo-ruleForm">
+        <el-form-item label="用户名" prop="nickName">
+          <el-input v-model="ruleForm.nickName"></el-input>
+        </el-form-item>
+        <el-form-item label="性别" prop="gender">
+            <el-radio v-model="ruleForm.gender" label="1">男</el-radio>
+            <el-radio v-model="ruleForm.gender" label="0">女</el-radio>
+        </el-form-item>
+        <el-form-item label="密码" prop="password">
+          <el-input type="password" v-model="ruleForm.password" autocomplete="off"></el-input>
+        </el-form-item>
+        <el-form-item label="确认密码" prop="checkpassword">
+          <el-input type="password" v-model="ruleForm.checkpassword" autocomplete="off"></el-input>
+        </el-form-item>
+        <el-form-item label="电话" prop="phone">
+          <el-input v-model="ruleForm.phone"></el-input>
+        </el-form-item>
+        <el-form-item>
+          <el-button type="primary" @click="submitForm('ruleForm')">提交</el-button>
+          <el-button @click="resetForm('ruleForm')">重置</el-button>
+        </el-form-item>
+      </el-form>
+    </el-dialog>
+    </div>
 </template>
 
 <script>
 export default {
   name: 'Home',
   data() {
+    // 验证手机的规则
+      var checkPhone = (rule, value, callback) => {
+        const regMobile = /^(0|86|17951)?(13[0-9]|15[0123456789]|17[678]|18[0-9]14[57])[0-9]{8}$/
+        if (regMobile.test(value)) {
+          return callback()
+        } else {
+          return callback(new Error('请输入正确的手机号'))
+        }
+      }
+      var validatePass = (rule, value, callback) => {
+        if (value === '') {
+          callback(new Error('请输入密码'));
+        } else {
+          if (this.ruleForm.checkpassword !== '') {
+            this.$refs.ruleForm.validateField('checkpassword');
+          }
+          callback();
+        }
+      };
+      var validatePass2 = (rule, value, callback) => {
+        if (value === '') {
+          callback(new Error('请再次输入密码'));
+        } else if (value !== this.ruleForm.password) {
+          callback(new Error('两次输入密码不一致!'));
+        } else {
+          callback();
+        }
+      };
     return {
       asideList:[
             {
@@ -178,8 +233,34 @@ export default {
       },
       isCollapse: false,
       defaultActive: '',
-      userName:''
-    }
+      id:'',
+      userName:'',
+      fitDialogVisible: false,
+      ruleForm: {
+          id: '',
+          nickName:'',
+          gender: '',
+          password: '',
+          checkpassword: '',
+          phone: ''
+        },
+        rules: {
+          nickName: [
+            { required: true,message: '请输入名称', trigger: 'blur' },
+            { min: 2, max: 8, message: '长度在 2 到 8 个字符', trigger: 'blur' }
+          ],
+          password: [
+            { validator: validatePass, trigger: 'blur' }
+          ],
+          checkpassword: [
+            { validator: validatePass2, trigger: 'blur' }
+          ],
+          phone: [
+            { message: '请输入手机号码', trigger: 'blur' },
+            { validator: checkPhone, trigger: 'blur' },
+          ],
+        }
+      };
   },
   created() {
     this.$axios
@@ -195,9 +276,25 @@ export default {
         //alert(localStorage.getItem("userName"))
         this.userName = localStorage.getItem("userName");
         console.log(err)
-      })
+      }),
+      this.getUserInfo()
   },
   methods: {
+    //设置回显用户信息
+    getUserInfo(){
+      let _that = this;
+      this.$axios({
+        method: 'get',
+        url: 'user/getUserInfo?userName='+localStorage.getItem("userName"),
+      }).then((res)=>{
+        _that.ruleForm = res.data.data;
+        //alert(_that.ruleForm)
+      })
+      .catch(()=>{
+          this.$message.error('回显信息失败')
+          //alert(this.userName)
+      })
+    },
     logout() {
       window.sessionStorage.removeItem('token')
       this.$router.push('/login')
@@ -208,6 +305,34 @@ export default {
     secondaryMenu(path) {
       this.defaultActive = path
     },
+    //修改信息
+    submitForm(formName) {
+        this.$refs[formName].validate((valid) => {
+          if (valid) {
+            this.$axios.
+              put('user/update',{       //  15189263748
+                id: this.ruleForm.id,
+                nickName: this.ruleForm.nickName,
+                password: this.ruleForm.password,
+                gender: this.ruleForm.gender,
+                phone: this.ruleForm.phone
+            }).then(()=>{
+              this.$message.success('修改信息成功')
+              this.logout();
+            })
+            .catch(()=>{
+              this.$message.error('修改信息失败')
+            })
+
+          } else {
+            console.log('error submit!!');
+            return false;
+          }
+        });
+      },
+    resetForm(formName) {
+        this.$refs[formName].resetFields();
+      }
   },
 }
 </script>

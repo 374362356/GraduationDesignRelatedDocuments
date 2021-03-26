@@ -195,7 +195,7 @@
            </el-form>
             <span slot="footer" class="dialog-footer">
                 <el-button @click="editDialogVisible = false">取 消</el-button>
-                <el-button type="primary" @click="editRoleSureBtn">确 定</el-button>
+                <el-button type="primary" @click="editStaffSureBtn">确 定</el-button>
             </span>
         </el-dialog>
 
@@ -468,7 +468,7 @@
                 this.editDialogVisible = true
             },
             //编辑人员确定按钮
-            editRoleSureBtn() {
+            editStaffSureBtn() {
                 this.$axios
                     .put('staff/staff_update', this.editStaffForm)
                     .then(() => {
