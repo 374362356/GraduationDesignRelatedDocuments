@@ -16,7 +16,7 @@ import org.springframework.web.multipart.MultipartFile;
 import java.io.IOException;
 import java.io.InputStream;
 
-public class QiuniuUtil {
+public class QiniuUtil {
 
     public static String accessKey = "paWCYuCarLFbl4uv8DATd8KLcbG3clogDOijz5q1";
     public static String secretKey = "Q-f8sDCKMx4JLO2CBtjnCdG6gyxu_PZBrtu1fOJG";
@@ -42,12 +42,12 @@ public class QiuniuUtil {
         return null;
     }
 
-    public static String getHeadUploadUrl(String maker,MultipartFile multipartFile,String id){
+    public static String getHeadUploadUrl(String maker,MultipartFile multipartFile){
         try {
             UploadManager uploadManager = new UploadManager(cfg);
             InputStream is = multipartFile.getInputStream();
             String filepath = maker+"/"
-                    +id+"/"
+                    //+id+"/"
                     +multipartFile.getOriginalFilename();
 
             Response response = uploadManager

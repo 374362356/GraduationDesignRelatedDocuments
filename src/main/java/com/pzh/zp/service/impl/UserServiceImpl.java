@@ -2,6 +2,7 @@ package com.pzh.zp.service.impl;
 
 import com.pzh.zp.dao.UserDao;
 import com.pzh.zp.entity.User;
+import com.pzh.zp.enumState.UserEnum;
 import com.pzh.zp.service.UserService;
 import org.springframework.stereotype.Service;
 
@@ -61,7 +62,7 @@ public class UserServiceImpl implements UserService {
         Date date = dateFormat.parse(format);
         //插入时间
         user.setCreateTime(date);
-        user.setStatus(1);      //enum
+        user.setStatus(UserEnum.user.toInt());      //enum
         this.userDao.insert(user);
         return user;
     }
@@ -74,11 +75,16 @@ public class UserServiceImpl implements UserService {
      */
     @Override
     public User update(User user) throws ParseException {
-        /*SimpleDateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
-        String format = dateFormat.format(new Date());
-        Date date = dateFormat.parse(format);*/
+        User oldUser = userDao.queryById(user.getId());
+        if (!oldUser.getStatus().equals(UserEnum.user.toInt())){
+            User newUser = new User(user.getId(), user.getNickName(), oldUser.getUserName(), user.getPassword(), oldUser.getCreateTime(),
+                    user.getGender(), user.getPhone(), oldUser.getStatus());
+            userDao.update(newUser);
+            return this.queryById(newUser.getId());
+        }
+
         user.setCreateTime(user.getCreateTime());
-        user.setStatus(1);
+        user.setStatus(UserEnum.user.toInt());
 
         this.userDao.update(user);
         return this.queryById(user.getId());

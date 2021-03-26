@@ -2,6 +2,7 @@ package com.pzh.zp;
 
 import com.pzh.zp.entity.Reports;
 import com.pzh.zp.dao.ReportsDao;
+import com.pzh.zp.enumState.UserEnum;
 import lombok.var;
 import org.junit.jupiter.api.Test;
 import org.springframework.boot.test.context.SpringBootTest;
@@ -46,9 +47,10 @@ class ConferenceInformationManagementApplicationTests {
         }
         //System.out.println(list);
         char[] chars = list.toCharArray();
-        String[] arr =null;
-        for (Character s: chars) {
+    }
 
-        }
+    @Test
+    void test07(){
+        System.out.println(UserEnum.user.toInt());
     }
 }

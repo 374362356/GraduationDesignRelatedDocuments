@@ -97,5 +97,18 @@
         where id = #{id}
     </delete>
 
+    <select id="fuzzyFile" parameterType="String" resultMap="FileuploadMap">
+        select id,
+               file_name,
+               file_url,
+               create_time
+            from pzh_meeting_management.fileupload
+        <where>
+            <if test="fileName != null and fileName != ''">
+                file_name like concat('%',#{fileName},'%')
+            </if>
+        </where>
+    </select>
+
 </mapper>
 

@@ -79,5 +79,7 @@ public interface FileuploadDao {
      */
     int deleteById(Integer id);
 
+    Fileupload fuzzyFile(String name);
+
 }
 

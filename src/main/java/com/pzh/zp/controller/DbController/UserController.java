@@ -24,6 +24,7 @@ public class UserController {
     /**
      * 增加一个标识字段表明是管理员还是用户，注册时默认是用户
      * 管理员通过页面的按钮来决定用户状态，是否冻结
+     * 插入判断用户账号唯一
      */
 
     /**
@@ -109,5 +110,10 @@ public class UserController {
         //System.out.println("--------------------->"+user);
         User update = userService.update(user);
         return ResultVo.success(update);
+    }
+
+    @GetMapping("/getUserInfo")
+    public ResultVo getUserInfo(@RequestParam String userName){
+        return ResultVo.success(userService.queryByuserName(userName));
     }
 }

@@ -22,6 +22,7 @@ import java.util.List;
 public class NewsController {
     /**
      * 数据库字段staff_id变更，标识是哪个管理员发布的公告
+     * 定时发布公告存在bug
      */
 
     /**

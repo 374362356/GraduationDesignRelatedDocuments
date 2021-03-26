@@ -3,9 +3,14 @@ package com.pzh.zp.service.impl;
 import com.pzh.zp.dao.FileuploadDao;
 import com.pzh.zp.entity.Fileupload;
 import com.pzh.zp.service.FileuploadService;
+import com.pzh.zp.utils.QiniuUtil;
 import org.springframework.stereotype.Service;
+import org.springframework.web.multipart.MultipartFile;
 
 import javax.annotation.Resource;
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
+import java.util.Date;
 import java.util.List;
 
 /**
@@ -45,13 +50,21 @@ public class FileuploadServiceImpl implements FileuploadService {
     /**
      * 新增数据
      *
-     * @param fileupload 实例对象
-     * @return 实例对象
+     * @param fileName
+     * @param files
+     * @return
+     * @throws ParseException
      */
     @Override
-    public Fileupload insert(Fileupload fileupload) {
-        this.fileuploadDao.insert(fileupload);
-        return fileupload;
+    public Fileupload insert(String fileName,MultipartFile files) throws ParseException {
+        SimpleDateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
+        String format = dateFormat.format(new Date());
+        Date date = dateFormat.parse(format);
+
+        String uploadUrl = QiniuUtil.getUploadUrl(files);
+        Fileupload file = new Fileupload(0, fileName, uploadUrl, date);
+        this.fileuploadDao.insert(file);
+        return file;
     }
 
     /**
@@ -73,7 +86,23 @@ public class FileuploadServiceImpl implements FileuploadService {
      * @return 是否成功
      */
     @Override
-    public boolean deleteById(Integer id) {
-        return this.fileuploadDao.deleteById(id) > 0;
+    public boolean deleteById(Integer id) {         //也删除了远程
+        Fileupload fileupload = fileuploadDao.queryById(id);
+        //这的key是文件名？
+        String key=null;
+        if(fileupload.getFileUrl().length()>0){
+            key = fileupload.getFileUrl().substring(QiniuUtil.TheHeaders.length());
+            QiniuUtil.delete(key);
+        }
+        System.out.println("=====删除了远程文件========>"+key);
+        if(key!=null){
+            return this.fileuploadDao.deleteById(id) > 0;
+        }
+        return false;
+    }
+
+    @Override
+    public Fileupload fuzzyFile(String name) {
+        return fileuploadDao.fuzzyFile(name);
     }
 }

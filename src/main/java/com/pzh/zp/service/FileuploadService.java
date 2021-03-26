@@ -1,7 +1,9 @@
 package com.pzh.zp.service;
 
 import com.pzh.zp.entity.Fileupload;
+import org.springframework.web.multipart.MultipartFile;
 
+import java.text.ParseException;
 import java.util.List;
 
 /**
@@ -32,10 +34,12 @@ public interface FileuploadService {
     /**
      * 新增数据
      *
-     * @param fileupload 实例对象
-     * @return 实例对象
+     * @param fileName
+     * @param files
+     * @return
+     * @throws ParseException
      */
-    Fileupload insert(Fileupload fileupload);
+    Fileupload insert(String fileName, MultipartFile files) throws ParseException;
 
     /**
      * 修改数据
@@ -53,4 +57,5 @@ public interface FileuploadService {
      */
     boolean deleteById(Integer id);
 
+    Fileupload fuzzyFile(String name);
 }
