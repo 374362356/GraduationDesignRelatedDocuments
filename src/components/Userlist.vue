@@ -35,15 +35,26 @@
           <el-table :data="userList" style="width: 100%" border stripe>
             <el-table-column type="index"></el-table-column>
             <el-table-column prop="id" label="id" width="80"></el-table-column>
-            <el-table-column prop="nickName" label="用户名" width="120"></el-table-column>
+            <el-table-column prop="nickName" label="用户名" width="100"></el-table-column>
             <el-table-column prop="userName" label="账号" width="120"></el-table-column>
             <el-table-column prop="gender" label="性别" width="80" :formatter="stateFormat"></el-table-column>
-            <el-table-column prop="phone" label="电话" width="140"> </el-table-column>
+            <el-table-column prop="phone" label="电话" width="130"> </el-table-column>
             <el-table-column prop="createTime" label="创建时间" width="160"> </el-table-column>
-            <el-table-column prop="roles" label="角色"></el-table-column>
-            <el-table-column label="状态">
+            <el-table-column prop="roles" label="角色" width="80"></el-table-column>
+            <el-table-column label="状态" width="140">
               <template slot-scope="scope">
-                <el-switch v-model="scope.row.mg_state" @change="userStateChange(scope.row)"></el-switch>
+                <!-- <el-switch v-model="value" @change="userStateChange(scope.row.id)"></el-switch> -->
+                <el-switch
+                    v-model="scope.row.status"
+                    :active-value="1"
+                    :inactive-value="-1"
+                    @change="userStateChange($event, scope.row)"
+                    active-color="#13ce66"
+                    inactive-color="#ff4949"
+                    active-text="活跃"
+                    inactive-text="冻结"
+                        >
+                </el-switch>
               </template>
             </el-table-column>
             <el-table-column label="操作" width="210">
@@ -174,7 +185,6 @@ export default {
       }
     }
     return {
-
       queryInfo: {
         query: '',
         pagenum: 1,
@@ -273,15 +283,17 @@ export default {
       this.queryInfo.pagenum = newpage
       this.getUserList()
     },
-    userStateChange(userinfo) {
+    //
+    userStateChange($event,row) {
+        alert(JSON.stringify(row))
       this.$axios
-        .put(`users/${userinfo.id}/state/${userinfo.mg_state}`)
-        .then(() => {
+      .put('user/update',row)
+        .then((res) => {
+          alert(JSON.stringify(res.data.data))
           this.$message.success('更新状态成功')
         })
         .catch((res) => {
-          userinfo.mg_state = !userinfo.mg_state
-          this.$message.error(res.meg)
+          this.$message.error(res.msg)
         })
     },
     addDialogClose() {

@@ -194,7 +194,7 @@ export default {
             {
                 authName: "会议文件列表",
                 children: [],
-                id: 107,
+                id: 108,
                 order: null,
                 path: "upload"
             },

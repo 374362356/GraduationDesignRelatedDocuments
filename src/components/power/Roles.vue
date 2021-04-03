@@ -51,8 +51,17 @@
             </template>
           </el-table-column>
           <el-table-column type="index"></el-table-column>
-          <el-table-column prop="name" label="角色名称"> </el-table-column>
-          <el-table-column prop="description" label="角色概述"> </el-table-column>
+          <el-table-column prop="id" label="编号" width="100"></el-table-column>
+          <el-table-column prop="rname" label="角色名称" width="120"> </el-table-column>
+          <el-table-column prop="description" label="角色概述" width="140"> </el-table-column>
+          <el-table-column prop="createTime" label="创建时间" width="180"></el-table-column>
+          <el-table-column prop="status" label="状态" width="150"> 
+            <template slot-scope="scope">
+                  <el-tag v-if="scope.row.status === 0">角色冻结</el-tag>
+                  <el-tag type="success" v-else-if="scope.row.status === 1">角色活跃</el-tag>
+                  <el-tag type="warning" v-else>无状态</el-tag>
+            </template>
+          </el-table-column>
           <el-table-column label="操作" width="300">
             <template slot-scope="scope">
               <el-button
@@ -108,10 +117,10 @@
     <el-dialog title="提示" :visible.sync="addDialogVisible" width="30%">
       <el-form ref="addRoleRef" :model="addRoleForm" label-width="80px">
         <el-form-item label="角色名称">
-          <el-input v-model="addRoleForm.roleName"></el-input>
+          <el-input v-model="addRoleForm.rname"></el-input>
         </el-form-item>
         <el-form-item label="角色概述">
-          <el-input v-model="addRoleForm.roleDesc"></el-input>
+          <el-input v-model="addRoleForm.description"></el-input>
         </el-form-item>
       </el-form>
       <span slot="footer" class="dialog-footer">
@@ -124,10 +133,10 @@
     <el-dialog title="提示" :visible.sync="editDialogVisible" width="30%">
       <el-form ref="addRoleRef" :model="editRoleForm" label-width="80px">
         <el-form-item label="角色名称">
-          <el-input v-model="editRoleForm.roleName"></el-input>
+          <el-input v-model="editRoleForm.rname"></el-input>
         </el-form-item>
         <el-form-item label="角色概述">
-          <el-input v-model="editRoleForm.roleDesc"></el-input>
+          <el-input v-model="editRoleForm.description"></el-input>
         </el-form-item>
       </el-form>
       <span slot="footer" class="dialog-footer">
@@ -146,6 +155,8 @@ export default {
   },
   data() {
     return {
+      offset: 0,
+      limit: 5,
       tableData: [],
       dialogVisible: false,
       rightsList: [],
@@ -157,8 +168,8 @@ export default {
       roleId: 0,
       addDialogVisible: false,
       addRoleForm: {
-        roleName: '',
-        roleDesc: '',
+        rname: '',
+        description: '',
       },
       editRoleForm: {},
       editDialogVisible: false,
@@ -166,12 +177,10 @@ export default {
   },
   methods: {
     getRolesList() {
-      // this.$axios
-        // .get('power/role_list')
       let _this = this;
       this.$axios({
         method:'get',
-        url:'power/role_list',
+        url:'role/role_list?offset='+this.offset+'&limit='+this.limit,
         // url:'list',
         headers:{
           'token':window.sessionStorage['token']
@@ -270,7 +279,7 @@ export default {
       })
         .then(() => {
           this.$axios
-            .delete('roles/' + row.id)
+            .delete('role/role_del?id=' + row.id)
             .then(() => {
               this.getRolesList()
               this.$message.success('删除成功')
@@ -288,22 +297,25 @@ export default {
     },
     //添加角色
     addRole() {
-      this.$axios.post('roles', this.addRoleForm).then(() => {
+      this.$axios.post('role/role_insert', this.addRoleForm)
+      .then(() => {
         this.getRolesList()
         this.$message.success('添加角色成功')
+      }).catch(()=>{
+         this.$message.error('添加角色失败')
       })
       this.addDialogVisible = false
     },
     //编辑角色
     editRole(row) {
-      this.editRoleForm = { roleName: row.roleName, roleDesc: row.roleDesc }
-      this.editRoleId = row.id
+      this.editRoleForm = {id: row.id, rname: row.rname, description: row.description}
+      //this.editRoleId = row.id
       this.editDialogVisible = true
     },
     //编辑角色确定按钮
     editRoleSureBtn() {
       this.$axios
-        .put('roles/' + this.editRoleId, this.editRoleForm)
+        .put('role/role_update', this.editRoleForm)
         .then(() => {
           this.getRolesList()
           this.$message.success('编辑成功')

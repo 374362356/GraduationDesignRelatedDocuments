@@ -5,8 +5,8 @@
         <img src="@/assets/img/rose.jpg" alt />
       </div>
       <el-form label-width="0px" class="form" :model="form" :rules="rules" ref="loginRef">
-        <el-form-item prop="userName">
-          <el-input prefix-icon="iconfont icon-user" v-model="form.userName"></el-input>
+        <el-form-item prop="username">
+          <el-input prefix-icon="iconfont icon-user" v-model="form.username"></el-input>
         </el-form-item>
         <el-form-item prop="password">
           <el-input prefix-icon="iconfont icon-lock_fill" v-model="form.password" type="password"></el-input>
@@ -38,7 +38,7 @@ export default {
   data: function () {
     return {
       form: {
-        userName: "admin",
+        username: "admin",
         password: "admin",
       },
       //headers:{'Access-Control-Expose-Headers':'token'},
@@ -54,7 +54,7 @@ export default {
         }],
         value: '',
       rules: {
-        userName: [
+        username: [
           { required: true, message: "请输用户名称", trigger: "blur" },
           {
             min: 2,
@@ -68,7 +68,7 @@ export default {
           {
             min: 4,
             max: 12,
-            message: "长度在 6 到 12 个字符",
+            message: "长度在 4 到 12 个字符",
             trigger: "blur",
           },
         ],
@@ -76,27 +76,51 @@ export default {
     };
   },
   methods: {
+    //json转字符串格式
+     trans:function(user){
+        let url = "";
+        for (let k in user) {
+            let value = user[k] !== undefined ? user[k] : "";
+            url += `&${
+        
+        k}=${
+        encodeURIComponent(value)}`;
+        }
+        return url ? url.substring(1):"";
+    },
     reset() {
       this.$refs.loginRef.resetFields();
     },
     login() {
-         this.$axios
-              .post("login",this.form)
-              .then((res)=> {
-                if(res.data.code===200){
-                  this.$message.success('登录成功')
-                  window.localStorage.setItem('token',res.data.data.token)
-                  window.localStorage.setItem('userName',this.form.userName)
-                  alert(res.data.data.token)
+      let userdata = this.trans(this.form);
+      this.$refs.loginRef.validate((boo)=>{
+        if(boo){
+          this.$axios
+                .post('login',this.form)
+                .then((res)=> {
+                  //alert(JSON.stringify(this.form))
+                  if(res.data.code===200){
+                    this.$message.success('登录成功')
+                    window.localStorage.setItem('token',res.data.data.token)
+                    window.localStorage.setItem('username',this.form.username)
+                    alert(res.data.data.token)
 
-                  this.$router.push('/home')
-                }else{
-                this.$message.error('登录失败')
-                }
-              })
-              .catch(()=>{
-                this.$message.error("Error!")
-              });
+                    this.$router.push('/home')
+                  }else{
+                  this.$message.error('登录失败')
+                  }
+                  //this.$router.push('/home')
+                })
+                .catch(()=>{
+                  this.$message.error("Error!")
+                });
+
+        }else{
+          this.$message.error("Error!")
+          return;
+        }
+      })
+      
      /* this.$refs.loginRef.validate((boo) => {
         if (!boo) return;
 

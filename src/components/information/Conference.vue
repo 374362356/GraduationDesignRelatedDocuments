@@ -105,16 +105,10 @@
 
     <!-- 添加会议 -->
     <el-dialog title="提示" :visible.sync="addDialogVisible" width="60%">
-      <el-form ref="addRoleRef" :model="addConferenceForm" label-width="80px">
-        <el-form-item label="会议名称">
+      <el-form ref="addRoleRef" :model="addConferenceForm" :rules="rules" label-width="80px">
+        <el-form-item label="会议名称" prop="name">
           <el-input v-model="addConferenceForm.name"></el-input>
         </el-form-item>
-        <!--<el-form-item label="开始时间">
-          <el-input v-model="addConferenceForm.startTime"></el-input>
-        </el-form-item>
-        <el-form-item label="结束时间">
-          <el-input v-model="addConferenceForm.endTime"></el-input>
-        </el-form-item>-->
         <el-form-item label="开始时间">
           <el-col :span="11">
             <el-date-picker type="date" placeholder="选择日期" v-model="addConferenceForm.startTime" style="width: 100%;" value-format="yyyy-MM-dd HH:mm:ss"></el-date-picker>
@@ -133,7 +127,7 @@
             <el-time-picker placeholder="选择时间" v-model="addConferenceForm.endTime" style="width: 100%;" value-format="yyyy-MM-dd HH:mm:ss"></el-time-picker>
           </el-col>
         </el-form-item>
-        <el-form-item label="举办地点">
+        <el-form-item label="举办地点" prop="place">
           <el-input v-model="addConferenceForm.place"></el-input>
         </el-form-item>
         <el-form-item label="举办方">
@@ -224,6 +218,12 @@ export default {
       },
       editConferenceForm: {},
       editDialogVisible: false,
+      rules: {
+        name: [
+          { required: true, message: '请输入用户名', trigger: 'blur' },
+        ],
+        place: [{ required: true, message: '请输入地点', trigger: 'blur' }],
+      },
     }
   },
   methods: {
@@ -375,9 +375,13 @@ export default {
       alert(JSON.stringify(this.addConferenceForm))
       this.$axios.post('conference/conference_insert', this.addConferenceForm
       
-      ).then(() => {
-        this.getConferenceList()
-        this.$message.success('添加会议成功')
+      ).then((res) => {
+        if(res.data.code==200){
+          this.$message.success('添加会议成功')
+        }else{
+          this.$message.success('添加会议失败')
+        }
+          this.getConferenceList()
       })
       this.addDialogVisible = false
     },

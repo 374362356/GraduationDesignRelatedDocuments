@@ -44,7 +44,7 @@
               <el-table-column prop="contentTitle" label="公告标题" width="180"> </el-table-column>
               <el-table-column prop="newTime" label="发布时间" width="150"> </el-table-column>
               <el-table-column prop="content" label="发布内容" width="300"> </el-table-column>
-              <el-table-column prop="stateId" label="发布人" width="140"></el-table-column>
+              <el-table-column prop="publishName" label="发布人" width="140"></el-table-column>
               <el-table-column prop="product.status" label="状态" width="120"> </el-table-column>
               <el-table-column label="操作" width="300">
                 <template slot-scope="scope">
@@ -78,7 +78,7 @@
             </el-form>
               <div><el-button type="primary" round @click="sub()">提交<i class="el-icon-upload el-icon--right"></i></el-button></div>
           </el-tab-pane>
-          <el-tab-pane label="角色管理" name="third">角色管理</el-tab-pane>
+          <el-tab-pane label="内容暂定" name="third">这里没有内容</el-tab-pane>
           <el-tab-pane label="定时任务补偿" name="fourth">
               <div class="block">
                 <span class="demonstration">定时任务发布：</span>
@@ -119,7 +119,7 @@
           <el-input v-model="editNewsForm.content"></el-input>
         </el-form-item>
         <el-form-item label="发布人员">
-          <el-input v-model="editNewsForm.stateId"></el-input>
+          <el-input v-model="editNewsForm.publishId"></el-input>
         </el-form-item>
         <el-form-item label="公告概述">
           <el-input v-model="editNewsForm.roleDesc"></el-input>
@@ -177,8 +177,8 @@ export default {
     }
   },
   created() {
-    //this.getCateList()
     this.getNewsList();
+    //this.getPublishName();
   },
   methods: {
     subOnTime(){
@@ -189,7 +189,7 @@ export default {
              content: this.editorTextUpload.content,
              timeSelect: this.timing
           }).then((res)=>{
-          alert(JSON.stringify(res.data.data.stateId))
+          alert(JSON.stringify(res.data.data.publishId))
           this.$message.success('发布公告成功')
           this.getNewsList();
         })
@@ -208,7 +208,7 @@ export default {
                 'token':window.sessionStorage.getItem("token")
               }
         }).then((res)=>{
-          alert(JSON.stringify(res.data.data.stateId))
+          alert(JSON.stringify(res.data.data.publishId))
           this.$message.success('发布公告成功')
           this.getNewsList();
         })
@@ -217,21 +217,20 @@ export default {
         })
       },
       //得到发布公告人员名
-    getPublishName(id,stateId){
-      let _this = this;
+    getPublishName(publishId){
       this.$axios({
         method:'get',
-        url:'news/findPublishName?id='+_this.id+'&stateId='+_this.stateId,
+        url:'news/findPublishName?publishId='+publishId,
         headers:{
           'token':window.sessionStorage['token']
         }
       }).then((res) => {
-          //_this.tableData.stateId = res.data
+          //_this.tableData.publishId = res.data
           alert(JSON.stringify(res.data))
         })
         .catch(() => {
           this.$message.error('获取名字失败')
-          alert(_this.getName.id+"-->"+_this.getName.stateId)
+          alert(_this.getName.id+"-->"+_this.getName.publishId)
         })
       },
     handleClick(tab, event) {
@@ -265,7 +264,7 @@ export default {
       this.editNewsForm = { contentTitle: row.contentTitle,
                                   newTime: row.newTime,
                                   content: row.content,
-                                  stateId: row.stateId,
+                                  publishId: row.publishId,
                                   roleDesc: row.roleDesc }
       this.newId = row.id
       this.editDialogVisible = true
