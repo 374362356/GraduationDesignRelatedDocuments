@@ -1,5 +1,6 @@
 package com.pzh.zp.controller.DbController;
 
+import com.pzh.zp.VO.NewsVo;
 import com.pzh.zp.VO.ResultVo;
 import com.pzh.zp.entity.News;
 import com.pzh.zp.service.NewsService;
@@ -23,6 +24,7 @@ public class NewsController {
     /**
      * 数据库字段staff_id变更，标识是哪个管理员发布的公告
      * 定时发布公告存在bug
+     * 判断公告只有管理员能发布
      */
 
     /**
@@ -48,7 +50,7 @@ public class NewsController {
      * @return
      */
     @GetMapping("/findAll")
-    public List<News> findAll(){
+    public List<NewsVo> findAll(){
         return  newsService.queryAll(null);
     }
 
@@ -76,8 +78,8 @@ public class NewsController {
     }
 
     @GetMapping("/findPublishName")
-    public ResultVo findPublishName(@RequestParam Integer id, @RequestParam Integer stateId){
-        return ResultVo.success(newsService.findPublishName(id, stateId));
+    public ResultVo findPublishName(@RequestParam Integer publishId){
+        return ResultVo.success(newsService.findPublishName(publishId));
     }
 
     @PostMapping("/news_insert")

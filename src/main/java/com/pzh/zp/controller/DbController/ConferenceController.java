@@ -23,6 +23,8 @@ public class ConferenceController {
      * 会议的在结束时间后便不能选择的问题
      * 会议的容纳人数上限
      * 前端会议添加空值判断
+     * 会议地点和名字不能重复选择
+     * 会议状态，显示当前是否在开展
      */
 
 
@@ -75,6 +77,9 @@ public class ConferenceController {
     public ResultVo insertConference(@RequestBody Conference conference){
         System.out.println("========add=======>"+conference);
         Conference insert = conferenceService.insert(conference);
+        if (insert==null){
+            return ResultVo.fail("新增失败，会议时间冲突");
+        }
         return ResultVo.success(insert);
     }
 

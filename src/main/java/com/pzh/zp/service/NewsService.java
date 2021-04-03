@@ -1,5 +1,6 @@
 package com.pzh.zp.service;
 
+import com.pzh.zp.VO.NewsVo;
 import com.pzh.zp.entity.News;
 import com.pzh.zp.entity.Staff;
 import com.pzh.zp.entity.User;
@@ -64,7 +65,7 @@ public interface NewsService {
      * @param news 实例对象
      * @return 对象列表
      */
-    List<News> queryAll(News news);
+    List<NewsVo> queryAll(News news);
 
     /**
      * 模糊查询
@@ -75,7 +76,12 @@ public interface NewsService {
      */
     List<News> fuzzySearch(String newTime, String contentTitle);
 
-    User findPublishName(Integer id, Integer stateId);
+    /**
+     *
+     * @param publishId
+     * @return
+     */
+    List<User> findPublishName(Integer publishId);
 
     String InsertTiming(HttpServletRequest request,News news,String timeSelect) throws ParseException;
 }

@@ -1,5 +1,6 @@
 package com.pzh.zp.service.impl;
 
+import com.pzh.zp.VO.ResultVo;
 import com.pzh.zp.dao.ConferenceDao;
 import com.pzh.zp.entity.Conference;
 import com.pzh.zp.service.ConferenceService;
@@ -7,6 +8,7 @@ import org.springframework.stereotype.Service;
 
 import javax.annotation.Resource;
 import java.util.List;
+import java.util.stream.Collectors;
 
 
 /**
@@ -51,6 +53,20 @@ public class ConferenceServiceImpl implements ConferenceService {
      */
     @Override
     public Conference insert(Conference conference) {
+        List<String> collect = conferenceDao.queryAll(null).stream().map(Conference::getPlace).collect(Collectors.toList());
+        if(collect.contains(conference.getPlace())){
+            //根据地点找出已有的会议，判断会议时间是都重合
+            List<Conference> conferences = conferenceDao.findConferenceByplace(conference.getPlace());
+            for (Conference con : conferences) {
+                if (conference.getStartTime().after(con.getEndTime())||conference.getEndTime().before(con.getStartTime())){
+                     conferenceDao.insert(conference);
+                     break;
+                }else {
+                    return null;
+                }
+
+            }
+        }
         this.conferenceDao.insert(conference);
         return conference;
     }

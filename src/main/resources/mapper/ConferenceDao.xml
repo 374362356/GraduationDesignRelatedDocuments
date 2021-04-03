@@ -144,4 +144,15 @@
         select count(1)
         from pzh_meeting_management.conference;
     </select>
+
+    <!--通过地点-->
+    <select id="findConferenceByplace" resultMap="ConferenceMap">
+        select *
+        from pzh_meeting_management.conference
+        <where>
+        <if test="place!=null and place!=''">
+             place = #{place}
+        </if>
+        </where>
+    </select>
 </mapper>

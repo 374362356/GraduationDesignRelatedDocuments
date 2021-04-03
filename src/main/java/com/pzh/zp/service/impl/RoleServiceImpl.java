@@ -2,10 +2,14 @@ package com.pzh.zp.service.impl;
 
 import com.pzh.zp.dao.RoleDao;
 import com.pzh.zp.entity.Role;
+import com.pzh.zp.enumState.UserEnum;
 import com.pzh.zp.service.RoleService;
 import org.springframework.stereotype.Service;
 
 import javax.annotation.Resource;
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
+import java.util.Date;
 import java.util.List;
 
 
@@ -51,7 +55,12 @@ public class RoleServiceImpl implements RoleService {
      * @return 实例对象
      */
     @Override
-    public Role insert(Role role) {
+    public Role insert(Role role) throws ParseException {
+        SimpleDateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
+        String format = dateFormat.format(new Date());
+        Date date = dateFormat.parse(format);
+        role.setCreateTime(date);
+        role.setStatus(UserEnum.UNFROZEN.getKey());
         this.roleDao.insert(role);
         return role;
     }
@@ -64,6 +73,9 @@ public class RoleServiceImpl implements RoleService {
      */
     @Override
     public Role update(Role role) {
+        Role byId = roleDao.queryById(role.getId());
+        role.setCreateTime(byId.getCreateTime());
+        role.setStatus(UserEnum.UNFROZEN.getKey());
         this.roleDao.update(role);
         return this.queryById(role.getId());
     }

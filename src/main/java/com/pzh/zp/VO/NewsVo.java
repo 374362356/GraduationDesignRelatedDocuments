@@ -1,29 +1,16 @@
-package com.pzh.zp.entity;
+package com.pzh.zp.VO;
 
 import com.fasterxml.jackson.annotation.JsonFormat;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
-import java.io.Serializable;
 import java.util.Date;
 
-/**
- * 公告表(News)实体类
- *
- * @author makejava
- * @since 2021-01-25 16:45:27
- */
 @Data
 @AllArgsConstructor
 @NoArgsConstructor
-public class News implements Serializable {
-    private static final long serialVersionUID = -20161982728838032L;
-
-    public News(String contentTitle,String content){
-        this.contentTitle=contentTitle;
-        this.content=content;
-    }
+public class NewsVo {
     private Integer id;
     /**
      * 发布时间
@@ -39,8 +26,7 @@ public class News implements Serializable {
      */
     private String content;
     /**
-     * 发布人id
+     * 发布人名
      */
-    private Integer publishId;
-
+    private String publishName;
 }

@@ -3,7 +3,6 @@ package com.pzh.zp.utils;
 import com.pzh.zp.VO.ResultVo;
 
 public final class ResultVoUtil {
-
     public static ResultVo success(Object data){
         ResultVo<Object> resultVo = new ResultVo<>();
         resultVo.setCode(200);

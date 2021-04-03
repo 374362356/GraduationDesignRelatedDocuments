@@ -97,5 +97,9 @@ public interface UserDao {
      */
     User queryByuserName(String userName);
 
+    /**
+     *
+     * @return
+     */
     Integer counting();
 }

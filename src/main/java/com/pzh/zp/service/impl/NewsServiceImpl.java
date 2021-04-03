@@ -1,5 +1,6 @@
 package com.pzh.zp.service.impl;
 
+import com.pzh.zp.VO.NewsVo;
 import com.pzh.zp.dao.NewsDao;
 import com.pzh.zp.entity.News;
 import com.pzh.zp.entity.Staff;
@@ -15,10 +16,9 @@ import javax.annotation.Resource;
 import javax.servlet.http.HttpServletRequest;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
-import java.util.Date;
-import java.util.List;
-import java.util.Timer;
-import java.util.TimerTask;
+import java.util.*;
+import java.util.stream.Collectors;
+import java.util.stream.Stream;
 
 
 /**
@@ -70,9 +70,9 @@ public class NewsServiceImpl implements NewsService {
         news.setNewTime(date);
 
         if(!news.getContentTitle().isEmpty() && !"".equals(news.getContentTitle())){
-            Claims token = JWTUtil.getClaimByToken(request.getHeader("token"));
-            Integer status = (Integer) token.get("id");
-            news.setStateId(status);
+            //Claims token = JWTUtil.getClaimByToken(request.getHeader("token"));
+            //Integer status = (Integer) token.get("id");
+            //news.setStateId(status);
             this.newsDao.insert(news);
             System.out.println("======>"+news);
             return news;
@@ -127,8 +127,19 @@ public class NewsServiceImpl implements NewsService {
      * @return 对象列表
      */
     @Override
-    public List<News> queryAll(News news) {
-        return newsDao.queryAll(news);
+    public List<NewsVo> queryAll(News news) {
+        List<News> newsList = newsDao.queryAll(news);
+        Map<Integer, Integer> idAndPid = newsList.stream().collect(Collectors.toMap(News::getId, News::getPublishId));
+        List<NewsVo> newsVos = null;
+        for (News n : newsList) {
+            Integer publishId = idAndPid.get(n.getId());
+            List<User> user = newsDao.findPublishName(publishId);
+            List<User> collect = user.stream().distinct().collect(Collectors.toList());
+            for (User u : collect){
+                newsVos.add(new NewsVo(n.getId(), n.getNewTime(), n.getContentTitle(), n.getContent(), u.getUserName()));
+            }
+        }
+        return newsVos;
     }
 
     /**
@@ -143,8 +154,8 @@ public class NewsServiceImpl implements NewsService {
     }
 
     @Override
-    public User findPublishName(Integer id, Integer stateId) {
-        return newsDao.findPublishName(id,stateId);
+    public List<User> findPublishName(Integer publishId) {
+        return newsDao.findPublishName(publishId);
     }
 
 }

@@ -14,9 +14,7 @@ import com.pzh.zp.entity.User;
 import com.pzh.zp.service.UserService;
 import com.pzh.zp.utils.JWTUtil;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
 import javax.servlet.http.HttpServletResponse;
 import java.util.HashMap;
@@ -24,14 +22,12 @@ import java.util.HashMap;
 @RestController
 public class loginController {
 
-    //登录密码加密
-    //private PasswordEncoder passwordEncoder = new BCryptPasswordEncoder();
     @Autowired
     private UserService userService;
 
     @PostMapping("/login")
     public ResultVo login(@RequestBody User user, HttpServletResponse response){
-        System.out.println("==========>"+user.getUserName());
+        /*System.out.println("==========>"+user.getUserName());
         User queryUser = userService.queryByuserName(user.getUserName());
         //密码匹配
         boolean matches = StringUtils.equals(user.getPassword(), queryUser.getPassword());
@@ -47,6 +43,7 @@ public class loginController {
             response.addHeader("Access-Control-Expose-Headers","token");
             return ResultVo.success(hs);
         }
-        return ResultVo.fail("登录失败");
+        return ResultVo.fail("登录失败");*/
+        return ResultVo.success(null);
     }
 }

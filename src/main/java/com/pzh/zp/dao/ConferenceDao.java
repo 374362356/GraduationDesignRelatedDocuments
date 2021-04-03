@@ -98,5 +98,11 @@ public interface ConferenceDao {
      */
     int queryIdByName(String name);
 
+    /**
+     *
+     * @return
+     */
     Integer counting();
+
+    List<Conference> findConferenceByplace(String place);
 }

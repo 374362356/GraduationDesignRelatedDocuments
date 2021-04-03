@@ -1,13 +1,14 @@
 package com.pzh.zp.controller.DbController;
 
+import com.pzh.zp.VO.ResultVo;
 import com.pzh.zp.entity.Permission;
 import com.pzh.zp.service.PermissionService;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import com.pzh.zp.service.impl.PermissionServiceImpl;
+import org.springframework.web.bind.annotation.*;
 
 import javax.annotation.Resource;
-
+import java.text.ParseException;
+import java.util.List;
 
 
 /**
@@ -36,4 +37,28 @@ public class PermissionController {
         return this.permissionService.queryById(id);
     }
 
+    @GetMapping("/permission_list")
+    public ResultVo findAll(@RequestParam int offset,@RequestParam int limit){
+        return ResultVo.success(permissionService.queryAllByLimit(offset, limit));
+    }
+
+    @PostMapping("/permission_insert")
+    public ResultVo addPermission(@RequestBody Permission permission) throws ParseException {
+        return ResultVo.success(permissionService.insert(permission));
+    }
+
+    @PutMapping("/permission_update")
+    public ResultVo updatePermission(@RequestBody Permission permission){
+        return  ResultVo.success(permissionService.update(permission));
+    }
+
+    @DeleteMapping("/permission_del")
+    public  ResultVo delPermission(@RequestParam Integer id){
+        return ResultVo.success(permissionService.deleteById(id));
+    }
+
+    @GetMapping("/fuzzy")
+    public List queryFuzzy(@RequestParam String pName,@RequestParam String path){
+        return permissionService.queryFuzzy(pName, path);
+    }
 }

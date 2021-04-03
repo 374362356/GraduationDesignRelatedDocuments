@@ -2,14 +2,14 @@ package com.pzh.zp.service;
 
 import com.pzh.zp.entity.Permission;
 
+import java.text.ParseException;
 import java.util.List;
-
 
 /**
  * 权限表(Permission)表服务接口
  *
  * @author makejava
- * @since 2021-01-25 16:45:28
+ * @since 2021-03-29 12:50:03
  */
 public interface PermissionService {
 
@@ -36,7 +36,7 @@ public interface PermissionService {
      * @param permission 实例对象
      * @return 实例对象
      */
-    Permission insert(Permission permission);
+    Permission insert(Permission permission) throws ParseException;
 
     /**
      * 修改数据
@@ -54,4 +54,12 @@ public interface PermissionService {
      */
     boolean deleteById(Integer id);
 
+    /**
+     *
+     * @param id
+     * @return
+     */
+    List<Permission>findByUserId(Integer id);
+
+    List<Permission> queryFuzzy(String pName,String path);
 }

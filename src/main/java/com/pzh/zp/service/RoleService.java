@@ -2,6 +2,7 @@ package com.pzh.zp.service;
 
 import com.pzh.zp.entity.Role;
 
+import java.text.ParseException;
 import java.util.List;
 
 
@@ -37,7 +38,7 @@ public interface RoleService {
      * @param role 实例对象
      * @return 实例对象
      */
-    Role insert(Role role);
+    Role insert(Role role) throws ParseException;
 
     /**
      * 修改数据

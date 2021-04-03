@@ -1,21 +1,22 @@
 package com.pzh.zp.service.impl;
 
-
 import com.pzh.zp.dao.PermissionDao;
 import com.pzh.zp.entity.Permission;
+import com.pzh.zp.enumState.UserEnum;
 import com.pzh.zp.service.PermissionService;
 import org.springframework.stereotype.Service;
 
 import javax.annotation.Resource;
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
+import java.util.Date;
 import java.util.List;
-
-
 
 /**
  * 权限表(Permission)表服务实现类
  *
  * @author makejava
- * @since 2021-01-25 16:45:29
+ * @since 2021-03-29 12:50:03
  */
 @Service("permissionService")
 public class PermissionServiceImpl implements PermissionService {
@@ -52,7 +53,12 @@ public class PermissionServiceImpl implements PermissionService {
      * @return 实例对象
      */
     @Override
-    public Permission insert(Permission permission) {
+    public Permission insert(Permission permission) throws ParseException {
+        SimpleDateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
+        String format = dateFormat.format(new Date());
+        Date date = dateFormat.parse(format);
+        permission.setCreateTime(date);
+        permission.setStatus(UserEnum.UNFROZEN.getKey());
         this.permissionDao.insert(permission);
         return permission;
     }
@@ -78,5 +84,15 @@ public class PermissionServiceImpl implements PermissionService {
     @Override
     public boolean deleteById(Integer id) {
         return this.permissionDao.deleteById(id) > 0;
+    }
+
+    @Override
+    public List<Permission> findByUserId(Integer id) {
+        return permissionDao.findByUserId(id);
+    }
+
+    @Override
+    public List<Permission> queryFuzzy(String pName, String path) {
+        return permissionDao.queryFuzzy(pName, path);
     }
 }

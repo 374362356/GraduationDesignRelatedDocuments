@@ -7,13 +7,13 @@
         <result property="newTime" column="new_time" jdbcType="TIMESTAMP"/>
         <result property="contentTitle" column="content_title" jdbcType="VARCHAR"/>
         <result property="content" column="content" jdbcType="VARCHAR"/>
-        <result property="stateId" column="state_id" jdbcType="INTEGER"/>
+        <result property="publishId" column="publish_id" jdbcType="INTEGER"/>
     </resultMap>
 
     <!--查询单个-->
     <select id="queryById" resultMap="NewsMap">
         select
-          id, new_time, content_title, content, state_id
+          id, new_time, content_title, content, publish_id
         from pzh_meeting_management.news
         where id = #{id}
     </select>
@@ -21,7 +21,7 @@
     <!--查询指定行数据-->
     <select id="queryAllByLimit" resultMap="NewsMap">
         select
-          id, new_time, content_title, content, state_id
+          id, new_time, content_title, content, publish_id
         from pzh_meeting_management.news
         limit #{offset}, #{limit}
     </select>
@@ -29,7 +29,7 @@
     <!--通过实体作为筛选条件查询-->
     <select id="queryAll" resultMap="NewsMap">
         select
-        id, new_time, content_title, content, state_id
+        id, new_time, content_title, content, publish_id
         from pzh_meeting_management.news
         <where>
             <if test="id != null">
@@ -44,35 +44,35 @@
             <if test="content != null and content != ''">
                 and content = #{content}
             </if>
-            <if test="stateId != null">
-                and state_id = #{stateId}
+            <if test="publishId != null">
+                and publish_id = #{publishId}
             </if>
         </where>
     </select>
 
     <!--新增所有列-->
     <insert id="insert" keyProperty="id" useGeneratedKeys="true">
-        insert into pzh_meeting_management.news(new_time, content_title, content, state_id)
-        values (#{newTime}, #{contentTitle}, #{content}, #{stateId})
+        insert into pzh_meeting_management.news(new_time, content_title, content, publish_id)
+        values (#{newTime}, #{contentTitle}, #{content}, #{publishId})
     </insert>
 
     <insert id="insertBatch" keyProperty="id" useGeneratedKeys="true">
-        insert into pzh_meeting_management.news(new_time, content_title, content, state_id)
+        insert into pzh_meeting_management.news(new_time, content_title, content, publish_id)
         values
         <foreach collection="entities" item="entity" separator=",">
-            (#{entity.newTime}, #{entity.contentTitle}, #{entity.content}, #{entity.stateId})
+            (#{entity.newTime}, #{entity.contentTitle}, #{entity.content}, #{entity.publishId})
         </foreach>
     </insert>
 
     <insert id="insertOrUpdateBatch" keyProperty="id" useGeneratedKeys="true">
-        insert into pzh_meeting_management.news(new_time, content_title, content, state_id)
+        insert into pzh_meeting_management.news(new_time, content_title, content, publish_id)
         values
         <foreach collection="entities" item="entity" separator=",">
-            (#{entity.newTime}, #{entity.contentTitle}, #{entity.content}, #{entity.stateId})
+            (#{entity.newTime}, #{entity.contentTitle}, #{entity.content}, #{entity.publishId})
         </foreach>
         on duplicate key update
-        new_time = values(new_time) , content_title = values(content_title) , content = values(content) , state_id =
-        values(state_id)
+        new_time = values(new_time) , content_title = values(content_title) , content = values(content) , publish_id =
+        values(publish_id)
     </insert>
 
     <!--通过主键修改数据-->
@@ -88,8 +88,8 @@
             <if test="content != null and content != ''">
                 content = #{content},
             </if>
-            <if test="stateId != null">
-                state_id = #{stateId},
+            <if test="publishId != null">
+                publish_id = #{publishId},
             </if>
         </set>
         where id = #{id}
@@ -102,7 +102,7 @@
     
     <!-- 模糊查询-->
     <select id="fuzzySearch" parameterType="String" resultMap="NewsMap">
-        select id, new_time, content_title, content, state_id
+        select id, new_time, content_title, content, publish_id
         from pzh_meeting_management.news
         <where>
             <if test="newTime!=null and newTime!=''">
@@ -117,10 +117,10 @@
     <!-- 发布公告人员   -->
     <select id="findPublishName" parameterType="Integer" resultType="com.pzh.zp.entity.User">
         select
-            id, nick_name, user_name, password, create_time, gender, phone, status
+            u.*
         from pzh_meeting_management.user u
-        left join pzh_meeting_management.news n on n.state_id=u.id
-        where n.id=#{id} and n.state_id=#{stateId}
+        left join pzh_meeting_management.news n on n.publish_id=u.id
+        where n.publish_id=#{publishId}
     </select>
 
     <select id="counting" resultType="Integer">

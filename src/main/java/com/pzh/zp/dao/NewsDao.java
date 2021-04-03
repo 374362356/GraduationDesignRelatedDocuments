@@ -91,9 +91,9 @@ public interface NewsDao {
     List<News> fuzzySearch(String newTime, String contentTitle);
 
     /**
-     * 根据公告id和state_id得到发布人的id和nickname
+     * 根据公告id和publish_id得到发布人的id和nickname
      */
-    User findPublishName(Integer id,Integer stateId);
+    List<User> findPublishName(Integer publishId);
 
     Integer counting();
 }

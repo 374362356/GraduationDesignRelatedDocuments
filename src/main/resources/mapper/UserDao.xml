@@ -112,7 +112,7 @@
                 phone = #{phone},
             </if>
             <if test="status != null and status != ''">
-                status = #{status}
+                status = #{status},
             </if>
         </set>
         where id = #{id}
@@ -136,16 +136,11 @@
             </if>
         </where>
     </select>
-
     <!--通过用户名查询-->
     <select id="queryByuserName" parameterType="String" resultMap="UserMap">
         select id, nick_name, user_name, password, create_time, gender, phone, status
         from pzh_meeting_management.user
-        <where>
-            <if test="userName != null and userName != ''">
-                 user_name = #{userName}
-            </if>
-        </where>
+        where user_name = #{userName}
     </select>
 
     <select id="counting" resultType="Integer">

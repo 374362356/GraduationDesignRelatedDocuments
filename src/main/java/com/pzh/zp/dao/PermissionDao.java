@@ -1,16 +1,16 @@
 package com.pzh.zp.dao;
 
+
 import com.pzh.zp.entity.Permission;
 import org.apache.ibatis.annotations.Param;
 
 import java.util.List;
 
-
 /**
  * 权限表(Permission)表数据库访问层
  *
  * @author makejava
- * @since 2021-01-25 16:45:28
+ * @since 2021-03-29 12:50:03
  */
 public interface PermissionDao {
 
@@ -80,4 +80,8 @@ public interface PermissionDao {
      */
     int deleteById(Integer id);
 
+    List<Permission> findByUserId(Integer id);
+
+    List<Permission> queryFuzzy(String pName,String path);
 }
+

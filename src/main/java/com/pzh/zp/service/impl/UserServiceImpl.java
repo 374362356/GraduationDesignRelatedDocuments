@@ -25,7 +25,6 @@ public class UserServiceImpl implements UserService {
 
     @Resource
     private UserDao userDao;
-
     /**
      * 通过ID查询单条数据
      *
@@ -62,7 +61,7 @@ public class UserServiceImpl implements UserService {
         Date date = dateFormat.parse(format);
         //插入时间
         user.setCreateTime(date);
-        user.setStatus(UserEnum.user.toInt());      //enum
+        user.setStatus(UserEnum.UNFROZEN.getKey());      //enum
         this.userDao.insert(user);
         return user;
     }
@@ -76,17 +75,10 @@ public class UserServiceImpl implements UserService {
     @Override
     public User update(User user) throws ParseException {
         User oldUser = userDao.queryById(user.getId());
-        if (!oldUser.getStatus().equals(UserEnum.user.toInt())){
+
             User newUser = new User(user.getId(), user.getNickName(), oldUser.getUserName(), user.getPassword(), oldUser.getCreateTime(),
-                    user.getGender(), user.getPhone(), oldUser.getStatus());
-            userDao.update(newUser);
-            return this.queryById(newUser.getId());
-        }
-
-        user.setCreateTime(user.getCreateTime());
-        user.setStatus(UserEnum.user.toInt());
-
-        this.userDao.update(user);
+                    user.getGender(), user.getPhone(), user.getStatus());
+        this.userDao.update(newUser);
         return this.queryById(user.getId());
     }
 
@@ -118,8 +110,29 @@ public class UserServiceImpl implements UserService {
         return userDao.queryAll(user);
     }
 
+    /**
+     * 
+     * @param userName
+     * @return
+     */
     @Override
     public User queryByuserName(String userName) {
         return userDao.queryByuserName(userName);
+    }
+
+    @Override
+    public int userStateChange(Integer id) {
+        User user = userDao.queryById(id);
+        if (user.getStatus().equals(UserEnum.FROZEN.getKey())){
+            user.setStatus(UserEnum.UNFROZEN.getKey());
+             this.userDao.update(user);
+             return user.getStatus();
+        }else if (user.getStatus().equals(UserEnum.UNFROZEN.getKey())){
+            user.setStatus(UserEnum.FROZEN.getKey());
+             this.userDao.update(user);
+             return user.getStatus();
+        }
+        System.out.println("=======user=====>"+user);
+        return user.getStatus();
     }
 }

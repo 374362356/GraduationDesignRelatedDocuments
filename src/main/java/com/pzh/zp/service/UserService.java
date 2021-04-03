@@ -80,4 +80,5 @@ public interface UserService {
      */
     User queryByuserName(String userName);
 
+    int userStateChange(Integer id);
 }

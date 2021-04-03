@@ -1,11 +1,16 @@
 package com.pzh.zp;
 
+import com.pzh.zp.dao.NewsDao;
+import com.pzh.zp.dao.UserDao;
+import com.pzh.zp.entity.News;
 import com.pzh.zp.entity.Reports;
 import com.pzh.zp.dao.ReportsDao;
+import com.pzh.zp.entity.User;
 import com.pzh.zp.enumState.UserEnum;
 import lombok.var;
 import org.junit.jupiter.api.Test;
 import org.springframework.boot.test.context.SpringBootTest;
+import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 
 import javax.annotation.Resource;
 import java.text.ParseException;
@@ -32,6 +37,10 @@ class ConferenceInformationManagementApplicationTests {
 
     @Resource
     private ReportsDao reportsDao;
+    @Resource
+    private UserDao userDao;
+    @Resource
+    private NewsDao newsDao;
     @Test
     void findAll(){
         List<Reports> reports = reportsDao.queryAll();
@@ -51,6 +60,24 @@ class ConferenceInformationManagementApplicationTests {
 
     @Test
     void test07(){
-        System.out.println(UserEnum.user.toInt());
+        User u = new User(9,"111","test111","123",new Date(),1,"15176253848",0);
+        System.out.println(userDao.update(u));
+    }
+
+    @Test
+    void bcrypt(){
+        String password = "111";
+        //密码加密
+        BCryptPasswordEncoder passwordEncoder=new BCryptPasswordEncoder();
+        //加密
+        String newPassword = passwordEncoder.encode(password);
+        System.out.println("加密密码为："+newPassword);
+    }
+
+    @Test
+    void toMap(){
+        List<News> news = newsDao.queryAll(null);
+        Map<Integer, Integer> publishId = news.stream().collect(Collectors.toMap(News::getId, News::getPublishId));
+        System.out.println(publishId.get(10));
     }
 }
