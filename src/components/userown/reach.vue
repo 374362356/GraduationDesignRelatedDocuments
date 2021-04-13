@@ -1,12 +1,12 @@
 <template>
   <div>
-    <h1>用户列表页面</h1>
+    <h1>参会信息页面</h1>
     <!-- 面包屑区域 -->
     <div class="header">
       <el-breadcrumb separator-class="el-icon-arrow-right">
         <el-breadcrumb-item :to="{ path: '/home' }">首页</el-breadcrumb-item>
-        <el-breadcrumb-item>用户管理</el-breadcrumb-item>
-        <el-breadcrumb-item>用户列表</el-breadcrumb-item>
+        <el-breadcrumb-item>参会信息管理</el-breadcrumb-item>
+        <el-breadcrumb-item>签到列表</el-breadcrumb-item>
       </el-breadcrumb>
     </div>
     <div class="main">
@@ -18,7 +18,7 @@
               placeholder="根据用户名，电话查询"
               v-model="queryInfo.query"
               clearable
-              @clear="getUserList"
+              @clear="getReachList"
             >
               <el-button
                 slot="append"
@@ -27,37 +27,24 @@
               ></el-button>
             </el-input>
           </el-col>
-          <el-col :span="4"
-            ><el-button type="primary" @click="addDialogVisible = true"
-              >添加用户</el-button></el-col>
         </el-row>
         <template>
           <el-table :data="userList" style="width: 100%" border stripe>
             <el-table-column type="index"></el-table-column>
-            <el-table-column prop="id" label="id" width="80"></el-table-column>
-            <el-table-column prop="nickName" label="用户名" width="100"></el-table-column>
-            <el-table-column prop="userName" label="账号" width="120"></el-table-column>
-            <el-table-column prop="gender" label="性别" width="80" :formatter="stateFormat"></el-table-column>
-            <el-table-column prop="phone" label="电话" width="130"> </el-table-column>
-            <el-table-column prop="createTime" label="创建时间" width="160"> </el-table-column>
-            <el-table-column prop="roles" label="角色" width="80"></el-table-column>
-            <el-table-column label="状态" width="140">
+            <el-table-column prop="id" label="编号" width="80"></el-table-column>
+            <el-table-column prop="reachTime" label="签到时间" width="170"></el-table-column>
+            <!-- <el-table-column prop="confirm" label="签到" width="120"></el-table-column> -->
+            <el-table-column prop="userName" label="用户名" width="100" ></el-table-column>
+            <el-table-column prop="staffName" label="会议负责人名" width="130"> </el-table-column>
+            <el-table-column prop="conferenceName" label="会议名" width="120"> </el-table-column>
+            <el-table-column label="签到" width="150">
               <template slot-scope="scope">
-                <!-- <el-switch v-model="value" @change="userStateChange(scope.row.id)"></el-switch> -->
-                <el-switch
-                    v-model="scope.row.status"
-                    :active-value="1"
-                    :inactive-value="-1"
-                    @change="userStateChange($event, scope.row)"
-                    active-color="#13ce66"
-                    inactive-color="#ff4949"
-                    active-text="活跃"
-                    inactive-text="冻结"
-                        >
-                </el-switch>
+                    <el-tag type="success" v-if="scope.row.confirm === 11">已签到</el-tag>
+                    <el-tag type="error" v-else-if="scope.row.confirm === 12">未签到</el-tag>
+                    <el-tag type="warning" v-else>状态错误</el-tag>
               </template>
             </el-table-column>
-            <el-table-column label="操作" width="210">
+            <el-table-column label="操作" width="200">
               <template slot-scope="scope">
                 <el-button
                   type="primary"
@@ -67,15 +54,8 @@
                 <el-button
                   type="danger"
                   icon="el-icon-delete"
-                  @click="delUser(scope.row.id)"
+                  @click="delReach(scope.row.id)"
                 ></el-button>
-                <el-tooltip class="item" effect="dark" content="分配角色" placement="top" :enterable="false">
-                  <el-button
-                    type="warning"
-                    icon="el-icon-setting"
-                    @click="allotUserRole(scope.row)"
-                  ></el-button>
-                </el-tooltip>
               </template>
             </el-table-column>
           </el-table>
@@ -85,10 +65,10 @@
             @size-change="handleSizeChange"
             @current-change="handleCurrentChange"
             :current-page="currentPage"
-            :page-sizes="[5, 10, 20]" 
-            :page-size="pageSize"     
+            :page-sizes="[5, 10, 20, 40]" 
+            :page-size="pagesize"     
             layout="total, sizes, prev, pager, next, jumper"
-            :total="userList.length"
+            :total="totalCount"
           >
         </el-pagination>
       </el-card>
@@ -114,47 +94,36 @@
         </span>
       </el-dialog>
 
-      <!-- 添加用户对话框 -->
-     <el-dialog title="添加用户" :visible.sync="addDialogVisible" width="50%" @close="addDialogClose">
-        <el-form :model="ruleForm" :rules="rules" ref="formRef" label-width="100px" class="demo-ruleForm">
-          <el-form-item label="账号" prop="userName">
-            <el-input v-model="ruleForm.userName"></el-input>
-          </el-form-item>
-          <el-form-item label="密码" prop="password">
-            <el-input v-model="ruleForm.password" type="password"></el-input>
-          </el-form-item>
-          <el-form-item label="性别" prop="gender">
-            <el-radio v-model="ruleForm.gender" label="1">男</el-radio>
-            <el-radio v-model="ruleForm.gender" label="0">女</el-radio>
-          </el-form-item>
-          <el-form-item label="手机号" prop="phone">
-            <el-input v-model="ruleForm.phone"></el-input>
-          </el-form-item>
-        </el-form>
-        <span slot="footer" class="dialog-footer">
-          <el-button @click="addDialogVisible = false">取 消</el-button>
-          <el-button type="primary" @click="addUsersSureBtn">确 定</el-button>
-        </span>
-      </el-dialog>
 
-      <!-- 修改用户对话框 -->
-      <el-dialog title="修改用户" :visible.sync="editDialogVisible" width="50%" @close="editDialogClose">
+      <!-- 修改签到对话框 -->
+      <el-dialog title="修改签到" :visible.sync="editDialogVisible" width="50%" @close="editDialogClose">
         <el-form :model="editForm" :rules="editRules" ref="edtFormRef" label-width="100px" class="demo-ruleForm">
           <el-form-item label="账号">
+            <el-input v-model="editForm.reachTime" disabled="disabled"></el-input>
+          </el-form-item>
+          <el-form-item label="签到 ">
+              <template slot-scope="scope">
+                <el-switch
+                    v-model="scope.confirm"
+                    :active-value="11"
+                    :inactive-value="12"
+                    @change="userStateChange($event, row)"
+                    active-color="#13ce66"
+                    inactive-color="#ff4949"
+                    active-text="已签到"
+                    inactive-text="未签到"
+                        >
+                </el-switch>
+              </template>
+          </el-form-item>
+          <el-form-item label="用户名">
             <el-input v-model="editForm.userName" disabled="disabled"></el-input>
           </el-form-item>
-          <el-form-item label="用户名" prop="nickName">
-            <el-input v-model="editForm.nickName"></el-input>
+          <el-form-item label="会议负责人名">
+          <el-input v-model="editForm.staffName"  disabled="disabled"></el-input>
           </el-form-item>
-          <el-form-item label="密码" prop="password">
-            <el-input v-model="editForm.password" type="password"></el-input>
-          </el-form-item>
-          <el-form-item label="性别" prop="gender">
-            <el-radio v-model="editForm.gender" label="1">男</el-radio>
-            <el-radio v-model="editForm.gender" label="0">女</el-radio>
-          </el-form-item>
-          <el-form-item label="电话" prop="phone">
-            <el-input v-model="editForm.phone"></el-input>
+          <el-form-item label="会议名">
+            <el-input v-model="editForm.conferenceName"  disabled="disabled"></el-input>
           </el-form-item>
         </el-form>
         <span slot="footer" class="dialog-footer">
@@ -195,7 +164,7 @@ export default {
         //pagesize: 5,
       },
       currentPage:1, //初始页
-      pageSize:5,
+      pagesize:5, 
       userList: [],
       totalCount: 1,
       addDialogVisible: false,
@@ -240,7 +209,7 @@ export default {
     }
   },
   created() {
-    this.getUserList()
+    this.getReachList()
   },
   methods: {
     //模糊查询
@@ -264,40 +233,51 @@ export default {
         return "女";
       }
     },
-    getUserList() {
+    getReachList() {
       let _this = this;
       this.$axios({
         method:'get',
-        url:'user/findAll',
+        url:'reach/findAll',
         // url:'list',
         headers:{
           'token':window.sessionStorage['token']
         }
       })
         .then((res) => {
-          //alert(JSON.stringify(res.data))
-          //_this.userList = res.data.data;
-          _this.userList = res.data
-          //alert(_this.userList)
+          //alert(JSON.stringify(res.data.data))
+          _this.userList = res.data.data
+          //this.totalCount = res.data.length
         })
         .catch(() => {
-          this.$message.error('获取用户列表失败')
+          this.$message.error('获取签到列表失败')
         })
     },
-    handleSizeChange: function (val) {
-                this.pageSize = val
+    handleSizeChange: function (size) {
+                this.pageSize = size
+                this.getReachList()
         },
-    handleCurrentChange: function(val){
-                this.currentPage = val;
+    handleCurrentChange: function(currentPage){
+                this.currentPage = currentPage;
+                this.getReachList()
     },
-
+    //分页方法（重点）
+   currentChangePage(list,currentPage) { 
+      let from = (currentPage - 1) * this.pagesize;
+      let to = currentPage * this.pagesize;
+      this.tempList = [];
+      for (; from < to; from++) {
+        if (list[from]) {
+          this.tempList.push(list[from]);
+        }
+      }
+    },
     //用户状态改变
     userStateChange($event,row) {
-        alert(JSON.stringify(row))
+      //alert(JSON.stringify(row))
       this.$axios
-      .put('user/update',row)
+      .put('reach/reach_update',this.editForm)
         .then((res) => {
-          alert(JSON.stringify(res.data.data))
+          //alert(JSON.stringify(res.data.data))
           this.$message.success('更新状态成功')
         })
         .catch((res) => {
@@ -322,11 +302,9 @@ export default {
                 'token':window.sessionStorage.getItem("token")
               }
           })
-          //    .get('power/user_insert', this.ruleForm)
-
             .then(() => {
               this.addDialogVisible = false
-              this.getUserList()
+              this.getReachList()
               this.$message.success('添加用户成功')
             })
             .catch(() => {
@@ -338,8 +316,9 @@ export default {
     //修改按钮
     showEditDialog(id) {
       this.editDialogVisible = true
-      this.$axios.get('user/toUpdate/' + id).then((res) => {
+      this.$axios.get('reach/findOne/' + id).then((res) => {
         this.editForm = res.data.data
+        //alert(JSON.stringify(res.data.data))
       })
     },
     editDialogClose() {
@@ -350,15 +329,16 @@ export default {
       this.$refs.edtFormRef.validate((boo) => {
         if (boo) {
           this.$axios
-            .put('user/update/'  , {
+            .put('reach/reach_update/'  , {
               id: this.editForm.id,
-              nickName: this.editForm.nickName,
-              password: this.editForm.password,
-              gender: this.editForm.gender,
-              phone: this.editForm.phone,
+              reachTime: this.editForm.reachTime,
+              confirm: this.editForm.confirm,
+              userName: this.editForm.userName,
+              staffName: this.editForm.staffName,
+              conferenceName: this.editForm.conferenceName,
             })
             .then(() => {
-              this.getUserList()
+              this.getReachList()
               this.$message.success('修改成功')
             })
             .catch(() => {
@@ -370,17 +350,17 @@ export default {
       })
     },
     // 删除用户
-    delUser(id) {
-      this.$confirm('此操作将永久删除该会议, 是否继续?', '提示', {
+    delReach(id) {
+      this.$confirm('此操作将永久删除该项, 是否继续?', '提示', {
         confirmButtonText: '确定',
         cancelButtonText: '取消',
         type: 'warning',
       })
         .then(() => {
           this.$axios
-            .delete('user/user_delete?id=' + row.id)
+            .delete('reach/del_reach?id=' + row.id)
             .then(() => {
-              this.getUserList()
+              this.getReachList()
               this.$message.success('删除成功')
             })
             .catch(() => {
@@ -394,40 +374,7 @@ export default {
           })
         })
     },
-    // 删除用户
-     /*delUser(id) {
-      this.$confirm('此操作将永久删除该用户, 是否继续?', '提示', {
-        confirmButtonText: '确定',
-        cancelButtonText: '取消',
-        type: 'warning',
-      })
-        .then(() => {
-          // this.$axios
-            this.$axios({
-
-              method:'get',
-              url:'user/user_delete?id='+id,
-              // url:'list',
-              // data:id,
-              headers:{
-                'token':window.sessionStorage['token']
-              }
-            })
-          // console.log(id+'12w1321312312321')
-            // .get("power/user_delete?id=8")
-            // .get('delete/'+id)
-            .then(() => {
-              this.getUserList()
-              this.$message.success('删除成功')
-            })
-            .catch(() => {
-              this.$message.error('删除失败')
-            })
-        })
-        .catch(() => {
-          this.$message.info('已取消删除')
-        })
-    },*/
+    
     //分配用户角色
     allotUserRole(row) {
       var _this = this;
@@ -473,7 +420,7 @@ export default {
           }
         })
           .then(() => {
-            this.getUserList()
+            this.getReachList()
             this.$message.success('修改用户角色成功')
           })
           .catch(() => {

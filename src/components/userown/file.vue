@@ -31,36 +31,24 @@
             <el-table-column prop="fileName" label="文件名"  width="120"></el-table-column>
             <el-table-column prop="fileUrl" label="文件路径" width="280"></el-table-column>
             <el-table-column prop="createTime" label="创建时间"  width="180"></el-table-column>
-                <el-table-column label="操作" width="300">
+            <el-table-column label="操作" width="300">
                     <template slot-scope="scope">
-                        <el-button type="primary" icon="el-icon-edit" size="small" @click="editFile(scope.row)">
+                        <!-- <el-button type="primary" icon="el-icon-edit" size="small" @click="editFile(scope.row)">
                             编辑</el-button>
                         <el-button type="danger" icon="el-icon-delete" size="small" @click="delFile(scope.row)">
-                            删除</el-button>
+                            删除</el-button> -->
                         <el-button type="success" icon="el-icon-delete" size="small" @click="downloadFile(scope.row)">
                             下载</el-button> 
                     </template>
                 </el-table-column>
           </el-table>
-        <el-form :model="ruleForm"
+        <!-- <el-form :model="ruleForm"
                 enctype="multipart/form-data"
                 :rules="rules" ref="ruleForm" label-width="100px" class="demo-ruleForm">
           <el-form-item label="任务名称:" prop="fileName">
             <el-input  v-model="ruleForm.fileName"></el-input>
           </el-form-item>
-          <!-- <el-form-item label="时间设置" required prop="date1">
-            <el-col :span="11">
-                <el-date-picker
-                  v-model="ruleForm.date1"
-                  type="datetimerange"
-                  :picker-options="pickerOptions"
-                  range-separator="至"
-                  start-placeholder="开始日期"
-                  end-placeholder="结束日期"
-                  >
-                </el-date-picker>
-            </el-col>
-          </el-form-item> -->
+ 
           <el-form-item label="相关文件上传:" prop="region">
             <el-upload
               class="upload-demo"
@@ -79,8 +67,7 @@
           <el-form-item>
             <el-button type="success" @click="submitForm('ruleForm')">上传到服务器</el-button>
           </el-form-item>
-            <!-- <div slot="tip" class="el-upload__tip">只能上传jpg/png文件，且不超过500kb</div> -->
-        </el-form>
+        </el-form> -->
     </el-card>
 
       <el-dialog title="下载文件" :visible.sync="downloadVisible" width="40%">

@@ -12,7 +12,7 @@
           <el-input prefix-icon="iconfont icon-lock_fill" v-model="form.password" type="password"></el-input>
         </el-form-item>
         <!-- 角色下拉选择-->
-        <el-form-item prop="roles">
+        <!-- <el-form-item prop="roles">
             <el-select v-model="value" placeholder="请选择">
               <el-option
                 v-for="item in options"
@@ -21,7 +21,7 @@
                 :value="item.value">
               </el-option>
             </el-select>
-        </el-form-item>
+        </el-form-item> -->
         <el-form-item class="itemBtn">
           <el-button type="primary" @click="login">登录</el-button>
           <el-button type="info" @click="reset">重置</el-button>
@@ -66,9 +66,9 @@ export default {
         password: [
           { required: true, message: "请输入用户密码", trigger: "blur" },
           {
-            min: 4,
+            min: 3,
             max: 12,
-            message: "长度在 4 到 12 个字符",
+            message: "长度在 3 到 12 个字符",
             trigger: "blur",
           },
         ],
@@ -103,11 +103,18 @@ export default {
                     this.$message.success('登录成功')
                     window.localStorage.setItem('token',res.data.data.token)
                     window.localStorage.setItem('username',this.form.username)
-                    alert(res.data.data.token)
-
-                    this.$router.push('/home')
+                    if(res.data.data.role=="user"){
+                      alert(JSON.stringify(res.data.data.role))
+                      this.$router.push('/user')
+                    }else{
+                      this.$router.push('/home')
+                    }
                   }else{
-                  this.$message.error('登录失败')
+                    if(res.data.code=='400'){
+                      this.$message.error(res.data.msg)
+                    }else{
+                      this.$message.error('登录失败')
+                    }
                   }
                   //this.$router.push('/home')
                 })

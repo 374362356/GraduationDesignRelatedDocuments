@@ -131,11 +131,11 @@
 
     <!-- 编辑角色 -->
     <el-dialog title="提示" :visible.sync="editDialogVisible" width="30%">
-      <el-form ref="addRoleRef" :model="editRoleForm" label-width="80px">
+      <el-form ref="addRoleRef" :model="editRoleForm" :rules="rules" label-width="80px">
         <el-form-item label="角色名称">
-          <el-input v-model="editRoleForm.rname"></el-input>
+          <el-input v-model="editRoleForm.rname" disabled="disabled"></el-input>
         </el-form-item>
-        <el-form-item label="角色概述">
+        <el-form-item label="角色概述" prop="description">
           <el-input v-model="editRoleForm.description"></el-input>
         </el-form-item>
       </el-form>
@@ -173,6 +173,11 @@ export default {
       },
       editRoleForm: {},
       editDialogVisible: false,
+      rules: {
+        description: [
+          { required: true, message: '请输入描述', trigger: 'blur' },
+        ],
+      },
     }
   },
   methods: {
@@ -298,9 +303,13 @@ export default {
     //添加角色
     addRole() {
       this.$axios.post('role/role_insert', this.addRoleForm)
-      .then(() => {
-        this.getRolesList()
-        this.$message.success('添加角色成功')
+      .then((res) => {
+        if(res.data.code='400'){
+            this.$message.error('添加失败，无此权限')
+        }else{
+            this.getRolesList()
+            this.$message.success('添加角色成功')
+        }
       }).catch(()=>{
          this.$message.error('添加角色失败')
       })

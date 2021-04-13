@@ -5,10 +5,10 @@
         <el-header>
           <div>
             <img src alt />
-            <span>会议信息管理系统</span>
+            <span>数学与计算机学院会议信息管理系统</span>
           </div>
           <div>
-            <span >欢迎您，{{userName}}</span>
+            <span >欢迎您，{{username}}</span>
           </div>
           <div>
             <el-button type="primary" @click="fitDialogVisible = true">设置</el-button>
@@ -170,13 +170,7 @@ export default {
                     id: 115,
                     order: 2,
                     path: "news"
-            },{
-                    authName: "建议管理",
-                    children: [] ,
-                    id: 121,
-                    order: 3,
-                    path: "suggestion"
-            }],
+            },],
                 id: 101,
                 order: 3,
                 path: "conference"
@@ -202,6 +196,27 @@ export default {
             id: 102,
             order: 4,
             path: "staff"
+        },
+        {
+            authName:"参会信息管理",
+            children:[
+            {
+                authName: "签到列表",
+                children: [],
+                id: 109,
+                order: null,
+                path: "reach1"
+            },
+            {
+                authName: "建议管理",
+                children: [] ,
+                id: 121,
+                order: 3,
+                path: "suggestion"
+            },],
+            id: 119,
+            order: 4,
+            path: "reach1"
         },
         {
             authName:"数据统计",
@@ -230,11 +245,12 @@ export default {
         '101': 'iconfont icon-3702mima',
         '102': 'iconfont icon-danju',
         '145': 'iconfont icon-baobiao',
+        '119': 'iconfont icon-danju',
       },
       isCollapse: false,
       defaultActive: '',
       id:'',
-      userName:'',
+      username:'',
       fitDialogVisible: false,
       ruleForm: {
           id: '',
@@ -274,7 +290,7 @@ export default {
       .catch((err) => {
         //取出浏览器里的用户名
         //alert(localStorage.getItem("userName"))
-        this.userName = localStorage.getItem("userName");
+        this.username = localStorage.getItem("username");
         console.log(err)
       }),
       this.getUserInfo()
@@ -285,7 +301,7 @@ export default {
       let _that = this;
       this.$axios({
         method: 'get',
-        url: 'user/getUserInfo?userName='+localStorage.getItem("userName"),
+        url: 'user/getUserInfo?username='+localStorage.getItem("username"),
       }).then((res)=>{
         _that.ruleForm = res.data.data;
         //alert(_that.ruleForm)

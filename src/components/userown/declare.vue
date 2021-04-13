@@ -8,34 +8,7 @@
     </el-breadcrumb>
     <!-- 卡片 -->
     <el-card class="box-card">
-      <!-- 警告 -->
-<!--      <el-alert
-        title="注意：只允许为第三级分类设置相关参数！"
-        type="warning"
-        :closable="false"
-        show-icon
-      >
-      </el-alert>
-      //选择 
-      <div class="block">
-        <span>选择商品分类: </span>
-        <el-cascader
-          v-model="selectedCateKeys"
-          :options="cateList"
-          @change="handleChange"
-          :props="{ value: 'cat_id', label: 'cat_name', children: 'children' }"
-        ></el-cascader>
-      </div>
-      //最下方
-      // 标签页
-      <el-tabs v-model="activeName" @tab-click="handleTabClick">
-        <el-tab-pane label="动态参数" name="first">
-          <el-button type="primary" :disabled="isDisabled1">添加参数</el-button>
-        </el-tab-pane>
-        <el-tab-pane label="静态属性" name="second">
-          <el-button type="primary" :disabled="isDisabled2">添加属性</el-button>
-        </el-tab-pane>
-      </el-tabs>  -->
+
       <el-tabs v-model="activeName" type="card" @tab-click="handleClick">
           <el-tab-pane label="公告展示" name="first">
               <el-table :data="tableData" style="width: 100%" stripe border>
@@ -46,7 +19,7 @@
               <el-table-column prop="content" label="发布内容" width="350"> </el-table-column>
               <el-table-column prop="publishName" label="发布人" width="120"></el-table-column>
               <el-table-column prop="product.status" label="状态" width="120"> </el-table-column>
-              <el-table-column label="操作" width="200">
+              <!-- <el-table-column label="操作" width="200">
                 <template slot-scope="scope">
                   <el-button
                     type="primary"
@@ -62,10 +35,10 @@
                     @click="delNews(scope.row)"
                     >删除</el-button>
                  </template>
-              </el-table-column>
+              </el-table-column> -->
             </el-table>
           </el-tab-pane>
-          <el-tab-pane label="公告编写" name="second">
+          <!-- <el-tab-pane label="公告编写" name="second">
             <el-form class="table" :rules="rules">
               <el-form-item label="公告标题" prop="title">
                 <el-input label="公告标题" width="60px" v-model="editorTextUpload.contentTitle"></el-input>
@@ -78,9 +51,9 @@
                   </editor>
             </el-form>
               <div><el-button type="primary" round @click="sub()">提交<i class="el-icon-upload el-icon--right"></i></el-button></div>
-          </el-tab-pane>
+          </el-tab-pane> -->
           <el-tab-pane label="内容暂定" name="third">这里没有内容</el-tab-pane>
-          <el-tab-pane label="定时任务补偿" name="fourth">
+          <!-- <el-tab-pane label="定时任务补偿" name="fourth">
               <div class="block">
                 <span class="demonstration">定时任务发布：</span>
                 <el-date-picker
@@ -97,7 +70,7 @@
                 发布内容：<el-input v-model="editorTextUpload.content"/>
               </div><br/>
               <div><el-button type="primary" round @click="subOnTime()">提交<i class="el-icon-upload el-icon--right"></i></el-button></div>
-          </el-tab-pane>
+          </el-tab-pane> -->
       </el-tabs>
     </el-card>
 
@@ -311,27 +284,6 @@ export default {
           })
         })
       },
-    // getCateList() {
-    //   this.$axios.get('categories').then((res) => {
-    //     this.cateList = res.data.data
-    //   })
-    // },
-    // handleChange() {
-    //   if (this.selectedCateKeys.length !== 3) {
-    //     this.selectedCateKeys = []
-    //     this.isDisabled1 = true
-    //     this.isDisabled2 = true
-    //     return
-    //   } else {
-    //     this.isDisabled1 = false
-    //     this.isDisabled2 = false
-    //     console.log(this.selectedCateKeys)
-    //   }
-    // },
-    // handleTabClick(tab, event) {
-    //   console.log(tab)
-    //   console.log(event)
-    // },
   },
 }
 </script>

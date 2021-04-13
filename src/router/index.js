@@ -16,6 +16,12 @@ import Person from '../components/person/person';
 import Reports from '@/components/information/Reports'
 import Reports2 from '@/components/information/Reports2'
 import Upload from "../components/order/Upload"
+
+import File from "../components/userown/file"
+import Declare from "../components/userown/declare"
+import Meeting from "../components/userown/meeting"
+import People from "../components/userown/people"
+import Reach from "../components/userown/reach"
 Vue.use(Router)
 
 export default new Router({
@@ -35,12 +41,28 @@ export default new Router({
         { path: '/suggestion', component: Suggestion },
         { path: '/news', component: News },
         { path: '/conference', component: Conference },
-        { path: '/user', component: User },
+        { path: '/reach1', component: Reach },
         { path: '/staff',component: Staff},
         { path: '/reports',component: Reports},
         { path: '/reports2',component: Reports2},
         { path: '/upload',component: Upload}
       ],
+    },
+    {
+      path: '/user',
+      component: User,
+      redirect: '/hello',
+      children: [
+        { path: '/hello', component: Welcome },
+        { path: '/file',component: File},
+        { path: '/declare',component: Declare},
+        { path: '/meeting',component: Meeting},
+        { path: '/people',component: People},
+        { path: '/analysis',component: Reports},
+        { path: '/analysis2',component: Reports2},
+        { path: '/reach',component: Reach},
+        { path: '/reach2', component: Reach },
+      ]
     },
   ],
 })

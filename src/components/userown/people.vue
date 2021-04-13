@@ -27,9 +27,9 @@
               ></el-button>
             </el-input>
           </el-col>
-          <el-col :span="4"
+          <!-- <el-col :span="4"
             ><el-button type="primary" @click="addDialogVisible = true"
-              >添加用户</el-button></el-col>
+              >添加用户</el-button></el-col> -->
         </el-row>
         <template>
           <el-table :data="personList" style="width: 100%" border stripe>
@@ -48,7 +48,7 @@
                 <el-switch v-model="scope.row.mg_state" @change="userStateChange(scope.row)"></el-switch>
               </template>
             </el-table-column>
-            <el-table-column label="操作" width="210">
+            <!-- <el-table-column label="操作" width="210">
               <template slot-scope="scope">
                 <el-button
                   type="primary"
@@ -68,7 +68,7 @@
                   ></el-button>
                 </el-tooltip>
               </template>
-            </el-table-column>
+            </el-table-column> -->
           </el-table>
         </template>
         <el-pagination
@@ -438,40 +438,7 @@ export default {
           })
         })
     },
-    // 删除用户
-     /*delUser(id) {
-      this.$confirm('此操作将永久删除该用户, 是否继续?', '提示', {
-        confirmButtonText: '确定',
-        cancelButtonText: '取消',
-        type: 'warning',
-      })
-        .then(() => {
-          // this.$axios
-            this.$axios({
-
-              method:'get',
-              url:'user/user_delete?id='+id,
-              // url:'list',
-              // data:id,
-              headers:{
-                'token':window.sessionStorage['token']
-              }
-            })
-          // console.log(id+'12w1321312312321')
-            // .get("power/user_delete?id=8")
-            // .get('delete/'+id)
-            .then(() => {
-              this.getUserList()
-              this.$message.success('删除成功')
-            })
-            .catch(() => {
-              this.$message.error('删除失败')
-            })
-        })
-        .catch(() => {
-          this.$message.info('已取消删除')
-        })
-    },*/
+    
     //分配用户角色
     allotUserRole(row) {
       var _this = this;

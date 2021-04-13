@@ -67,7 +67,7 @@
                     </el-table-column>
                     <!-- <el-table-column type="index"></el-table-column> -->
                     <el-table-column prop="id" label="编号"  width="80"></el-table-column>
-                    <el-table-column prop="name" label="人员姓名"  width="100"></el-table-column>
+                    <el-table-column prop="sname" label="人员姓名"  width="100"></el-table-column>
                     <el-table-column prop="gender" label="性别" width="70" :formatter="stateFormat"></el-table-column>
                     <el-table-column prop="email" label="邮箱"  width="150"></el-table-column>
                     <el-table-column prop="phone" label="电话"  width="140"></el-table-column>
@@ -129,7 +129,7 @@
        <el-dialog title="提示" :visible.sync="addDialogVisible" width="30%">
            <el-form ref="addRoleRef" :model="addStaffForm" :rules="rules" label-width="80px">
                <el-form-item label="人员名称">
-                   <el-input v-model="addStaffForm.name"></el-input>
+                   <el-input v-model="addStaffForm.sname"></el-input>
                </el-form-item>
                <el-form-item label="人员性别">
                     <el-radio v-model="addStaffForm.gender" label="1">男</el-radio>
@@ -166,7 +166,7 @@
        <el-dialog title="提示" :visible.sync="editDialogVisible" width="30%">
            <el-form ref="addRoleRef" :model="editStaffForm" :rules="editRules" label-width="80px">
                <el-form-item label="人员名称">
-                   <el-input v-model="editStaffForm.name"></el-input>
+                   <el-input v-model="editStaffForm.sname"></el-input>
                </el-form-item>
                <el-form-item label="人员性别">
                     <el-radio v-model="editStaffForm.gender" label="1">男</el-radio>
@@ -181,7 +181,7 @@
                <el-form-item label="人员职称">
                    <el-input v-model="editStaffForm.position"></el-input>
                </el-form-item>
-               <el-form-item label="负责会议">
+               <el-form-item label="负责会议" prop='name'>
                    <el-select v-model="editStaffForm.conferenceName" placeholder="请选择" filter-method="SelectOption">
                         <el-option
                         v-for="item in options"
@@ -254,7 +254,7 @@
                 roleId: 0,
                 addDialogVisible: false,
                 addStaffForm: {
-                    name: '',
+                    sname: '',
                     gender: '',
                     email:'',
                     phone:'',
@@ -316,6 +316,7 @@
                         'token':window.sessionStorage['token']
                     }
                 }).then((res) => {
+                    //alert(JSON.stringify(res.data.data))
                     _this.tableData = res.data.data
                 })
                 .catch(() => {
@@ -450,14 +451,14 @@
                     this.getStaffList()
                 })
                 .catch(()=>{
-                    this.$message.success('添加人员失败')
+                    this.$message.error('添加人员失败')
                 })
                 this.addDialogVisible = false
             },
             //编辑人员
             editStaff(row) {
                 this.editStaffForm = { id: row.id,
-                                       name: row.name, 
+                                       sname: row.sname, 
                                        gender: row.gender, 
                                        email: row.email,
                                        phone: row.phone,

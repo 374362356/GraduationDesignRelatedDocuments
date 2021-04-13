@@ -72,11 +72,11 @@
 
             <!-- 添加权限 -->
             <el-dialog title="提示" :visible.sync="addDialogVisible" width="30%">
-                <el-form ref="addRightRef" :model="addPermissionForm" label-width="80px">
-                    <el-form-item label="权限名称">
+                <el-form ref="addRightRef" :model="addPermissionForm" :rules="rules" label-width="80px">
+                    <el-form-item label="权限名称" prop="pname">
                     <el-input v-model="addPermissionForm.pname"></el-input>
                     </el-form-item>
-                    <el-form-item label="权限路径">
+                    <el-form-item label="权限路径" prop="url">
                     <el-input v-model="addPermissionForm.url"></el-input>
                     </el-form-item>
                     <el-form-item label="父路径">
@@ -91,11 +91,11 @@
 
             <!-- 编辑权限 -->
             <el-dialog title="提示" :visible.sync="editDialogVisible" width="30%">
-                <el-form ref="addPermissionRef" :model="editPermissionForm" label-width="80px">
-                    <el-form-item label="权限名称">
+                <el-form ref="addPermissionRef" :model="editPermissionForm" :rules="rules" label-width="80px">
+                    <el-form-item label="权限名称" prop="pname">
                         <el-input v-model="editPermissionForm.pname"></el-input>
                     </el-form-item>
-                    <el-form-item label="权限路径">
+                    <el-form-item label="权限路径" prop="url">
                         <el-input v-model="editPermissionForm.url"></el-input>
                     </el-form-item>
                     <el-form-item label="父路径">
@@ -129,6 +129,14 @@
             addDialogVisible: false,
             editDialogVisible: false,
             editPermissionForm: {},
+            rules: {
+            pname: [
+                { required: true, message: '请输入权限名', trigger: 'blur' },
+            ],
+            url: [
+                { required: true, message: '请输入权限路径', trigger: 'blur' },
+            ],
+      },
         }
     },
     created() {
@@ -170,9 +178,13 @@
         },
         addPermission(){
           this.$axios.post('permission/permission_insert', this.addPermissionForm)
-            .then(() => {
-                this.getRightsList()
-                this.$message.success('添加权限成功')
+            .then((res) => {
+                if(res.data.code='400'){
+                    this.$message.error('添加失败，无此权限')
+                }else{
+                    this.getRightsList()
+                    this.$message.success('添加权限成功')
+                }
             }).catch(()=>{
                 this.$message.error('添加权限失败')
             })
