@@ -12,7 +12,7 @@ public class StaffVo {
     /**
      * 姓名
      */
-    private String name;
+    private String sName;
     /**
      * 性别
      */

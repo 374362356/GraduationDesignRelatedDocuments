@@ -22,6 +22,10 @@ import java.util.List;
 @RequestMapping("person")
 public class PersonController {
     /**
+     *  普通用户登录，列表展示跟用户相关的会议参与人员
+     */
+
+    /**
      * 服务对象
      */
     @Resource

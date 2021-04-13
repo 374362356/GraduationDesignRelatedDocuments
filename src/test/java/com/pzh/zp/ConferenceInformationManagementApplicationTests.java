@@ -1,12 +1,15 @@
 package com.pzh.zp;
 
 import com.pzh.zp.dao.NewsDao;
+import com.pzh.zp.dao.ReachDao;
 import com.pzh.zp.dao.UserDao;
 import com.pzh.zp.entity.News;
+import com.pzh.zp.entity.Reach;
 import com.pzh.zp.entity.Reports;
 import com.pzh.zp.dao.ReportsDao;
 import com.pzh.zp.entity.User;
 import com.pzh.zp.enumState.UserEnum;
+import com.pzh.zp.utils.JWTUtil;
 import lombok.var;
 import org.junit.jupiter.api.Test;
 import org.springframework.boot.test.context.SpringBootTest;
@@ -41,6 +44,8 @@ class ConferenceInformationManagementApplicationTests {
     private UserDao userDao;
     @Resource
     private NewsDao newsDao;
+    @Resource
+    ReachDao reachDao;
     @Test
     void findAll(){
         List<Reports> reports = reportsDao.queryAll();
@@ -79,5 +84,16 @@ class ConferenceInformationManagementApplicationTests {
         List<News> news = newsDao.queryAll(null);
         Map<Integer, Integer> publishId = news.stream().collect(Collectors.toMap(News::getId, News::getPublishId));
         System.out.println(publishId.get(10));
+    }
+
+    @Test
+    void test1(){
+        System.out.println(JWTUtil.getClaimByToken("eyJhbGciOiJIUzI1NiJ9.eyJzdWIiOiJ6cCIsImlkIjo2LCJ1c2VybmFtZSI6Im1tIiwibmlja05hbWUiOiJhZG1pbiIsInN0YXR1cyI6MSwiaWF0IjoxNjE3ODEyMTg5LCJleHAiOjE2MTg0MTY5ODl9.eR58BUD8EqiIJJBQ0JaHURXoYeQuotvCI9eBsDKWHBU"));
+    }
+
+    @Test
+    void z(){
+        //System.out.println(reachDao.queryAll(new Reach()));
+        System.out.println(reachDao.queryByUserId(1));
     }
 }

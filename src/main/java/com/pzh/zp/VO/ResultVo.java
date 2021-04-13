@@ -35,5 +35,5 @@ public class ResultVo<T> {
         resultVo.setData(data);
         return resultVo;
     }
-    public static ResultVo fail(String msg){return fail(400,"失败",null);}
+    public static ResultVo fail(String msg){return fail(400,msg,null);}
 }

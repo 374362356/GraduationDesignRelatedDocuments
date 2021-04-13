@@ -4,7 +4,7 @@
 
     <resultMap type="com.pzh.zp.entity.Staff" id="StaffMap">
         <result property="id" column="id" jdbcType="INTEGER"/>
-        <result property="name" column="name" jdbcType="VARCHAR"/>
+        <result property="sName" column="s_name" jdbcType="VARCHAR"/>
         <result property="gender" column="gender" jdbcType="OTHER"/>
         <result property="email" column="email" jdbcType="VARCHAR"/>
         <result property="phone" column="phone" jdbcType="VARCHAR"/>
@@ -15,7 +15,7 @@
     <!--查询单个-->
     <select id="queryById" resultMap="StaffMap">
         select
-          id, name, gender, email, phone, position, conference_id
+          id, s_name, gender, email, phone, position, conference_id
         from pzh_meeting_management.staff
         where id = #{id}
     </select>
@@ -23,7 +23,7 @@
     <!--查询指定行数据-->
     <select id="queryAllByLimit" resultMap="StaffMap">
         select
-          id, name, gender, email, phone, position, conference_id
+          id, s_name, gender, email, phone, position, conference_id
         from pzh_meeting_management.staff
         limit #{offset}, #{limit}
     </select>
@@ -31,14 +31,14 @@
     <!--通过实体作为筛选条件查询-->
     <select id="queryAll" resultMap="StaffMap">
         select
-        id, name, gender, email, phone, position, conference_id
+        id, s_name, gender, email, phone, position, conference_id
         from pzh_meeting_management.staff
         <where>
             <if test="id != null">
                 and id = #{id}
             </if>
-            <if test="name != null and name != ''">
-                and name = #{name}
+            <if test="sName != null and sName != ''">
+                and s_name = #{sName}
             </if>
             <if test="gender != null">
                 and gender = #{gender}
@@ -60,28 +60,28 @@
 
     <!--新增所有列-->
     <insert id="insert" keyProperty="id" useGeneratedKeys="true">
-        insert into pzh_meeting_management.staff(name, gender, email, phone, position, conference_id)
-        values (#{name}, #{gender}, #{email}, #{phone}, #{position}, #{conferenceId})
+        insert into pzh_meeting_management.staff(s_name, gender, email, phone, position, conference_id)
+        values (#{sName}, #{gender}, #{email}, #{phone}, #{position}, #{conferenceId})
     </insert>
 
     <insert id="insertBatch" keyProperty="id" useGeneratedKeys="true">
-        insert into pzh_meeting_management.staff(name, gender, email, phone, position, conference_id)
+        insert into pzh_meeting_management.staff(s_name, gender, email, phone, position, conference_id)
         values
         <foreach collection="entities" item="entity" separator=",">
-            (#{entity.name}, #{entity.gender}, #{entity.email}, #{entity.phone}, #{entity.position},
+            (#{entity.sName}, #{entity.gender}, #{entity.email}, #{entity.phone}, #{entity.position},
             #{entity.conferenceId})
         </foreach>
     </insert>
 
     <insert id="insertOrUpdateBatch" keyProperty="id" useGeneratedKeys="true">
-        insert into pzh_meeting_management.staff(name, gender, email, phone, position, conference_id)
+        insert into pzh_meeting_management.staff(s_name, gender, email, phone, position, conference_id)
         values
         <foreach collection="entities" item="entity" separator=",">
-            (#{entity.name}, #{entity.gender}, #{entity.email}, #{entity.phone}, #{entity.position},
+            (#{entity.sName}, #{entity.gender}, #{entity.email}, #{entity.phone}, #{entity.position},
             #{entity.conferenceId})
         </foreach>
         on duplicate key update
-        name = values(name) , gender = values(gender) , email = values(email) , phone = values(phone) , position =
+        s_name = values(s_name) , gender = values(gender) , email = values(email) , phone = values(phone) , position =
         values(position) , conference_id = values(conference_id)
     </insert>
 
@@ -89,8 +89,8 @@
     <update id="update">
         update pzh_meeting_management.staff
         <set>
-            <if test="name != null and name != ''">
-                name = #{name},
+            <if test="sName != null and sName != ''">
+                s_name = #{sName},
             </if>
             <if test="gender != null">
                 gender = #{gender},
@@ -117,11 +117,11 @@
     </delete>
 
     <select id="fuzzySearch" resultMap="StaffMap" parameterType="String">
-        select id, name, gender, email, phone, position, conference_id
+        select id, s_name, gender, email, phone, position, conference_id
         from pzh_meeting_management.staff
         <where>
-            <if test="name!=null and name!=''">
-                name like concat('%',#{name},'%')
+            <if test="sName!=null and sName!=''">
+                s_name like concat('%',#{sName},'%')
             </if>
             <if test="email!=null and email!=''">
                 or email like concat('%',#{email},'%')
@@ -138,5 +138,17 @@
     <select id="counting" resultType="Integer">
         select count(1)
         from pzh_meeting_management.staff;
+    </select>
+
+    <select id="queryStaffIdByConferenceId" resultType="Integer">
+        select id
+        from pzh_meeting_management.staff
+        where conference_id = #{conferenceId}
+    </select>
+
+    <select id="queryStaffByName" resultMap="StaffMap">
+        select *
+        from pzh_meeting_management.staff
+        where s_name = #{sName}
     </select>
 </mapper>

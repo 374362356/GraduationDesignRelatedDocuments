@@ -13,7 +13,7 @@ import java.text.ParseException;
 @RequestMapping("/upload")
 public class QiniuController {
     /**
-     * 删除时远程数据库文件未删除
+     * 字段加上上传人名
      */
 
     @Autowired

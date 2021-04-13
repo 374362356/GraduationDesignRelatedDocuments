@@ -60,6 +60,8 @@ public class PersonServiceImpl implements PersonService {
     }
 
     /**
+     *  插入参会人员时需同时建立一个签到记录，reach表中的userid为person表id；
+     *  staffid何conferenceid需对应staff表的记录。staff与conference一对多，需判断会议主持在不同的时间负责会议
      *
      * @param personVo 实例对象
      * @return

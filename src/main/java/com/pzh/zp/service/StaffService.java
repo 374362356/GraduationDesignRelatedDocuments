@@ -57,13 +57,13 @@ public interface StaffService {
     /**
      * 模糊查询
      *
-     * @param name
+     * @param sName
      * @param email
      * @param phone
      * @param position
      * @return 对象列表
      */
-    List<Staff> fuzzySearch(String name, String email, String phone, String position);
+    List<Staff> fuzzySearch(String sName, String email, String phone, String position);
 
     /**
      * 通过实体作为筛选条件查询

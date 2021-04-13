@@ -1,9 +1,11 @@
 package com.pzh.zp.service.impl;
 
+import com.pzh.zp.config.PasswordEncoderConfig;
 import com.pzh.zp.dao.UserDao;
 import com.pzh.zp.entity.User;
 import com.pzh.zp.enumState.UserEnum;
 import com.pzh.zp.service.UserService;
+import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Service;
 
 import java.text.ParseException;
@@ -56,12 +58,17 @@ public class UserServiceImpl implements UserService {
      */
     @Override
     public User insert(User user) throws ParseException {
+        if(user==null){
+            return null;
+        }
         SimpleDateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
         String format = dateFormat.format(new Date());
         Date date = dateFormat.parse(format);
         //插入时间
         user.setCreateTime(date);
         user.setStatus(UserEnum.UNFROZEN.getKey());      //enum
+        String encode = new PasswordEncoderConfig().passWordEncoder().encode(user.getPassword());
+        user.setPassword(encode);
         this.userDao.insert(user);
         return user;
     }
@@ -76,7 +83,8 @@ public class UserServiceImpl implements UserService {
     public User update(User user) throws ParseException {
         User oldUser = userDao.queryById(user.getId());
 
-            User newUser = new User(user.getId(), user.getNickName(), oldUser.getUserName(), user.getPassword(), oldUser.getCreateTime(),
+        String encode = new BCryptPasswordEncoder().encode(user.getPassword());
+        User newUser = new User(user.getId(), user.getNickName(), oldUser.getUserName(), encode, oldUser.getCreateTime(),
                     user.getGender(), user.getPhone(), user.getStatus());
         this.userDao.update(newUser);
         return this.queryById(user.getId());

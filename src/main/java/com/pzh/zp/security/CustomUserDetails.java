@@ -16,9 +16,9 @@ import java.util.List;
 @AllArgsConstructor
 @NoArgsConstructor
 public class CustomUserDetails implements UserDetails {
-    private String userName;
+    private String username;
     private String password;
-    private List<Permission> permissons; //权限 实际就是 路径的集合 ["/teacher","/student"]
+    private List<Permission> permissons; //权限 就是 路径的集合
     private Boolean isAccountNonExpired;
     private Boolean isAccountNonLocked;
     private Boolean isCredentialsNonExpired;
@@ -46,7 +46,7 @@ public class CustomUserDetails implements UserDetails {
 
     @Override
     public String getUsername() {
-        return this.userName;
+        return this.username;
     }
 
     @Override

@@ -100,4 +100,9 @@
         delete from pzh_meeting_management.role where id = #{id}
     </delete>
 
+    <select id="findRoleIdByUserId" resultType="Integer">
+        select role_id
+        from pzh_meeting_management.role_user
+        where user_id = #{userId}
+    </select>
 </mapper>

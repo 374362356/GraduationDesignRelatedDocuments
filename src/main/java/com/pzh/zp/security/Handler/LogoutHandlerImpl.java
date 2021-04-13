@@ -20,8 +20,8 @@ public class LogoutHandlerImpl implements LogoutHandler {
         String token = request.getHeader("token");
         if(token!=null){
             Claims claim = JWTUtil.getClaimByToken(token);
-            String  username = claim.get("userName").toString();
-            System.out.println(username);
+            String  username = claim.get("username").toString();
+            System.out.println("======logout======="+username);
         }
         try {
             new ObjectMapper().writeValue(response.getOutputStream(), ResultVo.success("退出成功"));

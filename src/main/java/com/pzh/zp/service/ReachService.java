@@ -1,16 +1,16 @@
 package com.pzh.zp.service;
 
+import com.pzh.zp.VO.ReachVo;
 import com.pzh.zp.entity.Reach;
 
+import javax.servlet.http.HttpServletRequest;
 import java.util.List;
-
-
 
 /**
  * 到会时间表(Reach)表服务接口
  *
  * @author makejava
- * @since 2021-01-25 16:45:30
+ * @since 2021-04-10 19:32:43
  */
 public interface ReachService {
 
@@ -20,7 +20,7 @@ public interface ReachService {
      * @param id 主键
      * @return 实例对象
      */
-    Reach queryById(Integer id);
+    List<ReachVo> queryByUserId(Integer id);
 
     /**
      * 查询多条数据
@@ -45,7 +45,7 @@ public interface ReachService {
      * @param reach 实例对象
      * @return 实例对象
      */
-    Reach update(Reach reach);
+    ReachVo update(ReachVo reach);
 
     /**
      * 通过主键删除数据
@@ -55,4 +55,13 @@ public interface ReachService {
      */
     boolean deleteById(Integer id);
 
+    /**
+     *
+     * @param reach
+     * @param request
+     * @return
+     */
+    List<ReachVo> findAll(Reach reach, HttpServletRequest request);
+
+    ReachVo queryById(Integer id);
 }

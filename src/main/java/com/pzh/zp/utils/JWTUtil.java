@@ -22,7 +22,7 @@ public class JWTUtil {
         return Jwts.builder()
                 .setSubject(subject)
                 .claim("id",user.getId())
-                .claim("userName",user.getUserName())
+                .claim("username",user.getUserName())
                 .claim("nickName",user.getNickName())
                 .claim("status",user.getStatus())
                 .setIssuedAt(new Date())

@@ -11,21 +11,23 @@ import com.pzh.zp.entity.Permission;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.stereotype.Component;
+import org.springframework.stereotype.Service;
 
 import javax.servlet.http.HttpServletRequest;
 import java.util.List;
 
-@Component("AccessService")
+@Component("accessService")
 public class AccessService {
     public boolean hasPermission(HttpServletRequest request, Authentication authentication){
 
         Object principal = authentication.getPrincipal();
-        if(principal instanceof UserDetails){
-            CustomUserDetails userDetails=(CustomUserDetails) principal;
+        if(principal!=null && principal instanceof UserDetails){
+            CustomUserDetails userDetails = (CustomUserDetails) principal;
             boolean flag=false;
             List<Permission> permissons = userDetails.getPermissons();
             for (Permission permisson : permissons) {
-                if(request.getRequestURI().equals(permisson.getUrl())){
+                System.out.println("========AccessService========>"+request.getRequestURI()+"=======>"+permisson.getUrl());
+                if(request.getRequestURI().contains(permisson.getUrl())){
                     flag= true;
                     break;
                 }

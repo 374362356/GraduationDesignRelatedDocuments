@@ -130,7 +130,7 @@ public class NewsServiceImpl implements NewsService {
     public List<NewsVo> queryAll(News news) {
         List<News> newsList = newsDao.queryAll(news);
         Map<Integer, Integer> idAndPid = newsList.stream().collect(Collectors.toMap(News::getId, News::getPublishId));
-        List<NewsVo> newsVos = null;
+        List<NewsVo> newsVos = new ArrayList<>();
         for (News n : newsList) {
             Integer publishId = idAndPid.get(n.getId());
             List<User> user = newsDao.findPublishName(publishId);

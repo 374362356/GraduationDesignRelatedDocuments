@@ -1,4 +1,4 @@
-HELP.md
+会议问题记录文档.md
 target/
 !.mvn/wrapper/maven-wrapper.jar
 !**/src/main/**/target/

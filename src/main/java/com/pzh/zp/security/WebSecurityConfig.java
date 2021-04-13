@@ -51,8 +51,9 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
 
     @Override
     public void configure(WebSecurity web) throws Exception {
-        web.ignoring().antMatchers("/conference/**","/static/**","/user/**","/person/**","/reports/**","/news/**"
-                                    ,"/staff/**","/suggestion/**","/permission/**","/role/**","/upload/**");
+        web.ignoring().antMatchers("/reports/**","/static/**");
+        /*"/conference/**","/static/**","/user/**","/person/**","/reports/**","/news/**"
+                                    ,"/staff/**","/suggestion/**","/permission/**","/role/**","/upload/**"*/
     }
 
     @Override
@@ -63,17 +64,17 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
                 .authenticationEntryPoint(
                         (request, response, e) -> ResponseUtil.out(response, ResultVo.fail("请登陆再访问")))
                 .accessDeniedHandler(
-                        (request, response, e) -> ResponseUtil.out(response,ResultVo.fail("无权限")))
+                        (request, response, e) -> ResponseUtil.out(response,ResultVo.fail("无此权限")))
                 .and()
-                .formLogin().usernameParameter("userName").loginProcessingUrl("/login")
+                .formLogin().usernameParameter("username").loginProcessingUrl("/login")
                 .successHandler(successHandler)
                 .failureHandler(failureHandler)
                 .and()
                 .authorizeRequests()
-                .antMatchers("/login","/user/register","/logout").permitAll()
-                .antMatchers("/").authenticated()
+                .antMatchers("/login","/user/register","/logout","/reports/*").permitAll()
+                .antMatchers("/reports/**","/menus/**").authenticated()
                 //自定义权限控制器  其他所有请求 都要进行校验 返回True表示通过 返回false表示不能访问
-                .anyRequest().access("@AccessService.hasPermission(request,authentication)")
+                .anyRequest().access("@accessService.hasPermission(request,authentication)")
                 .and()
                 .logout().logoutUrl("/logout")
                 .addLogoutHandler(logoutHandler)

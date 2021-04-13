@@ -84,14 +84,17 @@ public interface StaffDao {
     /**
      * 模糊查询
      *
-     * @param name
+     * @param sName
      * @param email
      * @param phone
      * @param position
      * @return 对象列表
      */
-    List<Staff> fuzzySearch(String name,String email,String phone,String position);
+    List<Staff> fuzzySearch(String sName,String email,String phone,String position);
 
     Integer counting();
 
+    Integer queryStaffIdByConferenceId(Integer id);
+
+    Staff queryStaffByName(String name);
 }

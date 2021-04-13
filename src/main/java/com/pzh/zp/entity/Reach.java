@@ -4,20 +4,20 @@ import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
-import java.io.Serializable;
 import java.util.Date;
+import java.io.Serializable;
 
 /**
  * 到会时间表(Reach)实体类
  *
  * @author makejava
- * @since 2021-01-25 16:45:30
+ * @since 2021-04-10 19:32:35
  */
 @Data
 @AllArgsConstructor
 @NoArgsConstructor
 public class Reach implements Serializable {
-    private static final long serialVersionUID = -49091086868642669L;
+    private static final long serialVersionUID = -56929158515188978L;
 
     private Integer id;
     /**
@@ -27,15 +27,15 @@ public class Reach implements Serializable {
     /**
      * 到会确认
      */
-    private Object confirm;
+    private Integer confirm;
     /**
      * 参会人id
      */
-    private Integer personId;
+    private Integer userId;
     /**
-     * 接待人员id
+     * 会议负责人员id
      */
     private Integer staffId;
 
-
+    private Integer conferenceId;
 }

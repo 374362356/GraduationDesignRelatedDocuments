@@ -55,7 +55,7 @@ public class StaffServiceImpl implements StaffService {
             String name = conferenceDao.queryById(id).getName();
             for (Staff s: staff) {
                 if(s.getConferenceId().equals(id)) {
-                    StaffVo vo = new StaffVo(s.getId(), s.getName(), s.getGender(), s.getEmail(), s.getPhone(), s.getPosition(), name);
+                    StaffVo vo = new StaffVo(s.getId(), s.getSName(), s.getGender(), s.getEmail(), s.getPhone(), s.getPosition(), name);
                     staffVos.add(vo);
                 }
             }
@@ -76,7 +76,7 @@ public class StaffServiceImpl implements StaffService {
     public Staff insert(StaffVo staff) {
         String conferenceName = staff.getConferenceName();
         int id = conferenceDao.queryIdByName(conferenceName);
-        Staff newStaff = new Staff(0, staff.getName(), staff.getGender(), staff.getEmail(), staff.getPhone(), staff.getPosition(), id);
+        Staff newStaff = new Staff(0, staff.getSName(), staff.getGender(), staff.getEmail(), staff.getPhone(), staff.getPosition(), id);
         this.staffDao.insert(newStaff);
         return newStaff;
     }
@@ -90,7 +90,7 @@ public class StaffServiceImpl implements StaffService {
     @Override
     public Staff update(StaffVo staffVo) {
         int conferenceId = conferenceDao.queryIdByName(staffVo.getConferenceName());
-        Staff staff = new Staff(staffVo.getId(), staffVo.getName(), staffVo.getGender(), staffVo.getEmail(), staffVo.getPhone(),
+        Staff staff = new Staff(staffVo.getId(), staffVo.getSName(), staffVo.getGender(), staffVo.getEmail(), staffVo.getPhone(),
                 staffVo.getPosition(), conferenceId);
         this.staffDao.update(staff);
         return this.queryById(staff.getId());
@@ -109,15 +109,15 @@ public class StaffServiceImpl implements StaffService {
 
     /**
      *
-     * @param name
+     * @param sName
      * @param email
      * @param phone
      * @param position
      * @return
      */
     @Override
-    public List<Staff> fuzzySearch(String name, String email, String phone, String position) {
-        return staffDao.fuzzySearch(name, email, phone, position);
+    public List<Staff> fuzzySearch(String sName, String email, String phone, String position) {
+        return staffDao.fuzzySearch(sName, email, phone, position);
     }
 
     /**

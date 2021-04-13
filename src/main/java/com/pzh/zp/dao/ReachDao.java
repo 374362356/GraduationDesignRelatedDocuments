@@ -1,26 +1,26 @@
 package com.pzh.zp.dao;
 
+import com.pzh.zp.VO.ReachVo;
 import com.pzh.zp.entity.Reach;
 import org.apache.ibatis.annotations.Param;
 
 import java.util.List;
 
-
 /**
  * 到会时间表(Reach)表数据库访问层
  *
  * @author makejava
- * @since 2021-01-25 16:45:30
+ * @since 2021-04-10 19:32:41
  */
 public interface ReachDao {
 
     /**
-     * 通过ID查询单条数据
+     * 通过UserID查询单条数据
      *
      * @param id 主键
      * @return 实例对象
      */
-    Reach queryById(Integer id);
+    List<ReachVo> queryByUserId(Integer id);
 
     /**
      * 查询指定行数据
@@ -38,7 +38,7 @@ public interface ReachDao {
      * @param reach 实例对象
      * @return 对象列表
      */
-    List<Reach> queryAll(Reach reach);
+    List<ReachVo> queryAll(Reach reach);
 
     /**
      * 新增数据
@@ -80,4 +80,9 @@ public interface ReachDao {
      */
     int deleteById(Integer id);
 
+    ReachVo queryById(Integer id);
+
+    List<Integer> findPersonsByconferenceId(Integer id);
+
+    List<Reach> queryReachByUserId(Integer id);
 }

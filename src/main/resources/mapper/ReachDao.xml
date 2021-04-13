@@ -5,74 +5,96 @@
     <resultMap type="com.pzh.zp.entity.Reach" id="ReachMap">
         <result property="id" column="id" jdbcType="INTEGER"/>
         <result property="reachTime" column="reach_time" jdbcType="TIMESTAMP"/>
-        <result property="confirm" column="confirm" jdbcType="OTHER"/>
-        <result property="personId" column="person_id" jdbcType="INTEGER"/>
+        <result property="confirm" column="confirm" jdbcType="INTEGER"/>
+        <result property="userId" column="user_id" jdbcType="INTEGER"/>
         <result property="staffId" column="staff_id" jdbcType="INTEGER"/>
+        <result property="conferenceId" column="conference_id" jdbcType="INTEGER"/>
+    </resultMap>
+    <resultMap type="com.pzh.zp.VO.ReachVo" id="reachVo">
+        <result property="id" column="id" jdbcType="INTEGER"/>
+        <result property="reachTime" column="reach_time" jdbcType="TIMESTAMP"/>
+        <result property="confirm" column="confirm" jdbcType="INTEGER"/>
+        <result property="userName" column="user_name" jdbcType="INTEGER"/>
+        <result property="staffName" column="s_name" jdbcType="VARCHAR"/>
+        <result property="conferenceName" column="name" jdbcType="INTEGER"/>
     </resultMap>
 
     <!--查询单个-->
-    <select id="queryById" resultMap="ReachMap">
-        select
-          id, reach_time, confirm, person_id, staff_id
-        from pzh_meeting_management.reach
-        where id = #{id}
+    <select id="queryByUserId" resultMap="reachVo">
+        select r.id, r.reach_time, r.confirm, u.user_name, s.s_name, c.name
+        from reach r
+         left join user u on u.id = r.user_id
+         left join conference c on c.id = r.conference_id
+         left join staff s on s.id = r.staff_id
+        where r.user_id = #{userId}
     </select>
 
     <!--查询指定行数据-->
     <select id="queryAllByLimit" resultMap="ReachMap">
-        select
-          id, reach_time, confirm, person_id, staff_id
-        from pzh_meeting_management.reach
-        limit #{offset}, #{limit}
+        select id,
+               reach_time,
+               confirm,
+               user_id,
+               staff_id,
+               conference_id
+        from pzh_meeting_management.reach limit #{offset}, #{limit}
     </select>
 
     <!--通过实体作为筛选条件查询-->
-    <select id="queryAll" resultMap="ReachMap">
-        select
-        id, reach_time, confirm, person_id, staff_id
-        from pzh_meeting_management.reach
-        <where>
-            <if test="id != null">
-                and id = #{id}
-            </if>
-            <if test="reachTime != null">
-                and reach_time = #{reachTime}
-            </if>
-            <if test="confirm != null">
-                and confirm = #{confirm}
-            </if>
-            <if test="personId != null">
-                and person_id = #{personId}
-            </if>
-            <if test="staffId != null">
-                and staff_id = #{staffId}
-            </if>
-        </where>
+    <select id="queryAll" resultMap="reachVo">
+        select r.id, r.reach_time, r.confirm, u.user_name, s.s_name, c.name
+        from reach r
+        left join user u on u.id = r.user_id
+        left join conference c on c.id = r.conference_id
+        left join staff s on s.id = r.staff_id
+<!--        select-->
+<!--        id, reach_time, confirm, user_id, staff_id, conference_id-->
+<!--        from pzh_meeting_management.reach-->
+<!--        <where>-->
+<!--            <if test="id != null">-->
+<!--                and id = #{id}-->
+<!--            </if>-->
+<!--            <if test="reachTime != null">-->
+<!--                and reach_time = #{reachTime}-->
+<!--            </if>-->
+<!--            <if test="confirm != null">-->
+<!--                and confirm = #{confirm}-->
+<!--            </if>-->
+<!--            <if test="userId != null">-->
+<!--                and user_id = #{userId}-->
+<!--            </if>-->
+<!--            <if test="staffId != null">-->
+<!--                and staff_id = #{staffId}-->
+<!--            </if>-->
+<!--            <if test="conferenceId != null">-->
+<!--                and conference_id = #{conferenceId}-->
+<!--            </if>-->
+<!--        </where>-->
     </select>
 
     <!--新增所有列-->
     <insert id="insert" keyProperty="id" useGeneratedKeys="true">
-        insert into pzh_meeting_management.reach(reach_time, confirm, person_id, staff_id)
-        values (#{reachTime}, #{confirm}, #{personId}, #{staffId})
+        insert into pzh_meeting_management.reach(reach_time, confirm, user_id, staff_id, conference_id)
+        values (#{reachTime}, #{confirm}, #{userId}, #{staffId}, #{conferenceId})
     </insert>
 
     <insert id="insertBatch" keyProperty="id" useGeneratedKeys="true">
-        insert into pzh_meeting_management.reach(reach_time, confirm, person_id, staff_id)
+        insert into pzh_meeting_management.reach(reach_time, confirm, user_id, staff_id, conference_id)
         values
         <foreach collection="entities" item="entity" separator=",">
-            (#{entity.reachTime}, #{entity.confirm}, #{entity.personId}, #{entity.staffId})
+            (#{entity.reachTime}, #{entity.confirm}, #{entity.userId}, #{entity.staffId}, #{entity.conferenceId})
         </foreach>
     </insert>
 
     <insert id="insertOrUpdateBatch" keyProperty="id" useGeneratedKeys="true">
-        insert into pzh_meeting_management.reach(reach_time, confirm, person_id, staff_id)
+        insert into pzh_meeting_management.reach(reach_time, confirm, user_id, staff_id, conference_id)
         values
         <foreach collection="entities" item="entity" separator=",">
-            (#{entity.reachTime}, #{entity.confirm}, #{entity.personId}, #{entity.staffId})
+            (#{entity.reachTime}, #{entity.confirm}, #{entity.userId}, #{entity.staffId}, #{entity.conferenceId})
         </foreach>
         on duplicate key update
-        reach_time = values(reach_time) , confirm = values(confirm) , person_id = values(person_id) , staff_id =
-        values(staff_id)
+        reach_time = values(reach_time) , confirm = values(confirm) , user_id = values(user_id) , staff_id =
+        values(staff_id) , conference_id = values(conference_id)
     </insert>
 
     <!--通过主键修改数据-->
@@ -85,11 +107,14 @@
             <if test="confirm != null">
                 confirm = #{confirm},
             </if>
-            <if test="personId != null">
-                person_id = #{personId},
+            <if test="userId != null">
+                user_id = #{userId},
             </if>
             <if test="staffId != null">
                 staff_id = #{staffId},
+            </if>
+            <if test="conferenceId != null">
+                conference_id = #{conferenceId},
             </if>
         </set>
         where id = #{id}
@@ -97,7 +122,32 @@
 
     <!--通过主键删除-->
     <delete id="deleteById">
-        delete from pzh_meeting_management.reach where id = #{id}
+        delete
+        from pzh_meeting_management.reach
+        where id = #{id}
     </delete>
+    
+    <select id="findPersonsByconferenceId" parameterType="Integer">
+        select person_id
+        from pzh_meeting_management.activity_person
+        where conference_id = #{conference_id};
+    </select>
+
+    <!-- 通过userid得到会议id   -->
+    <select id="queryReachByUserId" resultMap="ReachMap">
+        select *
+        from pzh_meeting_management.reach
+        where user_id = #{userId}
+    </select>
+
+    <select id="queryById" resultMap="reachVo">
+        select r.id, r.reach_time, r.confirm, u.user_name, s.s_name, c.name
+        from reach r
+                 left join user u on u.id = r.user_id
+                 left join conference c on c.id = r.conference_id
+                 left join staff s on s.id = r.staff_id
+        where r.id = #{id}
+    </select>
+
 
 </mapper>

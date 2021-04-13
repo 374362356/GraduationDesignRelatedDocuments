@@ -81,4 +81,5 @@ public interface RoleDao {
      */
     int deleteById(Integer id);
 
+    int findRoleIdByUserId(Integer id);
 }

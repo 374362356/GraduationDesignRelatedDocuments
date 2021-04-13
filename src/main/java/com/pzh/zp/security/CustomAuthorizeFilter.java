@@ -7,6 +7,7 @@ import com.pzh.zp.service.PermissionService;
 import com.pzh.zp.service.UserService;
 import com.pzh.zp.utils.JWTUtil;
 import io.jsonwebtoken.Claims;
+import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.GrantedAuthority;
@@ -15,7 +16,6 @@ import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.web.authentication.WebAuthenticationDetailsSource;
 import org.springframework.stereotype.Component;
-import org.springframework.util.StringUtils;
 import org.springframework.web.filter.OncePerRequestFilter;
 
 import javax.servlet.FilterChain;
@@ -48,19 +48,19 @@ public class CustomAuthorizeFilter extends OncePerRequestFilter {
 
         //请求头是否有 token
         String token = request.getHeader("token");
-        if(token!=null&&!"undefined".equals(token)&&"".equals(token)) {
+        if(!StringUtils.isBlank(token)&&!"null".equals(token)) {
             //通过jwt工具类 返回用户名
             Claims claim = JWTUtil.getClaimByToken(token);
 
-            Object userName = claim.get("userName");
+            Object userName = claim.get("username");
             if (userName != null && SecurityContextHolder.getContext().getAuthentication() == null) {
                 User user = userService.queryByuserName(userName.toString());
-                UserVo userVo = new UserVo(user.getId(), user.getUserName(), user.getUserName(), user.getStatus());
+                UserVo userVo = new UserVo(user.getId(), user.getUserName(), user.getNickName(), user.getStatus());
                 List<Permission> permissons = permissionService.findByUserId(userVo.getId());
 
                 Collection<GrantedAuthority> authorities = new ArrayList<>();
                 for (Permission permisson : permissons) {
-                    if (StringUtils.isEmpty(permisson.getUrl())) {
+                    if (StringUtils.isBlank(permisson.getUrl())) {
                         continue;
                     }
                     SimpleGrantedAuthority authority = new SimpleGrantedAuthority(permisson.getUrl());
@@ -77,7 +77,7 @@ public class CustomAuthorizeFilter extends OncePerRequestFilter {
                     SecurityContextHolder.getContext().setAuthentication(authentication);
                 }
             }
-            System.out.println("=====SecurityContextHolder====>"+SecurityContextHolder.getContext().getAuthentication());
+            //System.out.println("=====SecurityContextHolder====>"+SecurityContextHolder.getContext().getAuthentication());
         }
         filterChain.doFilter(request,response);
     }
