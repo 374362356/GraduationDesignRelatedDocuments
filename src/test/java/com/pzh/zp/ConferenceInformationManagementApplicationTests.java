@@ -1,15 +1,10 @@
 package com.pzh.zp;
 
-import com.pzh.zp.dao.NewsDao;
-import com.pzh.zp.dao.ReachDao;
-import com.pzh.zp.dao.UserDao;
-import com.pzh.zp.entity.News;
-import com.pzh.zp.entity.Reach;
-import com.pzh.zp.entity.Reports;
-import com.pzh.zp.dao.ReportsDao;
-import com.pzh.zp.entity.User;
+import com.pzh.zp.dao.*;
+import com.pzh.zp.entity.*;
 import com.pzh.zp.enumState.UserEnum;
 import com.pzh.zp.utils.JWTUtil;
+import com.pzh.zp.utils.Stamp2date;
 import lombok.var;
 import org.junit.jupiter.api.Test;
 import org.springframework.boot.test.context.SpringBootTest;
@@ -46,6 +41,8 @@ class ConferenceInformationManagementApplicationTests {
     private NewsDao newsDao;
     @Resource
     ReachDao reachDao;
+    @Resource
+    ConferenceDao conferenceDao;
     @Test
     void findAll(){
         List<Reports> reports = reportsDao.queryAll();
@@ -92,8 +89,16 @@ class ConferenceInformationManagementApplicationTests {
     }
 
     @Test
-    void z(){
-        //System.out.println(reachDao.queryAll(new Reach()));
-        System.out.println(reachDao.queryByUserId(1));
+    void z() throws ParseException {
+        String stamp = Stamp2date.dateToStamp("2021-04-13 17:56:00");
+        long timeMillis = System.currentTimeMillis();
+        System.out.println(Long.parseLong(stamp) - timeMillis);
+    }
+
+    @Test
+    void p(){
+        List<Conference> conferences = conferenceDao.queryAll(null);
+        System.out.println(conferences.stream().map(x->x.getEndTime()).collect(Collectors.toList()));
+
     }
 }

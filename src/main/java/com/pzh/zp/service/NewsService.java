@@ -49,7 +49,7 @@ public interface NewsService {
      * @param news 实例对象
      * @return 实例对象
      */
-    News update(News news);
+    News update(NewsVo news);
 
     /**
      * 通过主键删除数据

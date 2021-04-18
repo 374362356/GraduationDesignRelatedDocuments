@@ -12,6 +12,17 @@
         <result property="phone" column="phone" jdbcType="VARCHAR"/>
         <result property="status" column="status" jdbcType="INTEGER"/>
     </resultMap>
+    <resultMap type="com.pzh.zp.VO.UserMapVo" id="UserMapVo">
+        <result property="id" column="id" jdbcType="INTEGER"/>
+        <result property="nickName" column="nick_name" jdbcType="VARCHAR"/>
+        <result property="userName" column="user_name" jdbcType="VARCHAR"/>
+        <result property="password" column="password" jdbcType="VARCHAR"/>
+        <result property="createTime" column="create_time" jdbcType="TIMESTAMP"/>
+        <result property="gender" column="gender" jdbcType="OTHER"/>
+        <result property="phone" column="phone" jdbcType="VARCHAR"/>
+        <result property="status" column="status" jdbcType="INTEGER"/>
+        <result property="description" column="description" jdbcType="VARCHAR"/>
+    </resultMap>
 
     <!--查询单个-->
     <select id="queryById" resultMap="UserMap">
@@ -30,10 +41,11 @@
     </select>
 
     <!--通过实体作为筛选条件查询-->
-    <select id="queryAll" resultMap="UserMap">
-        select
-        id, nick_name, user_name, password, create_time, gender, phone, status
-        from pzh_meeting_management.user
+    <select id="queryAll" resultMap="UserMapVo">
+        select u.*,r.description
+        from user u
+        left join role_user ru on u.id = ru.user_id
+        left join role r on r.id = ru.role_id
         <where>
             <if test="id != null">
                 and id = #{id}

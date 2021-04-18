@@ -26,7 +26,7 @@ public class AccessService {
             boolean flag=false;
             List<Permission> permissons = userDetails.getPermissons();
             for (Permission permisson : permissons) {
-                System.out.println("========AccessService========>"+request.getRequestURI()+"=======>"+permisson.getUrl());
+                //System.out.println("========AccessService========>"+request.getRequestURI()+"=======>"+permisson.getUrl());
                 if(request.getRequestURI().contains(permisson.getUrl())){
                     flag= true;
                     break;

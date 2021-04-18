@@ -9,12 +9,14 @@
         <result property="endTime" column="end_time" jdbcType="TIMESTAMP"/>
         <result property="place" column="place" jdbcType="VARCHAR"/>
         <result property="host" column="host" jdbcType="VARCHAR"/>
+        <result property="desc" column="desc" jdbcType="VARCHAR"/>
+        <result property="ongoing" column="ongoing" jdbcType="INTEGER"/>
     </resultMap>
 
     <!--查询单个-->
     <select id="queryById" resultMap="ConferenceMap">
         select
-          id, name, start_time, end_time, place, host
+          id, name, start_time, end_time, place, host, `desc`, ongoing
         from pzh_meeting_management.conference
         where id = #{id}
     </select>
@@ -22,7 +24,7 @@
     <!--查询指定行数据-->
     <select id="queryAllByLimit" resultMap="ConferenceMap">
         select
-          id, name, start_time, end_time, place, host
+          id, name, start_time, end_time, place, host, `desc`, ongoing
         from pzh_meeting_management.conference
         limit #{offset}, #{limit}
     </select>
@@ -30,7 +32,7 @@
     <!--通过实体作为筛选条件查询-->
     <select id="queryAll" resultMap="ConferenceMap">
         select
-        id, name, start_time, end_time, place, host
+        id, name, start_time, end_time, place, host, `desc`, ongoing
         from pzh_meeting_management.conference
         <where>
             <if test="id != null">
@@ -51,32 +53,38 @@
             <if test="host != null and host != ''">
                 and host = #{host}
             </if>
+            <if test="desc != null">
+                and `desc` = #{desc}
+            </if>
+            <if test="ongoing != null">
+                and ongoing = #{ongoing}
+            </if>
         </where>
     </select>
 
     <!--新增所有列-->
     <insert id="insert" keyProperty="id" useGeneratedKeys="true">
-        insert into pzh_meeting_management.conference(name, start_time, end_time, place, host)
-        values (#{name}, #{startTime}, #{endTime}, #{place}, #{host})
+        insert into pzh_meeting_management.conference(name, start_time, end_time, place, host, `desc`, ongoing)
+        values (#{name}, #{startTime}, #{endTime}, #{place}, #{host}, #{desc}, #{ongoing})
     </insert>
 
     <insert id="insertBatch" keyProperty="id" useGeneratedKeys="true">
-        insert into pzh_meeting_management.conference(name, start_time, end_time, place, host)
+        insert into pzh_meeting_management.conference(name, start_time, end_time, place, host, `desc`, ongoing)
         values
         <foreach collection="entities" item="entity" separator=",">
-            (#{entity.name}, #{entity.startTime}, #{entity.endTime}, #{entity.place}, #{entity.host})
+            (#{entity.name}, #{entity.startTime}, #{entity.endTime}, #{entity.place}, #{entity.host}, #{entity.desc}, #{entity.ongoing})
         </foreach>
     </insert>
 
     <insert id="insertOrUpdateBatch" keyProperty="id" useGeneratedKeys="true">
-        insert into pzh_meeting_management.conference(name, start_time, end_time, place, host)
+        insert into pzh_meeting_management.conference(name, start_time, end_time, place, host ,`desc`, ongoing)
         values
         <foreach collection="entities" item="entity" separator=",">
-            (#{entity.name}, #{entity.startTime}, #{entity.endTime}, #{entity.place}, #{entity.host})
+            (#{entity.name}, #{entity.startTime}, #{entity.endTime}, #{entity.place}, #{entity.host}, #{entity.desc}, #{entity.ongoing})
         </foreach>
         on duplicate key update
         name = values(name) , start_time = values(start_time) , end_time = values(end_time) , place = values(place) ,
-        host = values(host)
+        host = values(host), `desc` = values(desc), ongoing = values(ongoing)
     </insert>
 
     <!--通过主键修改数据-->
@@ -98,6 +106,12 @@
             <if test="host != null and host != ''">
                 host = #{host},
             </if>
+            <if test="desc !=null and desc != ''">
+                `desc` = #{desc},
+            </if>
+            <if test="ongoing != null and ongoing != ''">
+                ongoing = #{ongoing}
+            </if>
         </set>
         where id = #{id}
     </update>
@@ -109,7 +123,7 @@
 
     <!--模糊查询  -->
     <select id="fuzzySearch" resultMap="ConferenceMap" parameterType="String">
-        select id, name, start_time, end_time, place, host
+        select id, name, start_time, end_time, place, host, `desc`, ongoing
         from pzh_meeting_management.conference
         <where>
             <if test="name!=null and name!=''">
@@ -150,9 +164,9 @@
         select *
         from pzh_meeting_management.conference
         <where>
-        <if test="place!=null and place!=''">
-             place = #{place}
-        </if>
+            <if test="place!=null and place!=''">
+                 place = #{place}
+            </if>
         </where>
     </select>
 </mapper>

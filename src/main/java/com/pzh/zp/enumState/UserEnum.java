@@ -10,8 +10,14 @@ public enum UserEnum {
     UNFROZEN(1,"活跃"),
 
     CHECKIN(11,"已签到"),
-    UNCHECKIN(12,"未签到");
+    UNCHECKIN(12,"未签到"),
 
+    LEAVE(8,"请假"),
+    UNLEAVE(9,"工作"),
+
+    ONGOING(25,"开展中"),
+    UNGOING(23,"未开展"),
+    ENDGOING(7,"已结束");
 
     private Integer key;
     private String value;

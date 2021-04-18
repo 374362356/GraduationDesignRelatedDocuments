@@ -1,6 +1,7 @@
 package com.pzh.zp.controller.DbController;
 
 import com.pzh.zp.VO.ResultVo;
+import com.pzh.zp.VO.UserMapVo;
 import com.pzh.zp.entity.User;
 import com.pzh.zp.service.UserService;
 import org.springframework.web.bind.annotation.*;
@@ -58,7 +59,7 @@ public class UserController {
     }
 
     @GetMapping("/findAll")
-    public List<User> findAll(){
+    public List<UserMapVo> findAll(){
         return userService.queryAll(null);
     }
 

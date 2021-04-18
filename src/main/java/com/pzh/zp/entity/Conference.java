@@ -44,4 +44,13 @@ public class Conference implements Serializable {
      */
     private String host;
 
+    /**
+     * 会议简要
+     */
+    private String desc;
+
+    /**
+     * 状态
+     */
+    private Integer ongoing;
 }

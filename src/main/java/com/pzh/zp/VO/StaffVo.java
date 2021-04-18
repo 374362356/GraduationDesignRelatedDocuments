@@ -33,4 +33,6 @@ public class StaffVo {
      * 会议名
      */
     private String conferenceName;
+
+    private Integer leave;
 }

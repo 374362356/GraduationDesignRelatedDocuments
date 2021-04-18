@@ -1,5 +1,6 @@
 package com.pzh.zp.service.impl;
 
+import com.pzh.zp.VO.UserMapVo;
 import com.pzh.zp.config.PasswordEncoderConfig;
 import com.pzh.zp.dao.UserDao;
 import com.pzh.zp.entity.User;
@@ -114,7 +115,7 @@ public class UserServiceImpl implements UserService {
 
 
     @Override
-    public List<User> queryAll(User user) {
+    public List<UserMapVo> queryAll(User user) {
         return userDao.queryAll(user);
     }
 

@@ -3,15 +3,18 @@ package com.pzh.zp.service.impl;
 import com.pzh.zp.VO.PersonVo;
 import com.pzh.zp.dao.ConferenceDao;
 import com.pzh.zp.dao.PersonDao;
+import com.pzh.zp.dao.ReachDao;
+import com.pzh.zp.dao.StaffDao;
 import com.pzh.zp.entity.Conference;
 import com.pzh.zp.entity.Person;
+import com.pzh.zp.entity.Reach;
+import com.pzh.zp.enumState.UserEnum;
 import com.pzh.zp.service.PersonService;
 import org.springframework.stereotype.Service;
 
 import javax.annotation.Resource;
 import java.util.List;
-
-
+import java.util.stream.Collectors;
 
 
 /**
@@ -27,6 +30,12 @@ public class PersonServiceImpl implements PersonService {
 
     @Resource
     private ConferenceDao conferenceDao;
+
+    @Resource
+    private ReachDao reachDao;
+
+    @Resource
+    private StaffDao staffDao;
     /**
      * 通过ID查询单条数据
      *
@@ -76,6 +85,10 @@ public class PersonServiceImpl implements PersonService {
             int conference_id = conferenceDao.queryIdByName(personVo.getName());
             int person_id = person.getId();       //null
             personDao.insertActivity_person(conference_id, person_id);
+            //新增参会人员是需要新增其签到信息
+            Integer staffId = staffDao.queryStaffIdByConferenceId(conference_id);
+            Reach reach = new Reach(0, null, UserEnum.UNCHECKIN.getKey(), person_id, staffId, conference_id);
+            reachDao.insert(reach);
         }
         return person;
     }

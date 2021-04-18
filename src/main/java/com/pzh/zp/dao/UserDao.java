@@ -1,5 +1,6 @@
 package com.pzh.zp.dao;
 
+import com.pzh.zp.VO.UserMapVo;
 import com.pzh.zp.entity.User;
 import org.apache.ibatis.annotations.Param;
 
@@ -39,7 +40,7 @@ public interface UserDao {
      * @param user 实例对象
      * @return 对象列表
      */
-    List<User> queryAll(User user);
+    List<UserMapVo> queryAll(User user);
 
     /**
      * 新增数据

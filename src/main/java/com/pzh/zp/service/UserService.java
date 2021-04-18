@@ -1,5 +1,6 @@
 package com.pzh.zp.service;
 
+import com.pzh.zp.VO.UserMapVo;
 import com.pzh.zp.entity.User;
 
 import java.text.ParseException;
@@ -71,7 +72,7 @@ public interface UserService {
      * @param user 实例对象
      * @return 对象列表
      */
-    List<User> queryAll(User user);
+    List<UserMapVo> queryAll(User user);
 
     /**
      *

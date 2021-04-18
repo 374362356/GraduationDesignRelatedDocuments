@@ -10,13 +10,13 @@ import java.io.Serializable;
  * 工作人员表(Staff)实体类
  *
  * @author makejava
- * @since 2021-01-25 16:45:32
+ * @since 2021-04-14 19:00:59
  */
 @Data
 @AllArgsConstructor
 @NoArgsConstructor
 public class Staff implements Serializable {
-    private static final long serialVersionUID = 148885769105539092L;
+    private static final long serialVersionUID = -31610463703012308L;
 
     private Integer id;
     /**
@@ -43,5 +43,8 @@ public class Staff implements Serializable {
      * 会议编号
      */
     private Integer conferenceId;
-
+    /**
+     * 是否请假
+     */
+    private Integer leave;
 }

@@ -66,9 +66,8 @@ public class NewsController {
         return newsService.fuzzySearch(newTime, contentTitle);
     }
 
-    @PutMapping("/news_update/{newsId}")
-    public ResultVo updateNews(@PathVariable Integer newsId,@RequestBody News news){
-        news.setId(newsId);
+    @PutMapping("/news_update")
+    public ResultVo updateNews(@RequestBody NewsVo news){
         return ResultVo.success(newsService.update(news));
     }
 

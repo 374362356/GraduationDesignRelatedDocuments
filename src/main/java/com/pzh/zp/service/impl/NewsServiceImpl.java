@@ -2,6 +2,7 @@ package com.pzh.zp.service.impl;
 
 import com.pzh.zp.VO.NewsVo;
 import com.pzh.zp.dao.NewsDao;
+import com.pzh.zp.dao.UserDao;
 import com.pzh.zp.entity.News;
 import com.pzh.zp.entity.Staff;
 import com.pzh.zp.entity.User;
@@ -10,6 +11,7 @@ import com.pzh.zp.utils.JWTUtil;
 import com.pzh.zp.utils.Stamp2date;
 import io.jsonwebtoken.Claims;
 import lombok.SneakyThrows;
+import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.stereotype.Service;
 
 import javax.annotation.Resource;
@@ -32,6 +34,8 @@ public class NewsServiceImpl implements NewsService {
     @Resource
     private NewsDao newsDao;
 
+    @Resource
+    private UserDao userDao;
     /**
      * 通过ID查询单条数据
      *
@@ -70,9 +74,9 @@ public class NewsServiceImpl implements NewsService {
         news.setNewTime(date);
 
         if(!news.getContentTitle().isEmpty() && !"".equals(news.getContentTitle())){
-            //Claims token = JWTUtil.getClaimByToken(request.getHeader("token"));
-            //Integer status = (Integer) token.get("id");
-            //news.setStateId(status);
+            Claims token = JWTUtil.getClaimByToken(request.getHeader("token"));
+            Integer id = (Integer) token.get("id");
+            news.setPublishId(id);
             this.newsDao.insert(news);
             System.out.println("======>"+news);
             return news;
@@ -88,13 +92,17 @@ public class NewsServiceImpl implements NewsService {
         long timeMillis = System.currentTimeMillis();
         if(timeMillis<=Long.parseLong(stamp)){
             new Timer().schedule(new TimerTask() {
-                @SneakyThrows
                 @Override
                 public void run() {
-                    System.out.println("-------定时任务指定任务--------");
-                    insert(request, news);
-                }
-            }, Long.parseLong(stamp)-timeMillis);
+                    Thread thread = new Thread(() -> {
+                        try {
+                            insert(request, news);
+                        } catch (ParseException e) {
+                            e.printStackTrace();
+                        }
+                    });
+                    thread.start();
+                }}, Long.parseLong(stamp)-timeMillis);
         }
         return null;
     }
@@ -105,8 +113,10 @@ public class NewsServiceImpl implements NewsService {
      * @return 实例对象
      */
     @Override
-    public News update(News news) {
-        this.newsDao.update(news);
+    public News update(NewsVo news) {
+        User user = userDao.queryByuserName(news.getPublishName());
+        News newOne = new News(news.getId(), news.getNewTime(), news.getContentTitle(), news.getContent(), user.getId());
+        this.newsDao.update(newOne);
         return this.queryById(news.getId());
     }
 

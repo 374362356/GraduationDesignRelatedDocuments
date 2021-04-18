@@ -5,6 +5,7 @@ import com.pzh.zp.dao.ConferenceDao;
 import com.pzh.zp.dao.StaffDao;
 import com.pzh.zp.entity.Conference;
 import com.pzh.zp.entity.Staff;
+import com.pzh.zp.enumState.UserEnum;
 import com.pzh.zp.service.StaffService;
 import org.springframework.stereotype.Service;
 
@@ -55,7 +56,7 @@ public class StaffServiceImpl implements StaffService {
             String name = conferenceDao.queryById(id).getName();
             for (Staff s: staff) {
                 if(s.getConferenceId().equals(id)) {
-                    StaffVo vo = new StaffVo(s.getId(), s.getSName(), s.getGender(), s.getEmail(), s.getPhone(), s.getPosition(), name);
+                    StaffVo vo = new StaffVo(s.getId(), s.getSName(), s.getGender(), s.getEmail(), s.getPhone(), s.getPosition(), name,s.getLeave());
                     staffVos.add(vo);
                 }
             }
@@ -76,7 +77,8 @@ public class StaffServiceImpl implements StaffService {
     public Staff insert(StaffVo staff) {
         String conferenceName = staff.getConferenceName();
         int id = conferenceDao.queryIdByName(conferenceName);
-        Staff newStaff = new Staff(0, staff.getSName(), staff.getGender(), staff.getEmail(), staff.getPhone(), staff.getPosition(), id);
+        Staff newStaff = new Staff(0, staff.getSName(), staff.getGender(), staff.getEmail(), staff.getPhone(), staff.getPosition(), id, UserEnum.UNLEAVE.getKey());
+        //得到所有会议的结束时间，判断新增负责人的名下是否有会议主持的开始时间早于存在的会议主持的结束时间
         this.staffDao.insert(newStaff);
         return newStaff;
     }
@@ -91,7 +93,7 @@ public class StaffServiceImpl implements StaffService {
     public Staff update(StaffVo staffVo) {
         int conferenceId = conferenceDao.queryIdByName(staffVo.getConferenceName());
         Staff staff = new Staff(staffVo.getId(), staffVo.getSName(), staffVo.getGender(), staffVo.getEmail(), staffVo.getPhone(),
-                staffVo.getPosition(), conferenceId);
+                staffVo.getPosition(), conferenceId, staffVo.getLeave());
         this.staffDao.update(staff);
         return this.queryById(staff.getId());
     }

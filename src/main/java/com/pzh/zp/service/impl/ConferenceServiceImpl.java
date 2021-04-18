@@ -4,9 +4,11 @@ import com.pzh.zp.VO.ResultVo;
 import com.pzh.zp.dao.ConferenceDao;
 import com.pzh.zp.entity.Conference;
 import com.pzh.zp.service.ConferenceService;
+import com.pzh.zp.utils.Stamp2date;
 import org.springframework.stereotype.Service;
 
 import javax.annotation.Resource;
+import java.util.Date;
 import java.util.List;
 import java.util.stream.Collectors;
 
@@ -114,6 +116,9 @@ public class ConferenceServiceImpl implements ConferenceService {
      */
     @Override
     public List<Conference> queryAll(Conference conference) {
+        //判断会议状态
+        List<Date> dates = conferenceDao.queryAll(conference).stream().map(Conference::getEndTime).collect(Collectors.toList());
+
         return conferenceDao.queryAll(conference);
     }
 

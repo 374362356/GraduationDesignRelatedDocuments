@@ -51,7 +51,6 @@ public class SuccessHandler extends SavedRequestAwareAuthenticationSuccessHandle
             response.addHeader("Access-Control-Expose-Headers","token");
             ResponseUtil.out(response,ResultVo.success(hs));
         }
-        System.out.println("======SuccessHandler=======>"+hs);
         //ResponseUtil.out(response, ResultVo.success(new TokenVo(uservo,token)));
     }
 }
