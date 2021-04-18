@@ -37,7 +37,7 @@
                   <span>{{ props.row.id }}</span>
                 </el-form-item><br/>
                 <el-form-item label="会议简要: ">
-                  <span>{{ props.row.name }}</span>
+                  <span>{{ props.row.desc }}</span>
                 </el-form-item>     
               </el-form>
             </template>
@@ -50,7 +50,13 @@
           <el-table-column prop="endTime" label="结束时间"> </el-table-column>
           <el-table-column prop="place" label="举办地点"> </el-table-column>
           <el-table-column prop="host" label="举办方"> </el-table-column>
-          <el-table-column prop="product.status" label="状态"> </el-table-column>
+          <el-table-column prop="ongoing" label="状态">
+            <template slot-scope="scope">
+                <el-tag v-if="scope.row.ongoing === 25">开展中</el-tag>
+                <el-tag type="success" v-else-if="scope.row.ongoing === 23">未开展</el-tag>
+                <el-tag type="warning" v-if="scope.row.ongoing === 7">已结束</el-tag>
+            </template>
+          </el-table-column>
           <el-table-column label="操作" width="300">
             <template slot-scope="scope">
               <el-button
@@ -133,8 +139,8 @@
         <el-form-item label="举办方">
           <el-input v-model="addConferenceForm.host"></el-input>
         </el-form-item>
-        <el-form-item label="角色概述">
-          <el-input v-model="addConferenceForm.roleDesc"></el-input>
+        <el-form-item label="会议简要">
+          <el-input v-model="addConferenceForm.desc"></el-input>
         </el-form-item>
       </el-form>
       <span slot="footer" class="dialog-footer">
@@ -174,7 +180,7 @@
           <el-input v-model="editConferenceForm.host"></el-input>
         </el-form-item>
         <el-form-item label="角色概述">
-          <el-input v-model="editConferenceForm.roleDesc"></el-input>
+          <el-input v-model="editConferenceForm.desc"></el-input>
         </el-form-item>
       </el-form>
       <span slot="footer" class="dialog-footer">
@@ -214,7 +220,7 @@ export default {
         endTime: '',
         place: '',
         host: '',
-        roleDesc: '',
+        desc: '',
       },
       editConferenceForm: {},
       editDialogVisible: false,
@@ -250,7 +256,7 @@ export default {
         }
       }).then((res) => {
           _this.tableData = res.data
-          //alert(JSON.stringify(_this.tableData))
+          alert(JSON.stringify(_this.tableData))
         })
               /*
                let _this = this;
@@ -392,7 +398,7 @@ export default {
                                   endTime: row.endTime,
                                   place: row.place,
                                   host: row.host,
-                                  roleDesc: row.roleDesc }
+                                  desc: row.desc }
       this.conferenceId = row.id
       this.editDialogVisible = true
     },

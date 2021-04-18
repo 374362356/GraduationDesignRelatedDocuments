@@ -40,7 +40,7 @@
             <el-table-column prop="gender" label="性别" width="80" :formatter="stateFormat"></el-table-column>
             <el-table-column prop="phone" label="电话" width="130"> </el-table-column>
             <el-table-column prop="createTime" label="创建时间" width="160"> </el-table-column>
-            <el-table-column prop="roles" label="角色" width="80"></el-table-column>
+            <el-table-column prop="description" label="角色" width="100"></el-table-column>
             <el-table-column label="状态" width="140">
               <template slot-scope="scope">
                 <!-- <el-switch v-model="value" @change="userStateChange(scope.row.id)"></el-switch> -->

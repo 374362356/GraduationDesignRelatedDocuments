@@ -74,11 +74,11 @@
                     <el-table-column prop="position" label="职位"  width="100"></el-table-column>
                     <el-table-column prop="conferenceName" label="负责的会议名"  width="100"></el-table-column>
 
-                    <el-table-column label="状态" prop="status">
+                    <el-table-column label="状态" prop="status" width="100">
                         <template slot-scope="scope">
-                            <el-tag v-if="scope.row.status === 0">未支付</el-tag>
-                            <el-tag type="success" v-else-if="scope.row.status === 1">已完成</el-tag>
-                            <el-tag type="warning" v-else>退款中</el-tag>
+                            <el-tag v-if="scope.row.leave === 8">请假</el-tag>
+                            <el-tag type="success" v-else-if="scope.row.leave === 9">工作</el-tag>
+                            <el-tag type="warning" v-else>错误状态</el-tag>
                         </template>
                     </el-table-column>
 

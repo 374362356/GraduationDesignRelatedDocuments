@@ -45,7 +45,7 @@
               <el-table-column prop="newTime" label="发布时间" width="150"> </el-table-column>
               <el-table-column prop="content" label="发布内容" width="350"> </el-table-column>
               <el-table-column prop="publishName" label="发布人" width="120"></el-table-column>
-              <el-table-column prop="product.status" label="状态" width="120"> </el-table-column>
+              <el-table-column prop="product.status" label="状态" width="100"> </el-table-column>
               <el-table-column label="操作" width="200">
                 <template slot-scope="scope">
                   <el-button
@@ -68,14 +68,14 @@
           <el-tab-pane label="公告编写" name="second">
             <el-form class="table" :rules="rules">
               <el-form-item label="公告标题" prop="title">
-                <el-input label="公告标题" width="60px" v-model="editorTextUpload.contentTitle"></el-input>
+                <el-input width="60px" v-model="editorTextUpload.contentTitle"></el-input>
               </el-form-item>
               <editor id="editor_id" height="450px" width="1200px" :content.sync="editorText"
                   :afterChange="afterChange()"
                   pluginsPath="../../../static/kindeditor/plugins/" 
                   :loadStyleMode="false"
                   @on-content-change="onContentChange">
-                  </editor>
+              </editor>
             </el-form>
               <div><el-button type="primary" round @click="sub()">提交<i class="el-icon-upload el-icon--right"></i></el-button></div>
           </el-tab-pane>
@@ -85,7 +85,7 @@
                 <span class="demonstration">定时任务发布：</span>
                 <el-date-picker
                   v-model="timing"
-                  value-format="yyyy-MM-dd HH:MM:ss"
+                  value-format="yyyy-MM-dd HH:mm:ss"
                   type="datetime"
                   placeholder="选择日期时间"
                   align="center"
@@ -120,7 +120,7 @@
           <el-input v-model="editNewsForm.content"></el-input>
         </el-form-item>
         <el-form-item label="发布人员">
-          <el-input v-model="editNewsForm.publishId"></el-input>
+          <el-input v-model="editNewsForm.publishName"></el-input>
         </el-form-item>
         <el-form-item label="公告概述">
           <el-input v-model="editNewsForm.roleDesc"></el-input>
@@ -199,8 +199,8 @@ export default {
           this.$message.success('发布公告成功')
           this.getNewsList();
         })
-        .catch(()=>{
-          this.$message.error("发布公告失败")
+        .catch((res)=>{
+          this.$message.error(res.data.data.msg)
           alert(this.editorTextUpload.contentTitle+"-"+this.editorTextUpload.content+"-"+this.timing)
         })
     },
@@ -214,7 +214,7 @@ export default {
                 'token':window.sessionStorage.getItem("token")
               }
         }).then((res)=>{
-          alert(JSON.stringify(res.data.data.publishId))
+          //alert(JSON.stringify(res.data.data.publishId))
           this.$message.success('发布公告成功')
           this.getNewsList();
         })
@@ -267,18 +267,20 @@ export default {
     },
         //编辑会议
     editNews(row) {
-      this.editNewsForm = { contentTitle: row.contentTitle,
+      this.editNewsForm = {id: row.id,
+                                  contentTitle: row.contentTitle,
                                   newTime: row.newTime,
                                   content: row.content,
-                                  publishId: row.publishId,
+                                  publishName: row.publishName,
                                   roleDesc: row.roleDesc }
-      this.newId = row.id
       this.editDialogVisible = true
     },
     editNewsSureBtn(){
+      alert(JSON.stringify(this.editNewsForm))
         this.$axios.
-        put('news/news_update/'+this.newId,this.editNewsForm)
+        put('news/news_update',this.editNewsForm)
         .then((res)=>{
+          this.$message.success('更新公告信息成功')
           //this.editNewsForm = res.data.data;
           this.getNewsList();
         })
