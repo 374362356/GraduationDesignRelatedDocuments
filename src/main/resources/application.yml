@@ -10,9 +10,9 @@ spring:
   datasource:
     type: com.alibaba.druid.pool.DruidDataSource
     driver-class-name: com.mysql.cj.jdbc.Driver
-    url: jdbc:mysql://localhost:3306/pzh_meeting_management?useSSL=false&characterEncoding=utf-8&serverTimezone=UTC
+    url: jdbc:mysql://111.229.118.152:3306/pzh_meeting_management?useSSL=false&characterEncoding=utf-8&serverTimezone=UTC
     username: root
-    password: zp.6330330
+    password: 123456
 
 mybatis:
   type-aliases-package: com.pzh.zp.entity

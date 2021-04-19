@@ -6,6 +6,7 @@ import com.pzh.zp.service.ConferenceService;
 import org.springframework.web.bind.annotation.*;
 
 import javax.annotation.Resource;
+import javax.servlet.http.HttpServletRequest;
 import java.util.List;
 
 
@@ -25,6 +26,7 @@ public class ConferenceController {
      * 前端会议添加空值判断
      * 会议地点和名字不能重复选择
      * 会议状态，显示当前是否在开展
+     * 用户和管理员的界面显示不同数据
      */
 
 
@@ -64,8 +66,8 @@ public class ConferenceController {
      * @return 对象列表
      */
     @GetMapping("/findAll")
-    public List<Conference> findAll(){
-        return conferenceService.queryAll(null);
+    public List<Conference> findAll(HttpServletRequest request){
+        return conferenceService.queryAll(null,request);
     }
 
     /**

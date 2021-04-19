@@ -3,9 +3,17 @@ package com.pzh.zp.service.impl;
 import com.pzh.zp.dao.SuggestionDao;
 import com.pzh.zp.entity.Suggestion;
 import com.pzh.zp.service.SuggestionService;
+import com.pzh.zp.utils.JWTUtil;
+import io.jsonwebtoken.Claims;
+import org.apache.commons.lang3.StringUtils;
+import org.apache.ibatis.jdbc.Null;
 import org.springframework.stereotype.Service;
 
 import javax.annotation.Resource;
+import javax.servlet.http.HttpServletRequest;
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
+import java.util.Date;
 import java.util.List;
 
 
@@ -51,9 +59,21 @@ public class SuggestionServiceImpl implements SuggestionService {
      * @return 实例对象
      */
     @Override
-    public Suggestion insert(Suggestion suggestion) {
-        this.suggestionDao.insert(suggestion);
-        return suggestion;
+    public Suggestion insert(HttpServletRequest request, Suggestion suggestion) throws ParseException {
+        SimpleDateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
+        String format = dateFormat.format(new Date());
+        Date date = dateFormat.parse(format);
+        if(suggestion!= null) {
+            Claims token = JWTUtil.getClaimByToken(request.getHeader("token"));
+            Integer id = (Integer)token.get("id");
+            suggestion.setSuggTime(date);
+            suggestion.setPersonId(id);
+            //这里设置staffid应改为会议id
+            //suggestion.setStaffId();
+            this.suggestionDao.insert(suggestion);
+            return suggestion;
+        }
+        return null;
     }
 
     /**

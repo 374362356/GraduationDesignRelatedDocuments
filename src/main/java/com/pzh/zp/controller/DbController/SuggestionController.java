@@ -21,6 +21,8 @@ import javax.xml.transform.Result;
 public class SuggestionController {
     /**
      *  字段加上解决时间
+     *  用户界面添加新增建议页面
+     *  表字段staff_id改为会议ID，personID相当于userID
      */
 
     /**

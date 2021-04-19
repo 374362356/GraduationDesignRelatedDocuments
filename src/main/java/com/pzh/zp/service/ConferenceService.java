@@ -2,6 +2,7 @@ package com.pzh.zp.service;
 
 import com.pzh.zp.entity.Conference;
 
+import javax.servlet.http.HttpServletRequest;
 import java.util.List;
 
 
@@ -71,7 +72,7 @@ public interface ConferenceService {
      * @param conference 实例对象
      * @return 对象列表
      */
-    List<Conference> queryAll(Conference conference);
+    List<Conference> queryAll(Conference conference, HttpServletRequest request);
 
     /**
      *

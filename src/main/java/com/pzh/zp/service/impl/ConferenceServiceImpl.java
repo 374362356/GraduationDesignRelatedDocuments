@@ -2,12 +2,19 @@ package com.pzh.zp.service.impl;
 
 import com.pzh.zp.VO.ResultVo;
 import com.pzh.zp.dao.ConferenceDao;
+import com.pzh.zp.dao.RoleDao;
 import com.pzh.zp.entity.Conference;
+import com.pzh.zp.entity.Role;
+import com.pzh.zp.enumState.UserEnum;
 import com.pzh.zp.service.ConferenceService;
+import com.pzh.zp.utils.JWTUtil;
 import com.pzh.zp.utils.Stamp2date;
+import org.apache.commons.lang3.StringUtils;
 import org.springframework.stereotype.Service;
 
 import javax.annotation.Resource;
+import javax.servlet.http.HttpServletRequest;
+import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 import java.util.stream.Collectors;
@@ -24,6 +31,8 @@ public class ConferenceServiceImpl implements ConferenceService {
     @Resource
     private ConferenceDao conferenceDao;
 
+    @Resource
+    private RoleDao roleDao;
     /**
      * 通过ID查询单条数据
      *
@@ -115,11 +124,21 @@ public class ConferenceServiceImpl implements ConferenceService {
      * @return
      */
     @Override
-    public List<Conference> queryAll(Conference conference) {
+    public List<Conference> queryAll(Conference conference, HttpServletRequest request) {
+        List<Conference> list = new ArrayList<>();
         //判断会议状态
         List<Date> dates = conferenceDao.queryAll(conference).stream().map(Conference::getEndTime).collect(Collectors.toList());
 
-        return conferenceDao.queryAll(conference);
+        String token = request.getHeader("token");
+        Integer id = (Integer) JWTUtil.getClaimByToken(token).get("id");
+        int roleId = roleDao.findRoleIdByUserId(id);
+        Role role = roleDao.queryById(roleId);
+        if (!StringUtils.isBlank(id.toString()) && UserEnum.user.getValue().equals(role.getRName())){
+            list.add(this.queryById(id));
+            return list;
+        }else {
+            return conferenceDao.queryAll(conference);
+        }
     }
 
     @Override
