@@ -8,6 +8,7 @@ import com.pzh.zp.enumState.UserEnum;
 import com.pzh.zp.service.UserService;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
@@ -58,9 +59,16 @@ public class UserServiceImpl implements UserService {
      * @return 实例对象
      */
     @Override
+    @Transactional
     public User insert(User user) throws ParseException {
         if(user==null){
             return null;
+        }
+        List<String> allName = userDao.findAllName();
+        for (String name : allName){
+            if (user.getUserName().equals(name)){
+                return null;
+            }
         }
         SimpleDateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
         String format = dateFormat.format(new Date());
@@ -81,6 +89,7 @@ public class UserServiceImpl implements UserService {
      * @return 实例对象
      */
     @Override
+    @Transactional
     public User update(User user) throws ParseException {
         User oldUser = userDao.queryById(user.getId());
 
@@ -130,6 +139,7 @@ public class UserServiceImpl implements UserService {
     }
 
     @Override
+    @Transactional
     public int userStateChange(Integer id) {
         User user = userDao.queryById(id);
         if (user.getStatus().equals(UserEnum.FROZEN.getKey())){

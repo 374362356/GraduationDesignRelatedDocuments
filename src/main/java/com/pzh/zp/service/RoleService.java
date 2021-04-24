@@ -2,6 +2,7 @@ package com.pzh.zp.service;
 
 import com.pzh.zp.entity.Role;
 
+import javax.servlet.http.HttpServletRequest;
 import java.text.ParseException;
 import java.util.List;
 
@@ -56,4 +57,16 @@ public interface RoleService {
      */
     boolean deleteById(Integer id);
 
+    List<Role> queryAll(Role role);
+
+    /**
+     *
+     * @param request
+     * @param role_id
+     * @param user_id
+     * @return
+     */
+    int updateUserRole(HttpServletRequest request,String role_id, String user_id);
+
+    String findRole(String userId);
 }

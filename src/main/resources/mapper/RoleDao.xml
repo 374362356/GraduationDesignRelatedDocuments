@@ -105,4 +105,20 @@
         from pzh_meeting_management.role_user
         where user_id = #{userId}
     </select>
+
+    <update id="updateUserRole" parameterType="String">
+            update pzh_meeting_management.role_user
+            <set>
+                <if test="roleId != null and roleId != ''">
+                    role_id = #{roleId},
+                </if>
+            </set>
+            where user_id = #{userId}
+        </update>
+    <select id="findRole" resultType="String" parameterType="String">
+        select r2.r_name
+        from role_user r
+        left join role r2 on r.role_id = r2.id
+        where r.user_id = #{userId}
+    </select>
 </mapper>

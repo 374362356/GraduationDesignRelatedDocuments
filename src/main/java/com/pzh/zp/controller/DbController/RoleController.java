@@ -5,10 +5,11 @@ import com.pzh.zp.entity.Role;
 import com.pzh.zp.service.RoleService;
 import org.apache.ibatis.annotations.Delete;
 import org.apache.ibatis.annotations.Param;
+import org.apache.ibatis.annotations.Result;
 import org.springframework.web.bind.annotation.*;
-import sun.font.CompositeGlyphMapper;
 
 import javax.annotation.Resource;
+import javax.servlet.http.HttpServletRequest;
 import java.text.ParseException;
 
 
@@ -34,13 +35,13 @@ public class RoleController {
      * @return 单条数据
      */
     @GetMapping("selectOne")
-    public Role selectOne(Integer id) {
+    public Role selectOne(@RequestParam Integer id) {
         return this.roleService.queryById(id);
     }
 
     @GetMapping("/role_list")
-    public ResultVo findAll(@RequestParam("offset") int offset, @RequestParam("limit") int limit){
-        return ResultVo.success(roleService.queryAllByLimit(offset, limit));
+    public ResultVo findAll(){
+        return ResultVo.success(roleService.queryAll(null));
     }
 
     @PostMapping("/role_insert")
@@ -56,5 +57,19 @@ public class RoleController {
     @DeleteMapping("/role_del")
     public ResultVo delete(@RequestParam Integer id){
         return ResultVo.success(roleService.deleteById(id));
+    }
+
+    @PutMapping("/updateRole")
+    public ResultVo updateRoleUser(HttpServletRequest request,@RequestParam String role_id, @RequestParam String user_id){
+        int update = roleService.updateUserRole(request, role_id, user_id);
+        if (update!=-1){
+            return ResultVo.success(update);
+        }
+        return ResultVo.fail("更新失败，无此权限");
+    }
+
+    @GetMapping("/findRole")
+    public ResultVo findRole(@RequestParam String userId){
+        return ResultVo.success(roleService.findRole(userId));
     }
 }

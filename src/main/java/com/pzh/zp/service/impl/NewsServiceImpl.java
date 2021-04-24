@@ -13,6 +13,7 @@ import io.jsonwebtoken.Claims;
 import lombok.SneakyThrows;
 import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import javax.annotation.Resource;
 import javax.servlet.http.HttpServletRequest;
@@ -67,6 +68,7 @@ public class NewsServiceImpl implements NewsService {
      * @throws ParseException
      */
     @Override
+    @Transactional
     public News insert(HttpServletRequest request,News news) throws ParseException {
         SimpleDateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
         String format = dateFormat.format(new Date());
@@ -113,6 +115,7 @@ public class NewsServiceImpl implements NewsService {
      * @return 实例对象
      */
     @Override
+    @Transactional
     public News update(NewsVo news) {
         User user = userDao.queryByuserName(news.getPublishName());
         News newOne = new News(news.getId(), news.getNewTime(), news.getContentTitle(), news.getContent(), user.getId());
@@ -137,6 +140,7 @@ public class NewsServiceImpl implements NewsService {
      * @return 对象列表
      */
     @Override
+    @Transactional
     public List<NewsVo> queryAll(News news) {
         List<News> newsList = newsDao.queryAll(news);
         Map<Integer, Integer> idAndPid = newsList.stream().collect(Collectors.toMap(News::getId, News::getPublishId));

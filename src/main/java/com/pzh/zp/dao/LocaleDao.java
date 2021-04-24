@@ -1,19 +1,17 @@
 package com.pzh.zp.dao;
 
-import com.pzh.zp.entity.Role;
+import com.pzh.zp.entity.Locale;
 import org.apache.ibatis.annotations.Param;
 
 import java.util.List;
 
-
-
 /**
- * 角色表(Role)表数据库访问层
+ * (Locale)表数据库访问层
  *
  * @author makejava
- * @since 2021-01-25 16:45:31
+ * @since 2021-04-22 18:02:18
  */
-public interface RoleDao {
+public interface LocaleDao {
 
     /**
      * 通过ID查询单条数据
@@ -21,7 +19,7 @@ public interface RoleDao {
      * @param id 主键
      * @return 实例对象
      */
-    Role queryById(Integer id);
+    Locale queryById(Integer id);
 
     /**
      * 查询指定行数据
@@ -30,48 +28,48 @@ public interface RoleDao {
      * @param limit  查询条数
      * @return 对象列表
      */
-    List<Role> queryAllByLimit(@Param("offset") int offset, @Param("limit") int limit);
+    List<Locale> queryAllByLimit(@Param("offset") int offset, @Param("limit") int limit);
 
 
     /**
      * 通过实体作为筛选条件查询
      *
-     * @param role 实例对象
+     * @param locale 实例对象
      * @return 对象列表
      */
-    List<Role> queryAll(Role role);
+    List<Locale> queryAll(Locale locale);
 
     /**
      * 新增数据
      *
-     * @param role 实例对象
+     * @param locale 实例对象
      * @return 影响行数
      */
-    int insert(Role role);
+    int insert(Locale locale);
 
     /**
      * 批量新增数据（MyBatis原生foreach方法）
      *
-     * @param entities List<Role> 实例对象列表
+     * @param entities List<Locale> 实例对象列表
      * @return 影响行数
      */
-    int insertBatch(@Param("entities") List<Role> entities);
+    int insertBatch(@Param("entities") List<Locale> entities);
 
     /**
      * 批量新增或按主键更新数据（MyBatis原生foreach方法）
      *
-     * @param entities List<Role> 实例对象列表
+     * @param entities List<Locale> 实例对象列表
      * @return 影响行数
      */
-    int insertOrUpdateBatch(@Param("entities") List<Role> entities);
+    int insertOrUpdateBatch(@Param("entities") List<Locale> entities);
 
     /**
      * 修改数据
      *
-     * @param role 实例对象
+     * @param locale 实例对象
      * @return 影响行数
      */
-    int update(Role role);
+    int update(Locale locale);
 
     /**
      * 通过主键删除数据
@@ -81,20 +79,8 @@ public interface RoleDao {
      */
     int deleteById(Integer id);
 
-    /**
-     *
-     * @param id
-     * @return
-     */
-    int findRoleIdByUserId(Integer id);
+    List<String> findAllPlaces();
 
-    /**
-     *
-     * @param role_id
-     * @param user_id
-     * @return
-     */
-    int updateUserRole(String role_id,String user_id);
-
-    String findRole(String userId);
+    Locale queryByPlace(String place);
 }
+

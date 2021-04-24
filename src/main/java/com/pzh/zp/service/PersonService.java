@@ -4,6 +4,7 @@ import com.pzh.zp.VO.PersonVo;
 import com.pzh.zp.entity.Conference;
 import com.pzh.zp.entity.Person;
 
+import javax.servlet.http.HttpServletRequest;
 import java.util.List;
 
 
@@ -63,7 +64,7 @@ public interface PersonService {
      *
      * @return
      */
-    List<PersonVo> queryAllInfoPerson();
+    List<PersonVo> queryAllInfoPerson(HttpServletRequest request);
 
     /**
      *

@@ -5,6 +5,7 @@ import com.pzh.zp.entity.Permission;
 import com.pzh.zp.enumState.UserEnum;
 import com.pzh.zp.service.PermissionService;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import javax.annotation.Resource;
 import java.text.ParseException;
@@ -53,6 +54,7 @@ public class PermissionServiceImpl implements PermissionService {
      * @return 实例对象
      */
     @Override
+    @Transactional
     public Permission insert(Permission permission) throws ParseException {
         SimpleDateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
         String format = dateFormat.format(new Date());

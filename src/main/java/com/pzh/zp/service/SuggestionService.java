@@ -1,5 +1,6 @@
 package com.pzh.zp.service;
 
+import com.pzh.zp.VO.SuggestionVo;
 import com.pzh.zp.entity.Suggestion;
 
 import javax.servlet.http.HttpServletRequest;
@@ -39,7 +40,7 @@ public interface SuggestionService {
      * @param suggestion 实例对象
      * @return 实例对象
      */
-    Suggestion insert(HttpServletRequest request, Suggestion suggestion) throws ParseException;
+    Suggestion insert(HttpServletRequest request, SuggestionVo suggestion) throws ParseException;
 
     /**
      * 修改数据

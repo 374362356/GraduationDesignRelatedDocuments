@@ -1,5 +1,6 @@
 package com.pzh.zp;
 
+import com.pzh.zp.VO.ConferUpdate;
 import com.pzh.zp.dao.*;
 import com.pzh.zp.entity.*;
 import com.pzh.zp.enumState.UserEnum;
@@ -99,6 +100,22 @@ class ConferenceInformationManagementApplicationTests {
     void p(){
         List<Conference> conferences = conferenceDao.queryAll(null);
         System.out.println(conferences.stream().map(x->x.getEndTime()).collect(Collectors.toList()));
+    }
+
+    @Test
+    void test233() throws ParseException {
+        List<ConferUpdate> status = conferenceDao.findConferStatus();
+        List<Date> endtime = status.stream().map(ConferUpdate::getEndTime).collect(Collectors.toList());
+        List<Date> starttime = status.stream().map(ConferUpdate::getStartTime).collect(Collectors.toList());
+//        for (Date d : endtime) {
+//            System.out.println(Stamp2date.compareToCurrentTime(d));
+//        }
+        Map<Integer, Date> collect = status.stream().collect(Collectors.toMap(x -> x.getId(), x -> x.getEndTime()));
+        List<Object> list = new ArrayList<>();
+        list.add(collect);
+        for (Object l : list){
+            System.out.println();
+        }
 
     }
 }

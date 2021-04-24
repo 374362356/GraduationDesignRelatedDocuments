@@ -1,5 +1,7 @@
 package com.pzh.zp.dao;
 
+import com.pzh.zp.VO.ConferUpdate;
+import com.pzh.zp.VO.ConferenceVo;
 import com.pzh.zp.entity.Conference;
 import org.apache.ibatis.annotations.Param;
 
@@ -105,4 +107,12 @@ public interface ConferenceDao {
     Integer counting();
 
     List<Conference> findConferenceByplace(String place);
+
+    /**
+     *
+     * @return
+     */
+    List<ConferenceVo> findConferenceInfo();
+
+    List<ConferUpdate> findConferStatus();
 }

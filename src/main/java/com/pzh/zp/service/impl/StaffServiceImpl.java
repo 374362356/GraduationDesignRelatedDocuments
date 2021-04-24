@@ -8,6 +8,7 @@ import com.pzh.zp.entity.Staff;
 import com.pzh.zp.enumState.UserEnum;
 import com.pzh.zp.service.StaffService;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import javax.annotation.Resource;
 import java.util.ArrayList;
@@ -47,6 +48,7 @@ public class StaffServiceImpl implements StaffService {
      * @return 对象列表
      */
     @Override
+    @Transactional
     public List<StaffVo> queryAllByLimit(int offset, int limit) {
         List<StaffVo> staffVos = new ArrayList<>();
         List<Staff> staff = this.staffDao.queryAllByLimit(offset, limit);
@@ -74,6 +76,7 @@ public class StaffServiceImpl implements StaffService {
      * @return 实例对象
      */
     @Override
+    @Transactional
     public Staff insert(StaffVo staff) {
         String conferenceName = staff.getConferenceName();
         int id = conferenceDao.queryIdByName(conferenceName);
@@ -90,6 +93,7 @@ public class StaffServiceImpl implements StaffService {
      * @return 实例对象
      */
     @Override
+    @Transactional
     public Staff update(StaffVo staffVo) {
         int conferenceId = conferenceDao.queryIdByName(staffVo.getConferenceName());
         Staff staff = new Staff(staffVo.getId(), staffVo.getSName(), staffVo.getGender(), staffVo.getEmail(), staffVo.getPhone(),

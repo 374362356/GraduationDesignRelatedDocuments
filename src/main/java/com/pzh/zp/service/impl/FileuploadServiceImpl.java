@@ -5,6 +5,7 @@ import com.pzh.zp.entity.Fileupload;
 import com.pzh.zp.service.FileuploadService;
 import com.pzh.zp.utils.QiniuUtil;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.multipart.MultipartFile;
 
 import javax.annotation.Resource;
@@ -56,6 +57,7 @@ public class FileuploadServiceImpl implements FileuploadService {
      * @throws ParseException
      */
     @Override
+    @Transactional
     public Fileupload insert(String fileName,MultipartFile files) throws ParseException {
         SimpleDateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
         String format = dateFormat.format(new Date());
@@ -86,6 +88,7 @@ public class FileuploadServiceImpl implements FileuploadService {
      * @return 是否成功
      */
     @Override
+    @Transactional
     public boolean deleteById(Integer id) {         //也删除了远程
         Fileupload fileupload = fileuploadDao.queryById(id);
         //这的key是文件名？

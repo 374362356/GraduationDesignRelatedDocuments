@@ -9,6 +9,7 @@ import com.pzh.zp.service.ReachService;
 import com.pzh.zp.utils.JWTUtil;
 import org.apache.commons.lang3.StringUtils;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import javax.annotation.Resource;
 import javax.servlet.http.HttpServletRequest;
@@ -80,6 +81,7 @@ public class ReachServiceImpl implements ReachService {
      * @return 实例对象
      */
     @Override
+    @Transactional
     public ReachVo update(ReachVo reach) {
         Integer userId = userDao.queryByuserName(reach.getUserName()).getId();
         Integer staffId = staffDao.queryStaffByName(reach.getStaffName()).getId();
@@ -117,6 +119,7 @@ public class ReachServiceImpl implements ReachService {
      * @return
      */
     @Override
+    @Transactional
     public List<ReachVo> findAll(Reach reach, HttpServletRequest request) {
         List<ReachVo> reaches = reachDao.queryAll(reach);
         //

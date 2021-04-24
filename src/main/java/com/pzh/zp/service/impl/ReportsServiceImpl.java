@@ -5,6 +5,7 @@ import com.pzh.zp.entity.Reports;
 import com.pzh.zp.dao.*;
 import com.pzh.zp.service.ReportsService;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import javax.annotation.Resource;
 import java.util.ArrayList;
@@ -33,6 +34,7 @@ public class ReportsServiceImpl implements ReportsService {
     }
 
     @Override
+    @Transactional
     public List queryAll() {
         List<Reports> reports = reportsDao.queryAll();
 
@@ -54,6 +56,7 @@ public class ReportsServiceImpl implements ReportsService {
     }
 
     @Override
+    @Transactional
     public int update(Reports reports) {
         String confer = conferenceDao.counting().toString();
         String user = userDao.counting().toString();

@@ -171,8 +171,22 @@
         where person_id = #{person_id}
     </select>
 
+    <select id="findConferIdByPId" parameterType="Integer" resultType="Integer">
+        select conference_id
+        from pzh_meeting_management.activity_person
+        where person_id = #{id}
+    </select>
+
     <delete id="deleteActivity_person">
         delete from pzh_meeting_management.activity_person
         where id = #{id}
     </delete>
+
+    <select id="findPersonByConferId" resultType="com.pzh.zp.VO.PersonVo">
+        select p.*,c.name
+        from person p
+        left join activity_person ap on p.id = ap.person_id
+        left join conference c on ap.conference_id = c.id
+        where ap.conference_id = #{id}
+    </select>
 </mapper>

@@ -105,11 +105,27 @@ public interface PersonDao {
      */
     int insertActivity_person(Integer conference_id,Integer person_id);
 
+    /**
+     *
+     * @param conference_id
+     * @param person_id
+     * @param id
+     * @return
+     */
     int updateActivity_person(Integer conference_id,Integer person_id,Integer id);
 
     Integer findIdByP_id(Integer person_id);
 
+    /**
+     *
+     * @param person_id
+     * @return
+     */
     int findC_idByP_id(Integer person_id);
 
+    List<Integer> findConferIdByPId(Integer id);
+
     int deleteActivity_person(Integer id);
+
+    List<PersonVo> findPersonByConferId(Integer id);
 }

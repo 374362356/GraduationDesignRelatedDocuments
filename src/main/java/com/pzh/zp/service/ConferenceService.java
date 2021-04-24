@@ -1,5 +1,7 @@
 package com.pzh.zp.service;
 
+import com.pzh.zp.VO.ConferUpdate;
+import com.pzh.zp.VO.ConferenceVo;
 import com.pzh.zp.entity.Conference;
 
 import javax.servlet.http.HttpServletRequest;
@@ -79,4 +81,8 @@ public interface ConferenceService {
      * @return
      */
     List<String> queryAllName();
+
+    List<ConferenceVo> findConferenceInfo();
+
+    List<ConferUpdate> findConferStatus();
 }

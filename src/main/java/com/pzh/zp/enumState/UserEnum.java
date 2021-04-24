@@ -17,7 +17,10 @@ public enum UserEnum {
 
     ONGOING(25,"开展中"),
     UNGOING(23,"未开展"),
-    ENDGOING(7,"已结束");
+    ENDGOING(7,"已结束"),
+
+    LOCALE(22,"占用中"),
+    UNLOCALE(33,"未占用");
 
     private Integer key;
     private String value;

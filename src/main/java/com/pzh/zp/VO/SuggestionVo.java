@@ -1,25 +1,16 @@
-package com.pzh.zp.entity;
+package com.pzh.zp.VO;
 
 import com.fasterxml.jackson.annotation.JsonFormat;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
-import java.io.Serializable;
 import java.util.Date;
 
-/**
- * 建议表(Suggestion)实体类
- *
- * @author makejava
- * @since 2021-01-25 16:45:33
- */
 @Data
 @AllArgsConstructor
 @NoArgsConstructor
-public class Suggestion implements Serializable {
-    private static final long serialVersionUID = -55968467167468340L;
-
+public class SuggestionVo {
     private Integer id;
     /**
      * 时间
@@ -40,8 +31,7 @@ public class Suggestion implements Serializable {
      */
     private Integer personId;
     /**
-     * 受理人员id
+     * 受理人员姓名
      */
-    private Integer conferId;
-
+    private String conferName;
 }

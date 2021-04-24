@@ -1,5 +1,7 @@
 package com.pzh.zp.service.impl;
 
+import com.pzh.zp.VO.SuggestionVo;
+import com.pzh.zp.dao.ConferenceDao;
 import com.pzh.zp.dao.SuggestionDao;
 import com.pzh.zp.entity.Suggestion;
 import com.pzh.zp.service.SuggestionService;
@@ -8,6 +10,7 @@ import io.jsonwebtoken.Claims;
 import org.apache.commons.lang3.StringUtils;
 import org.apache.ibatis.jdbc.Null;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import javax.annotation.Resource;
 import javax.servlet.http.HttpServletRequest;
@@ -29,6 +32,8 @@ public class SuggestionServiceImpl implements SuggestionService {
     @Resource
     private SuggestionDao suggestionDao;
 
+    @Resource
+    private ConferenceDao conferenceDao;
     /**
      * 通过ID查询单条数据
      *
@@ -55,21 +60,26 @@ public class SuggestionServiceImpl implements SuggestionService {
     /**
      * 新增数据
      *
-     * @param suggestion 实例对象
+     * @param vo 实例对象
      * @return 实例对象
      */
     @Override
-    public Suggestion insert(HttpServletRequest request, Suggestion suggestion) throws ParseException {
+    @Transactional
+    public Suggestion insert(HttpServletRequest request, SuggestionVo vo) throws ParseException {
         SimpleDateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
         String format = dateFormat.format(new Date());
         Date date = dateFormat.parse(format);
-        if(suggestion!= null) {
+        Integer conferenceId = conferenceDao.queryIdByName(vo.getConferName());
+        Suggestion suggestion = new Suggestion();
+        if(vo!= null) {
             Claims token = JWTUtil.getClaimByToken(request.getHeader("token"));
             Integer id = (Integer)token.get("id");
             suggestion.setSuggTime(date);
             suggestion.setPersonId(id);
             //这里设置staffid应改为会议id
-            //suggestion.setStaffId();
+            suggestion.setConferId(conferenceId);
+            suggestion.setSuggestionTitle(vo.getSuggestionTitle());
+            suggestion.setContent(vo.getContent());
             this.suggestionDao.insert(suggestion);
             return suggestion;
         }

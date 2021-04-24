@@ -2,12 +2,15 @@ package com.pzh.zp.controller.DbController;
 
 
 import com.pzh.zp.VO.ResultVo;
+import com.pzh.zp.VO.SuggestionVo;
 import com.pzh.zp.entity.Suggestion;
 import com.pzh.zp.service.SuggestionService;
 import org.springframework.web.bind.annotation.*;
 
 import javax.annotation.Resource;
+import javax.servlet.http.HttpServletRequest;
 import javax.xml.transform.Result;
+import java.text.ParseException;
 
 
 /**
@@ -59,5 +62,10 @@ public class SuggestionController {
     @GetMapping("/fuzzy")
     public ResultVo fuzzyInfo(@RequestParam String suggestionTitle){
         return ResultVo.success(suggestionService.fuzzyInfo(suggestionTitle));
+    }
+
+    @PostMapping("/suggestion_insert")
+    public ResultVo insert(HttpServletRequest request,@RequestBody SuggestionVo suggestionVo) throws ParseException {
+        return ResultVo.success(suggestionService.insert(request, suggestionVo));
     }
 }

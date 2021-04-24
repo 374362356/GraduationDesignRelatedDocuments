@@ -9,6 +9,7 @@ import com.pzh.zp.service.PersonService;
 import org.springframework.web.bind.annotation.*;
 
 import javax.annotation.Resource;
+import javax.servlet.http.HttpServletRequest;
 import java.util.List;
 
 
@@ -51,8 +52,8 @@ public class PersonController {
     }
 
     @GetMapping("/findAll")
-    public ResultVo findAll(){
-        return ResultVo.success(personService.queryAllInfoPerson());
+    public ResultVo findAll(HttpServletRequest request){
+        return ResultVo.success(personService.queryAllInfoPerson(request));
     }
 
     /**
@@ -78,7 +79,11 @@ public class PersonController {
 
     @PostMapping("/person_insert")
     public ResultVo addPerson(@RequestBody PersonVo personVo){
-        return ResultVo.success(personService.insert(personVo));
+        Person insert = personService.insert(personVo);
+        if (insert!=null) {
+            return ResultVo.success(insert);
+        }
+        return ResultVo.fail("出状况了");
     }
 
     @PutMapping("/person_update")

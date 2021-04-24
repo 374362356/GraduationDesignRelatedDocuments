@@ -103,4 +103,6 @@ public interface UserDao {
      * @return
      */
     Integer counting();
+
+    List<String> findAllName();
 }

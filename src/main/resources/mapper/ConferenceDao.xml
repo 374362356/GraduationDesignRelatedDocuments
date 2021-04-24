@@ -12,6 +12,20 @@
         <result property="desc" column="desc" jdbcType="VARCHAR"/>
         <result property="ongoing" column="ongoing" jdbcType="INTEGER"/>
     </resultMap>
+<!--        select c.id, name, start_time, end_time, place, host, `desc`, ongoing, l.places,l.quantity,l.employ-->
+    <resultMap type="com.pzh.zp.VO.ConferenceVo" id="ConferInfo">
+        <result property="id" column="id" jdbcType="INTEGER"/>
+        <result property="name" column="name" jdbcType="VARCHAR"/>
+        <result property="startTime" column="start_time" jdbcType="TIMESTAMP"/>
+        <result property="endTime" column="end_time" jdbcType="TIMESTAMP"/>
+        <result property="place" column="place" jdbcType="VARCHAR"/>
+        <result property="host" column="host" jdbcType="VARCHAR"/>
+        <result property="desc" column="desc" jdbcType="VARCHAR"/>
+        <result property="ongoing" column="ongoing" jdbcType="INTEGER"/>
+        <result property="places" column="places" jdbcType="VARCHAR"/>
+        <result property="quantity" column="quantity" jdbcType="INTEGER"/>
+        <result property="employ" column="employ" jdbcType="INTEGER"/>
+    </resultMap>
 
     <!--查询单个-->
     <select id="queryById" resultMap="ConferenceMap">
@@ -168,5 +182,16 @@
                  place = #{place}
             </if>
         </where>
+    </select>
+
+    <select id="findConferenceInfo" resultMap="ConferInfo">
+        select c.id, name, start_time, end_time, place, host, `desc`, ongoing, l.places,l.quantity,l.employ
+        from conference c
+        left join locale l on c.id=l.confer_id
+    </select>
+
+    <select id="findConferStatus" resultType="com.pzh.zp.VO.ConferUpdate">
+        select id,start_time,end_time
+        from conference;
     </select>
 </mapper>

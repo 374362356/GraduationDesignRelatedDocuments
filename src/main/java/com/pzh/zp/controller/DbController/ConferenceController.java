@@ -1,5 +1,6 @@
 package com.pzh.zp.controller.DbController;
 
+import com.pzh.zp.VO.ConferenceVo;
 import com.pzh.zp.VO.ResultVo;
 import com.pzh.zp.entity.Conference;
 import com.pzh.zp.service.ConferenceService;
@@ -80,7 +81,7 @@ public class ConferenceController {
         System.out.println("========add=======>"+conference);
         Conference insert = conferenceService.insert(conference);
         if (insert==null){
-            return ResultVo.fail("新增失败，会议时间冲突");
+            return ResultVo.fail("新增失败，会议时间冲突或会议名重复");
         }
         return ResultVo.success(insert);
     }
@@ -93,10 +94,12 @@ public class ConferenceController {
      */
     @PutMapping("/conference_update/{conferenceId}")
     public ResultVo updateConference(@PathVariable Integer conferenceId, @RequestBody Conference conference){
-        System.out.println("========update========>"+conference);
         conference.setId(conferenceId);
         Conference update = conferenceService.update(conference);
-        return ResultVo.success(update);
+        if (update!=null) {
+            return ResultVo.success(update);
+        }
+        return ResultVo.fail("会议名更新失败");
     }
 
     @DeleteMapping("/conference_delete")
@@ -106,5 +109,15 @@ public class ConferenceController {
             return ResultVo.success(b);
         }
         return ResultVo.fail("删除失败");
+    }
+
+    @GetMapping("/findConferenceInfo")
+    public List<ConferenceVo> findAllInfo(HttpServletRequest request){
+        return conferenceService.findConferenceInfo();
+    }
+
+    @GetMapping("/updateConferStatus")
+    public ResultVo updateConferStatus(){
+        return ResultVo.success(conferenceService.findConferStatus());
     }
 }

@@ -1,0 +1,114 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.pzh.zp.dao.LocaleDao">
+
+    <resultMap type="com.pzh.zp.entity.Locale" id="LocaleMap">
+        <result property="id" column="id" jdbcType="INTEGER"/>
+        <result property="places" column="places" jdbcType="VARCHAR"/>
+        <result property="quantity" column="quantity" jdbcType="INTEGER"/>
+        <result property="employ" column="employ" jdbcType="INTEGER"/>
+        <result property="conferId" column="confer_id" jdbcType="INTEGER"/>
+    </resultMap>
+
+    <!--查询单个-->
+    <select id="queryById" resultMap="LocaleMap">
+        select
+          id, places, quantity, employ, confer_id
+        from pzh_meeting_management.locale
+        where id = #{id}
+    </select>
+
+    <!--查询指定行数据-->
+    <select id="queryAllByLimit" resultMap="LocaleMap">
+        select
+          id, places, quantity, employ, confer_id
+        from pzh_meeting_management.locale
+        limit #{offset}, #{limit}
+    </select>
+
+    <!--通过实体作为筛选条件查询-->
+    <select id="queryAll" resultMap="LocaleMap">
+        select
+        id, places, quantity, employ, confer_id
+        from pzh_meeting_management.locale
+        <where>
+            <if test="id != null">
+                and id = #{id}
+            </if>
+            <if test="places != null and places != ''">
+                and places = #{places}
+            </if>
+            <if test="quantity != null">
+                and quantity = #{quantity}
+            </if>
+            <if test="employ != null">
+                and employ = #{employ}
+            </if>
+            <if test="conferId != null">
+                and confer_id = #{conferId}
+            </if>
+        </where>
+    </select>
+
+    <!--新增所有列-->
+    <insert id="insert" keyProperty="id" useGeneratedKeys="true">
+        insert into pzh_meeting_management.locale(places, quantity, employ, confer_id)
+        values (#{places}, #{quantity}, #{employ}, #{conferId})
+    </insert>
+
+    <insert id="insertBatch" keyProperty="id" useGeneratedKeys="true">
+        insert into pzh_meeting_management.locale(places, quantity, employ, confer_id)
+        values
+        <foreach collection="entities" item="entity" separator=",">
+            (#{entity.places}, #{entity.quantity}, #{entity.employ}, #{entity.conferId})
+        </foreach>
+    </insert>
+
+    <insert id="insertOrUpdateBatch" keyProperty="id" useGeneratedKeys="true">
+        insert into pzh_meeting_management.locale(places, quantity, employ, confer_id)
+        values
+        <foreach collection="entities" item="entity" separator=",">
+            (#{entity.places}, #{entity.quantity}, #{entity.employ}, #{entity.conferId})
+        </foreach>
+        on duplicate key update
+        places = values(places) , quantity = values(quantity) , employ = values(employ) , confer_id = values(confer_id)
+    </insert>
+
+    <!--通过主键修改数据-->
+    <update id="update">
+        update pzh_meeting_management.locale
+        <set>
+            <if test="places != null and places != ''">
+                places = #{places},
+            </if>
+            <if test="quantity != null">
+                quantity = #{quantity},
+            </if>
+            <if test="employ != null">
+                employ = #{employ},
+            </if>
+            <if test="conferId != null">
+                confer_id = #{conferId},
+            </if>
+        </set>
+        where id = #{id}
+    </update>
+
+    <!--通过主键删除-->
+    <delete id="deleteById">
+        delete from pzh_meeting_management.locale where id = #{id}
+    </delete>
+
+    <select id="findAllPlaces" resultType="String">
+        select places
+        from pzh_meeting_management.locale
+    </select>
+
+    <select id="queryByPlace" resultMap="LocaleMap" parameterType="String">
+        select
+          id, places, quantity, employ, confer_id
+        from pzh_meeting_management.locale
+        where places = #{place}
+    </select>
+</mapper>
+

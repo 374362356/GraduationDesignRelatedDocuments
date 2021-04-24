@@ -7,6 +7,7 @@ import com.pzh.zp.service.UserService;
 import org.springframework.web.bind.annotation.*;
 
 import javax.annotation.Resource;
+import javax.xml.transform.Result;
 
 import java.text.ParseException;
 import java.util.Date;
@@ -71,8 +72,10 @@ public class UserController {
     @PostMapping("/user_insert")
     public ResultVo insertUser(@RequestBody User user) throws ParseException {
         User insert = userService.insert(user);
-        //System.out.println("------------------>"+insert);
-        return ResultVo.success(insert);
+        if (insert!=null) {
+            return ResultVo.success(insert);
+        }
+        return ResultVo.fail("用户账号已存在");
     }
 
     /**
@@ -108,9 +111,11 @@ public class UserController {
      */
     @PutMapping("/update")
     public ResultVo updateUser(@RequestBody User user) throws ParseException {
-        //System.out.println("--------------------->"+user);
         User update = userService.update(user);
-        return ResultVo.success(update);
+        if (update!=null) {
+            return ResultVo.success(update);
+        }
+        return ResultVo.fail("用户名已存在");
     }
 
     @GetMapping("/getUserInfo")

@@ -28,4 +28,19 @@ public class Stamp2date {
         res = simpleDateFormat.format(date);
         return res;
     }
+
+    public static int compareToCurrentTime(Date date) {
+        int num = 0;
+        //当前时间
+        long currentTime = System.currentTimeMillis();
+        long argTime = date.getTime();
+        if (currentTime == argTime) {
+            num = 0;
+        } else if (argTime > currentTime) {
+            num = 1;
+        } else {
+            num = -1;
+        }
+        return num;
+    }
 }

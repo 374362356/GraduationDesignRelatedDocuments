@@ -159,4 +159,9 @@
         select count(1)
         from pzh_meeting_management.user;
     </select>
+
+    <select id="findAllName" resultType="String">
+        select user_name
+        from pzh_meeting_management.user
+    </select>
 </mapper>
