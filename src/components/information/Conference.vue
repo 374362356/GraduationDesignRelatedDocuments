@@ -110,7 +110,7 @@
     </el-dialog>
 
     <!-- 添加会议 -->
-    <el-dialog title="提示" :visible.sync="addDialogVisible" width="60%">
+    <el-dialog title="提示" :visible.sync="addDialogVisible" width="60%" @close="addDialogClose">
       <el-form ref="addRoleRef" :model="addConferenceForm" :rules="rules" label-width="80px">
         <el-form-item label="会议名称" prop="name">
           <el-input v-model="addConferenceForm.name"></el-input>
@@ -134,9 +134,17 @@
           </el-col>
         </el-form-item>
         <el-form-item label="举办地点" prop="place">
-          <el-input v-model="addConferenceForm.place"></el-input>
+          <el-select v-model="addConferenceForm.place" placeholder="请选择" filter-method="SelectOption">
+            <el-option
+              v-for="item in options"
+              :key="item"
+              :label="item"
+              :value="item"
+              :disabled="item.disabled">
+            </el-option>
+          </el-select>
         </el-form-item>
-        <el-form-item label="举办方">
+        <el-form-item label="举办方" prop="host">
           <el-input v-model="addConferenceForm.host"></el-input>
         </el-form-item>
         <el-form-item label="会议简要">
@@ -173,8 +181,16 @@
             <el-time-picker placeholder="选择时间" v-model="editConferenceForm.endTime" style="width: 100%;" value-format="yyyy-MM-dd HH:mm:ss"></el-time-picker>
           </el-col>
         </el-form-item>
-        <el-form-item label="举办地点">
-          <el-input v-model="editConferenceForm.place"></el-input>
+        <el-form-item label="举办地点" prop="place">
+          <el-select v-model="editConferenceForm.place" placeholder="请选择" filter-method="SelectOption">
+            <el-option
+              v-for="item in options"
+              :key="item"
+              :label="item"
+              :value="item"
+              :disabled="item.disabled">
+            </el-option>
+          </el-select>
         </el-form-item>
         <el-form-item label="举办方">
           <el-input v-model="editConferenceForm.host"></el-input>
@@ -196,6 +212,8 @@ export default {
   name: 'Roles',
   created() {
     this.getConferenceList()
+    this.SelectOption()
+    this.updateConferStatus()
   },
   data() {
     return {
@@ -229,10 +247,37 @@ export default {
           { required: true, message: '请输入用户名', trigger: 'blur' },
         ],
         place: [{ required: true, message: '请输入地点', trigger: 'blur' }],
+        host: [{ required: true, message: '请输入举办方', trigger: 'blur' }],
       },
     }
   },
   methods: {
+    //更新会议状态
+    updateConferStatus(){
+      let _that = this;
+        this.$axios({
+          methods: 'get',
+          url: 'conference/updateConferStatus'
+        }).then((res)=>{
+          //_that.options = res.data.data;
+          //alert(JSON.stringify(res.data.data))
+        }).catch(()=>{
+          this.$message.error('更新会议状态失败')
+        })
+    },
+    //下拉搜索会议室
+    SelectOption(){
+      let _that = this;
+        this.$axios({
+          methods: 'get',
+          url: 'locale/findPlaces'
+        }).then((res)=>{
+          _that.options = res.data.data;
+          //alert(JSON.stringify(_that.options))
+        }).catch(()=>{
+          this.$message.error('获取会议室列表失败')
+        })
+    },
     getConferenceByfuzzy(){
       let _this = this;
         this.$axios({
@@ -256,7 +301,7 @@ export default {
         }
       }).then((res) => {
           _this.tableData = res.data
-          alert(JSON.stringify(_this.tableData))
+          //alert(JSON.stringify(_this.tableData))
         })
               /*
                let _this = this;
@@ -378,18 +423,18 @@ export default {
     },
     //添加会议
     addConference() {
-      alert(JSON.stringify(this.addConferenceForm))
+      //alert(JSON.stringify(this.addConferenceForm))
       this.$axios.post('conference/conference_insert', this.addConferenceForm
       
       ).then((res) => {
         if(res.data.code==200){
           this.$message.success('添加会议成功')
         }else{
-          this.$message.success('添加会议失败')
+          this.$message.error(res.data.msg)
         }
-          this.getConferenceList()
+        this.addDialogVisible = false
+        this.getConferenceList()
       })
-      this.addDialogVisible = false
     },
     //编辑会议
     editConference(row) {
@@ -406,15 +451,22 @@ export default {
     editConferenceSureBtn() {
       this.$axios
         .put('conference/conference_update/' + this.conferenceId, this.editConferenceForm)
-        .then(() => {
+        .then((res) => {
           this.getConferenceList()
-          this.$message.success('编辑成功')
+          if(res.data.code == 200){
+            this.$message.success('编辑成功')
+          }else{
+            this.$message.error(res.data.msg)
+          }
         })
         .catch(() => {
           this.$$message.error('编辑失败')
         })
 
       this.editDialogVisible = false
+    },
+    addDialogClose() {
+      this.$refs.formRef.resetFields()
     },
   },
 }

@@ -169,7 +169,14 @@ export default {
                 order: null,
                 path: "file"
             },
-            ],
+            {
+                authName: "发表建议列表",
+                children: [],
+                id: 120,
+                order: null,
+                path: "advise"
+            },
+          ],
             id: 102,
             order: 4,
             path: "file"

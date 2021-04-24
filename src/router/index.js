@@ -22,6 +22,7 @@ import Declare from "../components/userown/declare"
 import Meeting from "../components/userown/meeting"
 import People from "../components/userown/people"
 import Reach from "../components/userown/reach"
+import Advise from "../components/userown/advise"
 Vue.use(Router)
 
 export default new Router({
@@ -62,6 +63,7 @@ export default new Router({
         { path: '/analysis2',component: Reports2},
         { path: '/reach',component: Reach},
         { path: '/reach2', component: Reach },
+        { path: '/advise', component: Advise },
       ]
     },
   ],

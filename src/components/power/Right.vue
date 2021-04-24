@@ -179,7 +179,7 @@
         addPermission(){
           this.$axios.post('permission/permission_insert', this.addPermissionForm)
             .then((res) => {
-                if(res.data.code='400'){
+                if(res.data.code==400){
                     this.$message.error('添加失败，无此权限')
                 }else{
                     this.getRightsList()
@@ -202,7 +202,10 @@
                     }
                   }).then((res) => {
                       _this.rightsList = res.data.data
-                      if (res.data.code !== 200) {
+                      if(res.data.code == '400'){
+                        this.$message.error(res.data.msg)
+                      }else
+                      if (res.data.code !== '200') {
                           return this.$message.error('获取权限列表失败！')
                       }
                   }).catch(() => {

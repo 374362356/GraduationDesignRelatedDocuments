@@ -185,14 +185,18 @@ export default {
       let _this = this;
       this.$axios({
         method:'get',
-        url:'role/role_list?offset='+this.offset+'&limit='+this.limit,
+        url:'role/role_list',
         // url:'list',
         headers:{
           'token':window.sessionStorage['token']
         }
       })
         .then((res) => {
-          _this.tableData = res.data.data
+          if(res.data.code=='400'){
+            this.$message.error(res.data.msg)
+          }else{
+            _this.tableData = res.data.data
+          }
         })
         .catch(() => {
           this.$message.error('获取角色列表失败')
@@ -285,9 +289,13 @@ export default {
         .then(() => {
           this.$axios
             .delete('role/role_del?id=' + row.id)
-            .then(() => {
+            .then((res) => {
+              if(res.data.code='400'){
+                this.$message.error('删除失败，无此权限')
+              }else{
+                this.$message.success('删除角色成功')
+              }
               this.getRolesList()
-              this.$message.success('删除成功')
             })
             .catch(() => {
               this.$message.error('删除失败')
@@ -307,9 +315,9 @@ export default {
         if(res.data.code='400'){
             this.$message.error('添加失败，无此权限')
         }else{
-            this.getRolesList()
-            this.$message.success('添加角色成功')
+          this.$message.success('添加角色成功')
         }
+        this.getRolesList()
       }).catch(()=>{
          this.$message.error('添加角色失败')
       })
@@ -325,9 +333,13 @@ export default {
     editRoleSureBtn() {
       this.$axios
         .put('role/role_update', this.editRoleForm)
-        .then(() => {
+        .then((res) => {
+          if(res.data.code='400'){
+            this.$message.error('更新失败，无此权限')
+          }else{
+            this.$message.success('编辑成功')
+          }
           this.getRolesList()
-          this.$message.success('编辑成功')
         })
         .catch(() => {
           this.$$message.error('编辑失败')

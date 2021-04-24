@@ -97,14 +97,14 @@
       <el-dialog title="提示" :visible.sync="allotDialogVisible" width="30%">
         <el-form ref="form" :model="allotForm" label-width="100px">
           <el-form-item label="当前的用户">
-<!--            {{ allotForm.user.username}}-->
+           {{ allotForm.userName }}
           </el-form-item>
           <el-form-item label="当前的角色">
-            {{ allotForm.roles }}
+            {{ allotForm.description }}
           </el-form-item>
           <el-form-item label="设置新的角色">
             <el-select v-model="selectedRoleId">
-              <el-option v-for="item in rolesList" :key="item.name" :label="item.roleName" :value="item.name"></el-option>
+              <el-option v-for="item in rolesList" :key="item.rname" :label="item.rname" :value="item.rname"></el-option>
             </el-select>
           </el-form-item>
         </el-form>
@@ -202,7 +202,7 @@ export default {
       editDialogVisible: false,
       allotDialogVisible: false,
       allotForm: '',
-      rolesList: '',
+      rolesList:'',
       selectedRoleId: '',
       ruleForm: {
         userName: '',
@@ -211,6 +211,10 @@ export default {
         phone: '',
       },
 
+      roleform: {
+        user_id: '',
+        role_id: ''
+      },
       editForm: {},
       rules: {
         userName: [
@@ -323,11 +327,14 @@ export default {
               }
           })
           //    .get('power/user_insert', this.ruleForm)
-
-            .then(() => {
+            .then((res) => {
               this.addDialogVisible = false
               this.getUserList()
-              this.$message.success('添加用户成功')
+              if(res.data.code==200){
+                this.$message.success('添加用户成功')
+              }else{
+                this.$message.error(res.data.msg)
+              }
             })
             .catch(() => {
               this.$message.error('添加用户失败')
@@ -357,9 +364,13 @@ export default {
               gender: this.editForm.gender,
               phone: this.editForm.phone,
             })
-            .then(() => {
+            .then((res) => {
               this.getUserList()
-              this.$message.success('修改成功')
+              if(res.data.code ==200){
+                this.$message.success('修改成功')
+              }else{
+                this.$message.error(res.data.msg)
+              }
             })
             .catch(() => {
               this.$message.error('修改失败')
@@ -434,53 +445,65 @@ export default {
       // this.$axios.get('power/role_list').then((res) => {
       //   this.rolesList = res.data.data
       // })
-      // var _this = this;
       this.$axios({
         method:'get',
-        url:'power/role_list',
+        url:'role/role_list',
         headers:{
           'token':window.sessionStorage['token']
         }
       })
       .then((res) => {
-       _this.rolesList = res.data.data})
-      this.allotForm = row
+        _this.rolesList = res.data.data
+        this.findRole(row.id);
+        //alert(JSON.stringify(row))
+
+      })
       this.allotDialogVisible = true
+      this.allotForm = row
+      this.roleform = {
+                user_id: row.id,
+                role_id: this.selectedRoleId
+      }
     },
     //保存用户选择的新的角色
     saveRole() {
-       // let id = this.allotForm.user.id
-      // let name = this.selectedRoleId
       if (!this.selectedRoleId) {
         return this.$message.error('请选择新的角色')
       } else {
-        /*this.$axios
-          .put(`power/user_update/${this.allotForm.id}`, {
-            rid: this.selectedRoleId,
-          })*/
-        this.$axios({
-          method:'get',
-          url:'power/user_update',
-          // data:this.allotForm.user.id 90-,//rid:this.selectedRoleId,
-          // dataType:JSON,
-          params:{
-            id:this.allotForm.user.id,
-            name: this.selectedRoleId
-          },
-
-          headers:{
-            'token':window.sessionStorage.getItem("token")
-          }
-        })
-          .then(() => {
-            this.getUserList()
-            this.$message.success('修改用户角色成功')
+          this.$axios
+          .put('role/updateRole', {
+            user_id: this.roleform.user_id,
+            role_id: this.selectedRoleId
+          })
+          .then((res) => {
+            alert(JSON.stringify(this.roleform))
+            if(res.data.code==200){
+              this.getUserList()
+              this.$message.success('修改用户角色成功')
+            }
+            else{
+              this.$message.error(res.data.msg)
+            }
           })
           .catch(() => {
             this.$message.error('修改用户角色失败')
           })
       }
       this.allotDialogVisible = false
+    },
+    findRole(row) {
+      var _this = this;
+      this.$axios({
+        method:'get',
+        url:'role/findRole?userId='+row,
+        headers:{
+          'token':window.sessionStorage['token']
+        }
+      })
+      .then((res) => {
+        _this.selectedRoleId = res.data.data
+        //alert(JSON.stringify(_this.selectedRoleId))
+      })
     },
   },
 }
