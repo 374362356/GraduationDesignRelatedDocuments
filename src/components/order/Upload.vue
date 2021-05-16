@@ -25,7 +25,7 @@
                 >
            </el-col>
           </el-row>
-          <el-table :data="files" style="width: 100%" stripe border>
+          <el-table :data="files.slice((currentPage-1)*PageSize,currentPage*PageSize)" style="width: 100%" stripe border>
             <el-table-column type="index"></el-table-column>
             <el-table-column prop="id" label="编号"  width="80"></el-table-column>
             <el-table-column prop="fileName" label="文件名"  width="120"></el-table-column>
@@ -42,6 +42,16 @@
                     </template>
                 </el-table-column>
           </el-table>
+          <div>
+            <el-pagination @size-change="handleSizeChange" 
+                            @current-change="handleCurrentChange" 
+                            :current-page="currentPage" 
+                            :page-sizes="pageSizes" 
+                            :page-size="PageSize" layout="total, sizes, prev, pager, next, jumper" 
+                            :total="totalCount">
+               </el-pagination>
+          </div>
+          <br/>
         <el-form :model="ruleForm"
                 enctype="multipart/form-data"
                 :rules="rules" ref="ruleForm" label-width="100px" class="demo-ruleForm">
@@ -117,7 +127,11 @@ export default {
           query: '',
       },
       offset: 0,
-      limit: 6,
+      limit: 10,
+      currentPage:1, //初始页
+      PageSize:6,
+      totalCount: 1,
+      pageSizes:[5,10,20],
       fileList: [],
       fileLink:'',
       editFileForm:{},
@@ -232,6 +246,7 @@ export default {
       })
         .then((res) => {
           _this.files = res.data.data;
+          this.totalCount = res.data.data.length;
           //alert(JSON.stringify(_this.files))
         })
         .catch(() => {
@@ -302,7 +317,19 @@ export default {
   },
   created(){
     this.getFilesList()
-  }
+  },
+      // 每页显示的条数
+      handleSizeChange(val) {
+        // 改变每页显示的条数 
+        this.PageSize=val
+        // 注意：在改变每页显示的条数时，要将页码显示到第一页
+        this.currentPage=1
+      },
+        // 显示第几页
+      handleCurrentChange(val) {
+          // 改变默认的页数
+          this.currentPage=val
+      },
 }
 </script>
 

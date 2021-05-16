@@ -12,7 +12,7 @@
         >添加角色</el-button
       >
       <template>
-        <el-table :data="tableData" style="width: 100%" stripe border>
+        <el-table :data="tableData.slice((currentPage-1)*PageSize,currentPage*PageSize)" style="width: 100%" stripe border>
           <el-table-column type="expand">
             <template slot-scope="scope">
               <el-row v-for="item1 in scope.row.children" :key="item1.id">
@@ -89,6 +89,15 @@
           </el-table-column>
         </el-table>
       </template>
+      <div>
+        <el-pagination @size-change="handleSizeChange" 
+                        @current-change="handleCurrentChange" 
+                        :current-page="currentPage" 
+                        :page-sizes="pageSizes" 
+                        :page-size="PageSize" layout="total, sizes, prev, pager, next, jumper" 
+                        :total="totalCount">
+           </el-pagination>
+      </div>
     </el-card>
     <!-- 分配权限对话框 -->
     <el-dialog
@@ -157,6 +166,11 @@ export default {
     return {
       offset: 0,
       limit: 5,
+      currentPage:1, //初始页
+      PageSize:6,
+      userList: [],
+      totalCount: 1,
+      pageSizes:[5,10,20],
       tableData: [],
       dialogVisible: false,
       rightsList: [],
@@ -192,6 +206,7 @@ export default {
         }
       })
         .then((res) => {
+          this.totalCount = res.data.data.length
           if(res.data.code=='400'){
             this.$message.error(res.data.msg)
           }else{
@@ -347,6 +362,18 @@ export default {
 
       this.editDialogVisible = false
     },
+    // 每页显示的条数
+    handleSizeChange(val) {
+           // 改变每页显示的条数 
+           this.PageSize=val
+           // 注意：在改变每页显示的条数时，要将页码显示到第一页
+           this.currentPage=1
+       },
+         // 显示第几页
+       handleCurrentChange(val) {
+           // 改变默认的页数
+           this.currentPage=val
+       },
   },
 }
 </script>

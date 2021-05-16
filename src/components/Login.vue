@@ -92,7 +92,7 @@ export default {
       this.$refs.loginRef.resetFields();
     },
     login() {
-      let userdata = this.trans(this.form);
+      //let userdata = this.trans(this.form);
       this.$refs.loginRef.validate((boo)=>{
         if(boo){
           this.$axios

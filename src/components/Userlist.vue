@@ -32,7 +32,7 @@
               >添加用户</el-button></el-col>
         </el-row>
         <template>
-          <el-table :data="userList" style="width: 100%" border stripe>
+          <el-table :data="userList.slice((currentPage-1)*PageSize,currentPage*PageSize)" style="width: 100%" border stripe>
             <el-table-column type="index"></el-table-column>
             <el-table-column prop="id" label="id" width="80"></el-table-column>
             <el-table-column prop="nickName" label="用户名" width="100"></el-table-column>
@@ -80,17 +80,15 @@
             </el-table-column>
           </el-table>
         </template>
-        <el-pagination
-          background
-            @size-change="handleSizeChange"
-            @current-change="handleCurrentChange"
-            :current-page="currentPage"
-            :page-sizes="[5, 10, 20]" 
-            :page-size="pageSize"     
-            layout="total, sizes, prev, pager, next, jumper"
-            :total="userList.length"
-          >
-        </el-pagination>
+        <div>
+          <el-pagination @size-change="handleSizeChange" 
+                          @current-change="handleCurrentChange" 
+                          :current-page="currentPage" 
+                          :page-sizes="pageSizes" 
+                          :page-size="PageSize" layout="total, sizes, prev, pager, next, jumper" 
+                          :total="totalCount">
+             </el-pagination>
+        </div>
       </el-card>
 
       <!-- 分配角色对话框 -->
@@ -195,9 +193,10 @@ export default {
         //pagesize: 5,
       },
       currentPage:1, //初始页
-      pageSize:5,
+      PageSize:6,
       userList: [],
       totalCount: 1,
+      pageSizes:[5,10,20],
       addDialogVisible: false,
       editDialogVisible: false,
       allotDialogVisible: false,
@@ -282,18 +281,25 @@ export default {
           //alert(JSON.stringify(res.data))
           //_this.userList = res.data.data;
           _this.userList = res.data
+          this.totalCount = res.data.length
           //alert(_this.userList)
         })
         .catch(() => {
           this.$message.error('获取用户列表失败')
         })
     },
-    handleSizeChange: function (val) {
-                this.pageSize = val
-        },
-    handleCurrentChange: function(val){
-                this.currentPage = val;
-    },
+    // 每页显示的条数
+    handleSizeChange(val) {
+           // 改变每页显示的条数 
+           this.PageSize=val
+           // 注意：在改变每页显示的条数时，要将页码显示到第一页
+           this.currentPage=1
+       },
+         // 显示第几页
+       handleCurrentChange(val) {
+           // 改变默认的页数
+           this.currentPage=val
+       },
 
     //用户状态改变
     userStateChange($event,row) {
@@ -461,8 +467,8 @@ export default {
       this.allotDialogVisible = true
       this.allotForm = row
       this.roleform = {
-                user_id: row.id,
-                role_id: this.selectedRoleId
+              user_id: row.id,
+              role_id: this.selectedRoleId
       }
     },
     //保存用户选择的新的角色
@@ -471,12 +477,12 @@ export default {
         return this.$message.error('请选择新的角色')
       } else {
           this.$axios
-          .put('role/updateRole', {
-            user_id: this.roleform.user_id,
-            role_id: this.selectedRoleId
+          .put('role/updateRole', this.roleform={
+             user_id: this.roleform.user_id,
+             role_id: this.selectedRoleId
           })
           .then((res) => {
-            alert(JSON.stringify(this.roleform))
+            //alert(JSON.stringify(this.roleform))
             if(res.data.code==200){
               this.getUserList()
               this.$message.success('修改用户角色成功')

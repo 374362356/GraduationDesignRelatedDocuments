@@ -37,7 +37,7 @@
                             编辑</el-button>
                         <el-button type="danger" icon="el-icon-delete" size="small" @click="delFile(scope.row)">
                             删除</el-button> -->
-                        <el-button type="success" icon="el-icon-delete" size="small" @click="downloadFile(scope.row)">
+                        <el-button type="success" icon="el-icon-link" size="small" @click="downloadFile(scope.row)">
                             下载</el-button> 
                     </template>
                 </el-table-column>

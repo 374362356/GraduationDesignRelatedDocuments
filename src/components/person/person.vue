@@ -32,7 +32,7 @@
               >添加用户</el-button></el-col>
         </el-row>
         <template>
-          <el-table :data="personList" style="width: 100%" border stripe>
+          <el-table :data="personList.slice((currentPage-1)*PageSize,currentPage*PageSize)" style="width: 100%" border stripe>
             <el-table-column type="index"></el-table-column>
             <el-table-column prop="id" label="id" width="80"></el-table-column>
             <el-table-column prop="name" label="会议名" width="120"></el-table-column>
@@ -71,13 +71,15 @@
             </el-table-column>
           </el-table>
         </template>
-        <el-pagination
-          background
-          layout="prev, pager, next"
-          :page-size="queryInfo.pagesize"
-          @current-change="handleCurrentChange"
-          :total="total">
-        </el-pagination>
+        <div>
+          <el-pagination @size-change="handleSizeChange" 
+                          @current-change="handleCurrentChange" 
+                          :current-page="currentPage" 
+                          :page-sizes="pageSizes" 
+                          :page-size="PageSize" layout="total, sizes, prev, pager, next, jumper" 
+                          :total="totalCount">
+             </el-pagination>
+        </div>
       </el-card>
 
       <!-- 分配角色对话框 -->
@@ -222,6 +224,11 @@ export default {
         pagenum: 1,
         pagesize: 5,
       },
+      currentPage:1, //初始页
+      PageSize:6,
+      userList: [],
+      totalCount: 1,
+      pageSizes:[5,10,20],
       personList: [],
       total: 0,
       addDialogVisible: false,
@@ -323,7 +330,7 @@ export default {
         .then((res) => {
           _this.personList = res.data.data;
           //alert(JSON.stringify(_this.personList))
-          this.total = res.data.data.total
+          this.totalCount = res.data.data.length
         })
         .catch(() => {
           this.$message.error('获取人员列表失败')
@@ -526,6 +533,18 @@ export default {
       }
       this.allotDialogVisible = false
     },
+    // 每页显示的条数
+    handleSizeChange(val) {
+           // 改变每页显示的条数 
+           this.PageSize=val
+           // 注意：在改变每页显示的条数时，要将页码显示到第一页
+           this.currentPage=1
+       },
+         // 显示第几页
+       handleCurrentChange(val) {
+           // 改变默认的页数
+           this.currentPage=val
+       },
   },
 }
 </script>

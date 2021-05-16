@@ -11,7 +11,7 @@
       <el-row :gutter="20">
           <el-col :span="10">
             <el-input
-              placeholder="根据用户名，电话查询"
+              placeholder="根据主题查询"
               v-model="queryInfo.query"
               clearable
               @clear="getSuggestionsList"
@@ -75,13 +75,12 @@
         </div>
       </template>
       <!-- 分页 -->
-      <el-pagination
-        background
-        layout="prev, pager, next"
-        :total="suggestionsList.length"
-        @size-change="handleSizeChange"
-        @current-change="handleCurrentChange"
-      >
+      <el-pagination @size-change="handleSizeChange" 
+                           @current-change="handleCurrentChange" 
+                           :current-page="currentPage" 
+                           :page-sizes="pageSizes" 
+                           :page-size="PageSize" layout="total, sizes, prev, pager, next, jumper" 
+                           :total="totalCount">
       </el-pagination>
     </el-card>
   </div>
@@ -92,11 +91,15 @@ export default {
   data() {
     return {
       suggestionsList: [],
-      offset: 1,
-      limit: 5,
+      offset: 0,
+      limit: 10,
       queryInfo: {
         query: '',
-      }
+      },
+      currentPage:1,
+      totalCount:1,
+      pageSizes:[5,10,20],
+      PageSize:5,
     }
   },
   created() {
@@ -146,6 +149,7 @@ export default {
         .get('suggestion/findAll?offset='+this.offset+'&limit='+this.limit)
         .then((res) => {
           this.suggestionsList = res.data.data
+          this.totalCount = res.data.data.length
 
         })
       /*this.$axios({
@@ -166,12 +170,22 @@ export default {
         this.$message.error('获取权限列表失败')
       })*/
     },
+    // 每页显示的条数
     handleSizeChange(val) {
-      this.limit = val
-    },
-    handleCurrentChange(val) {
-      this.offset = val
-    },
+        // 改变每页显示的条数 
+        this.PageSize=val
+        // 点击每页显示的条数时，显示第一页
+        this.getSuggestionsList(val,1)
+        // 注意：在改变每页显示的条数时，要将页码显示到第一页
+        this.currentPage=1  
+      },
+        // 显示第几页
+      handleCurrentChange(val) {
+          // 改变默认的页数
+          this.currentPage=val
+          // 切换页码时，要获取每页显示的条数
+          this.getSuggestionsList(this.PageSize,(val)*(this.pageSize))
+      },
   },
 }
 </script>

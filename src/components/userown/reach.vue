@@ -29,7 +29,7 @@
           </el-col>
         </el-row>
         <template>
-          <el-table :data="userList" style="width: 100%" border stripe>
+          <el-table :data="userList.slice((currentPage-1)*PageSize,currentPage*PageSize)" style="width: 100%" border stripe>
             <el-table-column type="index"></el-table-column>
             <el-table-column prop="id" label="编号" width="80"></el-table-column>
             <el-table-column prop="reachTime" label="签到时间" width="170"></el-table-column>
@@ -60,17 +60,15 @@
             </el-table-column>
           </el-table>
         </template>
-        <el-pagination
-          background
-            @size-change="handleSizeChange"
-            @current-change="handleCurrentChange"
-            :current-page="currentPage"
-            :page-sizes="[5, 10, 20, 40]" 
-            :page-size="pagesize"     
-            layout="total, sizes, prev, pager, next, jumper"
-            :total="totalCount"
-          >
-        </el-pagination>
+        <div>
+          <el-pagination @size-change="handleSizeChange" 
+                          @current-change="handleCurrentChange" 
+                          :current-page="currentPage" 
+                          :page-sizes="pageSizes" 
+                          :page-size="PageSize" layout="total, sizes, prev, pager, next, jumper" 
+                          :total="totalCount">
+             </el-pagination>
+        </div>
       </el-card>
 
       <!-- 分配角色对话框 -->
@@ -164,9 +162,10 @@ export default {
         //pagesize: 5,
       },
       currentPage:1, //初始页
-      pagesize:5, 
+      PageSize:6,
       userList: [],
       totalCount: 1,
+      pageSizes:[5,10,20],
       addDialogVisible: false,
       editDialogVisible: false,
       allotDialogVisible: false,
@@ -246,20 +245,24 @@ export default {
         .then((res) => {
           //alert(JSON.stringify(res.data.data))
           _this.userList = res.data.data
-          //this.totalCount = res.data.length
+          this.totalCount = res.data.data.length
         })
         .catch(() => {
           this.$message.error('获取签到列表失败')
         })
     },
-    handleSizeChange: function (size) {
-                this.pageSize = size
-                this.getReachList()
-        },
-    handleCurrentChange: function(currentPage){
-                this.currentPage = currentPage;
-                this.getReachList()
-    },
+      // 每页显示的条数
+      handleSizeChange(val) {
+          // 改变每页显示的条数 
+          this.PageSize=val
+          // 注意：在改变每页显示的条数时，要将页码显示到第一页
+          this.currentPage=1
+      },
+        // 显示第几页
+      handleCurrentChange(val) {
+          // 改变默认的页数
+          this.currentPage=val
+       },
     //分页方法（重点）
    currentChangePage(list,currentPage) { 
       let from = (currentPage - 1) * this.pagesize;

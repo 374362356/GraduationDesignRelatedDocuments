@@ -27,7 +27,7 @@
         <el-button type="primary" @click="addDialogVisible = true">添加人员</el-button>
       </el-col>
             <template>
-                <el-table :data="tableData" style="width: 100%" stripe border>
+                <el-table :data="tableData.slice((currentPage-1)*PageSize,currentPage*PageSize)" style="width: 100%" stripe border>
                     <el-table-column type="expand">
                         <template slot-scope="scope">
                             <el-row v-for="item1 in scope.row.children" :key="item1.id">
@@ -100,6 +100,15 @@
                         </template>
                     </el-table-column>
                 </el-table>
+                <div>
+                    <el-pagination @size-change="handleSizeChange" 
+                                    @current-change="handleCurrentChange" 
+                                    :current-page="currentPage" 
+                                    :page-sizes="pageSizes" 
+                                    :page-size="PageSize" layout="total, sizes, prev, pager, next, jumper" 
+                                    :total="totalCount">
+                    </el-pagination>
+                </div>
             </template>
         </el-card>
         <!-- 分配权限对话框 -->
@@ -198,16 +207,6 @@
                 <el-button type="primary" @click="editStaffSureBtn">确 定</el-button>
             </span>
         </el-dialog>
-
-    <!-- 分页 -->
-      <el-pagination
-        background
-        layout="prev, pager, next"
-        :total="tableData.length"
-        @size-change="handleSizeChange"
-        @current-change="handleCurrentChange"
-      >
-      </el-pagination>
     </div>
 </template>
 
@@ -243,6 +242,10 @@
                 queryInfo: {
                     query: '',
                 },
+                currentPage:1, //初始页
+                PageSize:6,
+                totalCount: 1,
+                pageSizes:[5,10,20],
                 tableData: [],
                 dialogVisible: false,
                 rightsList: [],
@@ -310,7 +313,7 @@
                 let _this = this;
                 this.$axios({
                     method:'get',
-                    url:'staff/findAll?offset='+this.offset+'&limit='+this.limit,
+                    url:'staff/findAll',
                     // url:'list',
                     headers:{
                         'token':window.sessionStorage['token']
@@ -318,6 +321,7 @@
                 }).then((res) => {
                     //alert(JSON.stringify(res.data.data))
                     _this.tableData = res.data.data
+                    this.totalCount = res.data.data.length
                 })
                 .catch(() => {
                     this.$message.error('获取人员列表失败')
@@ -483,12 +487,18 @@
                 this.editDialogVisible = false
             },
         },
-    handleSizeChange(val) {
-      this.limit = val
-    },
-    handleCurrentChange(val) {
-      this.offset = val
-    },
+        // 每页显示的条数
+        handleSizeChange(val) {
+           // 改变每页显示的条数 
+           this.PageSize=val
+           // 注意：在改变每页显示的条数时，要将页码显示到第一页
+           this.currentPage=1
+       },
+         // 显示第几页
+       handleCurrentChange(val) {
+           // 改变默认的页数
+           this.currentPage=val
+       },
     }
 </script>
 

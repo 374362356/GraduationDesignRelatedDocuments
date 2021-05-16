@@ -38,32 +38,41 @@
       </el-tabs>  -->
       <el-tabs v-model="activeName" type="card" @tab-click="handleClick">
           <el-tab-pane label="公告展示" name="first">
-              <el-table :data="tableData" style="width: 100%" stripe border>
-              <el-table-column type="index"></el-table-column>
-              <el-table-column prop="id" label="id" width="100"> </el-table-column>
-              <el-table-column prop="contentTitle" label="公告标题" width="180"> </el-table-column>
-              <el-table-column prop="newTime" label="发布时间" width="150"> </el-table-column>
-              <el-table-column prop="content" label="发布内容" width="350"> </el-table-column>
-              <el-table-column prop="publishName" label="发布人" width="120"></el-table-column>
-              <el-table-column prop="product.status" label="状态" width="100"> </el-table-column>
-              <el-table-column label="操作" width="200">
-                <template slot-scope="scope">
-                  <el-button
-                    type="primary"
-                    icon="el-icon-edit"
-                    size="small"
-                    @click="editNews(scope.row)"
-                    >编辑</el-button
-                  >
-                  <el-button
-                    type="danger"
-                    icon="el-icon-delete"
-                    size="small"
-                    @click="delNews(scope.row)"
-                    >删除</el-button>
-                 </template>
-              </el-table-column>
+              <el-table :data="tableData.slice((currentPage-1)*PageSize,currentPage*PageSize)" style="width: 100%" stripe border>
+                <el-table-column type="index"></el-table-column>
+                <el-table-column prop="id" label="id" width="100"> </el-table-column>
+                <el-table-column prop="contentTitle" label="公告标题" width="180"> </el-table-column>
+                <el-table-column prop="newTime" label="发布时间" width="150"> </el-table-column>
+                <el-table-column prop="content" label="发布内容" width="350"> </el-table-column>
+                <el-table-column prop="publishName" label="发布人" width="120"></el-table-column>
+                <el-table-column prop="product.status" label="状态" width="100"> </el-table-column>
+                <el-table-column label="操作" width="200">
+                  <template slot-scope="scope">
+                    <el-button
+                      type="primary"
+                      icon="el-icon-edit"
+                      size="small"
+                      @click="editNews(scope.row)"
+                      >编辑</el-button
+                    >
+                    <el-button
+                      type="danger"
+                      icon="el-icon-delete"
+                      size="small"
+                      @click="delNews(scope.row)"
+                      >删除</el-button>
+                  </template>
+                </el-table-column>
             </el-table>
+            <div>
+              <el-pagination @size-change="handleSizeChange" 
+                              @current-change="handleCurrentChange" 
+                              :current-page="currentPage" 
+                              :page-sizes="pageSizes" 
+                              :page-size="PageSize" layout="total, sizes, prev, pager, next, jumper" 
+                              :total="totalCount">
+                 </el-pagination>
+            </div>
           </el-tab-pane>
           <el-tab-pane label="公告编写" name="second">
             <el-form class="table" :rules="rules">
@@ -138,6 +147,11 @@
 export default {
   data() {
     return {
+      currentPage:1, //初始页
+      PageSize:6,
+      userList: [],
+      totalCount: 1,
+      pageSizes:[5,10,20],
       activeName: 'first',
       tableData:[],
       editNewsForm: {},
@@ -195,6 +209,9 @@ export default {
              content: this.editorTextUpload.content,
              timeSelect: this.timing
           }).then((res)=>{
+            if(res.data.code == 400){ 
+            this.$message.error(res.data.msg)
+          }
           alert(JSON.stringify(res.data.data.publishId))
           this.$message.success('发布公告成功')
           this.getNewsList();
@@ -259,6 +276,7 @@ export default {
         }
       }).then((res) => {
           _this.tableData = res.data
+          this.totalCount = res.data.length
           //alert(JSON.stringify(_this.tableData))
         })
         .catch(() => {
@@ -313,6 +331,18 @@ export default {
           })
         })
       },
+      // 每页显示的条数
+      handleSizeChange(val) {
+           // 改变每页显示的条数 
+           this.PageSize=val
+           // 注意：在改变每页显示的条数时，要将页码显示到第一页
+           this.currentPage=1
+       },
+         // 显示第几页
+       handleCurrentChange(val) {
+           // 改变默认的页数
+           this.currentPage=val
+       },
     // getCateList() {
     //   this.$axios.get('categories').then((res) => {
     //     this.cateList = res.data.data
