@@ -128,11 +128,27 @@ public class StaffServiceImpl implements StaffService {
 
     /**
      *
-     * @param staff 实例对象
+     * @param staff1
      * @return
      */
     @Override
-    public List<Staff> queryAll(Staff staff) {
-        return staffDao.queryAll(staff);
+    public List<StaffVo> queryAll(Staff staff1) {
+        List<StaffVo> staffVos = new ArrayList<>();
+        List<Staff> staff = this.staffDao.queryAll(staff1);
+        //System.out.println("================>"+staff);
+        List<Integer> conferenceId = staff.stream().map(s -> s.getConferenceId()).collect(Collectors.toList());
+        for (Integer id:conferenceId) {
+            String name = conferenceDao.queryById(id).getName();
+            for (Staff s: staff) {
+                if(s.getConferenceId().equals(id)) {
+                    StaffVo vo = new StaffVo(s.getId(), s.getSName(), s.getGender(), s.getEmail(), s.getPhone(), s.getPosition(), name,s.getLeave());
+                    staffVos.add(vo);
+                }
+            }
+            if(staffVos.size()==staff.size()){      //还有问题
+                break;
+            }
+        }
+        return staffVos;
     }
 }

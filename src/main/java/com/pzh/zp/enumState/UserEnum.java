@@ -2,9 +2,9 @@ package com.pzh.zp.enumState;
 
 
 public enum UserEnum {
-    root(2,"root"),
-    admin(3,"admin"),
-    user(4,"user"),
+    root(1,"root"),
+    admin(2,"admin"),
+    user(3,"user"),
 
     FROZEN(-1,"冻结"),     //炸了，用0就是没法。不能写入数据库。
     UNFROZEN(1,"活跃"),

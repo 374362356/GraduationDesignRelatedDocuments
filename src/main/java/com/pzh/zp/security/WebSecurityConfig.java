@@ -51,7 +51,7 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
 
     @Override
     public void configure(WebSecurity web) throws Exception {
-        web.ignoring().antMatchers("/reports/**","/static/**");
+        web.ignoring().antMatchers("/static/**","/reports/**");
         /*"/conference/**","/static/**","/user/**","/person/**","/reports/**","/news/**"
                                     ,"/staff/**","/suggestion/**","/permission/**","/role/**","/upload/**"*/
     }
@@ -62,7 +62,7 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
             .addFilterBefore(customAuthorizeFilter, UsernamePasswordAuthenticationFilter.class)
                 .exceptionHandling()
                 .authenticationEntryPoint(
-                        (request, response, e) -> ResponseUtil.out(response, ResultVo.fail("请登陆再访问")))
+                        (request, response, e) -> ResponseUtil.out(response,ResultVo.fail("请登录后操作")))
                 .accessDeniedHandler(
                         (request, response, e) -> ResponseUtil.out(response,ResultVo.fail("无此权限")))
                 .and()

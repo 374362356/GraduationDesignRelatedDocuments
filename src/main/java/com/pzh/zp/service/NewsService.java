@@ -1,5 +1,6 @@
 package com.pzh.zp.service;
 
+import com.pzh.zp.DTO.NewsDto;
 import com.pzh.zp.VO.NewsVo;
 import com.pzh.zp.entity.News;
 import com.pzh.zp.entity.Staff;
@@ -41,7 +42,9 @@ public interface NewsService {
      * @param news 实例对象
      * @return 实例对象
      */
-    News insert(HttpServletRequest request, News news) throws ParseException;
+    News insert(News news) throws ParseException;
+
+    News insertNews(HttpServletRequest request,News news) throws ParseException;
 
     /**
      * 修改数据
@@ -83,5 +86,5 @@ public interface NewsService {
      */
     List<User> findPublishName(Integer publishId);
 
-    String InsertTiming(HttpServletRequest request,News news,String timeSelect) throws ParseException;
+    String InsertTiming( NewsDto news) throws ParseException;
 }

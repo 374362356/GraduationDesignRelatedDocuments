@@ -97,4 +97,11 @@ public interface RoleDao {
     int updateUserRole(String role_id,String user_id);
 
     String findRole(String userId);
+
+    /**
+     *
+     * @param rName
+     * @return
+     */
+    String findRoleNameById(String rName);
 }

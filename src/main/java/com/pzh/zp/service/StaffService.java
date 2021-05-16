@@ -71,5 +71,5 @@ public interface StaffService {
      * @param staff 实例对象
      * @return 对象列表
      */
-    List<Staff> queryAll(Staff staff);
+    List<StaffVo> queryAll(Staff staff);
 }

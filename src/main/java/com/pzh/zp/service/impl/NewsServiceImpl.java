@@ -1,17 +1,14 @@
 package com.pzh.zp.service.impl;
 
+import com.pzh.zp.DTO.NewsDto;
 import com.pzh.zp.VO.NewsVo;
 import com.pzh.zp.dao.NewsDao;
 import com.pzh.zp.dao.UserDao;
 import com.pzh.zp.entity.News;
-import com.pzh.zp.entity.Staff;
 import com.pzh.zp.entity.User;
 import com.pzh.zp.service.NewsService;
 import com.pzh.zp.utils.JWTUtil;
-import com.pzh.zp.utils.Stamp2date;
 import io.jsonwebtoken.Claims;
-import lombok.SneakyThrows;
-import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -21,7 +18,6 @@ import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.*;
 import java.util.stream.Collectors;
-import java.util.stream.Stream;
 
 
 /**
@@ -62,21 +58,38 @@ public class NewsServiceImpl implements NewsService {
 
     /**
      *
-     * @param request
      * @param news
      * @return
      * @throws ParseException
      */
     @Override
     @Transactional
-    public News insert(HttpServletRequest request,News news) throws ParseException {
+    public News insert(News news) throws ParseException {
         SimpleDateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
         String format = dateFormat.format(new Date());
         Date date = dateFormat.parse(format);
         news.setNewTime(date);
 
         if(!news.getContentTitle().isEmpty() && !"".equals(news.getContentTitle())){
-            Claims token = JWTUtil.getClaimByToken(request.getHeader("token"));
+           /* Claims token = JWTUtil.getClaimByToken(request.getHeader("token"));
+            Integer id = (Integer) token.get("id");
+            news.setPublishId(id);*/
+            this.newsDao.insert(news);
+            System.out.println("======>"+news);
+            return news;
+        }
+        return null;
+    }
+
+    @Override
+    public News insertNews(HttpServletRequest request, News news) throws ParseException {
+        SimpleDateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
+        String format = dateFormat.format(new Date());
+        Date date = dateFormat.parse(format);
+        news.setNewTime(date);
+
+        if(!news.getContentTitle().isEmpty() && !"".equals(news.getContentTitle())){
+           Claims token = JWTUtil.getClaimByToken(request.getHeader("token"));
             Integer id = (Integer) token.get("id");
             news.setPublishId(id);
             this.newsDao.insert(news);
@@ -87,13 +100,14 @@ public class NewsServiceImpl implements NewsService {
     }
 
     @Override
-    public String InsertTiming(HttpServletRequest request,News news,String timeSelect) throws ParseException {
+    public String InsertTiming(NewsDto newsDto) throws ParseException {
         //String sub = timeSelect.substring(0, timeSelect.lastIndexOf("："));
-        String stamp = Stamp2date.dateToStamp(timeSelect);
+        //String stamp = Stamp2date.dateToStamp(timeSelect);
         //比较定时的时间于当前时间
-        long timeMillis = System.currentTimeMillis();
-        if(timeMillis<=Long.parseLong(stamp)){
-            new Timer().schedule(new TimerTask() {
+        //long timeMillis = System.currentTimeMillis();
+         /*if(timeMillis<=Long.parseLong(stamp)){
+             insert(request,news);
+           new Timer().schedule(new TimerTask() {
                 @Override
                 public void run() {
                     Thread thread = new Thread(() -> {
@@ -105,8 +119,14 @@ public class NewsServiceImpl implements NewsService {
                     });
                     thread.start();
                 }}, Long.parseLong(stamp)-timeMillis);
-        }
-        return null;
+        }*/
+        News news = new News();
+        news.setContentTitle(newsDto.getContentTitle());
+        news.setContent(newsDto.getContent());
+        news.setPublishId(newsDto.getPublishId());
+        News insert = insert(news);
+        return insert.toString();
+
     }
     /**
      * 修改数据
@@ -171,5 +191,4 @@ public class NewsServiceImpl implements NewsService {
     public List<User> findPublishName(Integer publishId) {
         return newsDao.findPublishName(publishId);
     }
-
 }

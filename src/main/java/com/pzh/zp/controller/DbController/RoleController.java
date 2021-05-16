@@ -1,11 +1,9 @@
 package com.pzh.zp.controller.DbController;
 
 import com.pzh.zp.VO.ResultVo;
+import com.pzh.zp.DTO.UserStatusChange;
 import com.pzh.zp.entity.Role;
 import com.pzh.zp.service.RoleService;
-import org.apache.ibatis.annotations.Delete;
-import org.apache.ibatis.annotations.Param;
-import org.apache.ibatis.annotations.Result;
 import org.springframework.web.bind.annotation.*;
 
 import javax.annotation.Resource;
@@ -60,8 +58,8 @@ public class RoleController {
     }
 
     @PutMapping("/updateRole")
-    public ResultVo updateRoleUser(HttpServletRequest request,@RequestParam String role_id, @RequestParam String user_id){
-        int update = roleService.updateUserRole(request, role_id, user_id);
+    public ResultVo updateRoleUser(@RequestBody UserStatusChange statusChange, HttpServletRequest request){
+        int update = roleService.updateUserRole(request, statusChange.getRole_id(), statusChange.getUser_id());
         if (update!=-1){
             return ResultVo.success(update);
         }

@@ -1,6 +1,7 @@
 package com.pzh.zp;
 
 import com.pzh.zp.VO.ConferUpdate;
+import com.pzh.zp.VO.UserVo;
 import com.pzh.zp.dao.*;
 import com.pzh.zp.entity.*;
 import com.pzh.zp.enumState.UserEnum;
@@ -10,6 +11,7 @@ import lombok.var;
 import org.junit.jupiter.api.Test;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
+//import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 
 import javax.annotation.Resource;
 import java.text.ParseException;
@@ -69,7 +71,7 @@ class ConferenceInformationManagementApplicationTests {
 
     @Test
     void bcrypt(){
-        String password = "111";
+        String password = "123";
         //密码加密
         BCryptPasswordEncoder passwordEncoder=new BCryptPasswordEncoder();
         //加密
@@ -86,7 +88,7 @@ class ConferenceInformationManagementApplicationTests {
 
     @Test
     void test1(){
-        System.out.println(JWTUtil.getClaimByToken("eyJhbGciOiJIUzI1NiJ9.eyJzdWIiOiJ6cCIsImlkIjo2LCJ1c2VybmFtZSI6Im1tIiwibmlja05hbWUiOiJhZG1pbiIsInN0YXR1cyI6MSwiaWF0IjoxNjE3ODEyMTg5LCJleHAiOjE2MTg0MTY5ODl9.eR58BUD8EqiIJJBQ0JaHURXoYeQuotvCI9eBsDKWHBU"));
+        System.out.println(JWTUtil.generateToken(new UserVo(1,"root","赵六",1)));
     }
 
     @Test

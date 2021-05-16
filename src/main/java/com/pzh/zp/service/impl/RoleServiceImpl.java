@@ -106,26 +106,26 @@ public class RoleServiceImpl implements RoleService {
     @Transactional
     public int updateUserRole(HttpServletRequest request,String role_id, String user_id) {
         Claims token = JWTUtil.getClaimByToken(request.getHeader("token"));
+        System.out.println("======>>>>>>>"+role_id+"========"+user_id);
+        //String NewId = roleDao.findRoleNameById(role_id);
         Integer id = (Integer) token.get("id");
-        int roleId = roleDao.findRoleIdByUserId(id);
-        Role role = roleDao.queryById(roleId);
-        String r_id = null;
+        int OldId = roleDao.findRoleIdByUserId(id);
+        Role role = roleDao.queryById(OldId);
+        String rId = null;
         if (role.getRName().equals(UserEnum.root.getValue())) {
             if (UserEnum.user.getValue().equals(role_id)) {
-                r_id = UserEnum.user.getKey().toString();
+                rId = UserEnum.user.getKey().toString();
             } else
             if (UserEnum.root.getValue().equals(role_id)) {
                 return -1;
             } else
             if (UserEnum.admin.getValue().equals(role_id)) {
-                r_id = UserEnum.admin.getKey().toString();
+                rId = UserEnum.admin.getKey().toString();
             }
-            if (r_id!=null) {
-                return roleDao.updateUserRole(r_id, user_id);
-            }
+
         }else if (role.getRName().equals(UserEnum.admin.getValue())){
             if (UserEnum.user.getValue().equals(role_id)) {
-                r_id = UserEnum.user.getKey().toString();
+                rId = UserEnum.user.getKey().toString();
             } else
             if (UserEnum.root.getValue().equals(role_id)) {
                 return -1;
@@ -133,11 +133,11 @@ public class RoleServiceImpl implements RoleService {
             if (UserEnum.admin.getValue().equals(role_id)) {
                 return  -1;
             }
-            if (r_id!=null) {
-                return roleDao.updateUserRole(r_id, user_id);
-            }
         }
-            return -1;
+        if (rId!=null) {
+            return roleDao.updateUserRole(rId, user_id);
+        }
+        return -1;
     }
 
     @Override

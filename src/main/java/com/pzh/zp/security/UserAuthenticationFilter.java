@@ -1,8 +1,9 @@
 package com.pzh.zp.security;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
+import org.apache.commons.lang3.StringUtils;
 import org.springframework.security.web.authentication.UsernamePasswordAuthenticationFilter;
-import org.springframework.util.StringUtils;
+
 
 import javax.servlet.http.HttpServletRequest;
 import java.io.IOException;
@@ -20,7 +21,7 @@ public class UserAuthenticationFilter extends UsernamePasswordAuthenticationFilt
     protected String obtainPassword(HttpServletRequest request) {
         String password = this.getBodyParams(request).get(super.SPRING_SECURITY_FORM_PASSWORD_KEY);
         threadLocal.remove();
-        if(!StringUtils.isEmpty(password)){
+        if(StringUtils.isNotBlank(password)){
             return password;
         }
         return super.obtainPassword(request);
@@ -29,7 +30,7 @@ public class UserAuthenticationFilter extends UsernamePasswordAuthenticationFilt
     @Override
     protected String obtainUsername(HttpServletRequest request) {
         String username = this.getBodyParams(request).get(super.SPRING_SECURITY_FORM_USERNAME_KEY);
-        if(!StringUtils.isEmpty(username)){
+        if(StringUtils.isNotBlank(username)){
             return username;
         }
         return super.obtainUsername(request);

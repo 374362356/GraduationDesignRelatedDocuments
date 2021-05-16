@@ -1,9 +1,15 @@
 package com.pzh.zp.controller.DbController;
 
+import com.pzh.zp.DTO.NewsDto;
 import com.pzh.zp.VO.NewsVo;
 import com.pzh.zp.VO.ResultVo;
 import com.pzh.zp.entity.News;
+import com.pzh.zp.rabbitmq.XdelaySender;
 import com.pzh.zp.service.NewsService;
+import com.pzh.zp.utils.JWTUtil;
+import com.pzh.zp.utils.Stamp2date;
+import io.jsonwebtoken.Claims;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 
 import javax.annotation.Resource;
@@ -32,6 +38,9 @@ public class NewsController {
      */
     @Resource
     private NewsService newsService;
+
+    @Autowired
+    XdelaySender xdelaySender;
 
     /**
      * 通过主键查询单条数据
@@ -83,7 +92,7 @@ public class NewsController {
 
     @PostMapping("/news_insert")
     public ResultVo InsertNews(HttpServletRequest request,@RequestBody News news) throws ParseException {
-        News insert = newsService.insert(request, news);
+        News insert = newsService.insertNews(request, news);
         if (insert!=null){
             return ResultVo.success(insert);
         }
@@ -91,12 +100,25 @@ public class NewsController {
     }
 
     @PutMapping("/timing_insert")
-    public ResultVo InsertTiming(@RequestParam String contentTitle,@RequestParam String content,@RequestParam String timeSelect,HttpServletRequest request) throws ParseException {
-        System.out.println("----------------------------"+timeSelect);
-        String timing = newsService.InsertTiming(request, new News(contentTitle,content), timeSelect);
+    public ResultVo InsertTiming(@RequestBody NewsDto newsDto,HttpServletRequest request) throws ParseException {
+        //System.out.println("--------------time--------------"+newsDto.getTimeSelect());
+        /*System.out.println("-----------"+newsDto.getContentTitle()+"-----------------"+newsDto.getContent());
+        String timing =new QuartzConfig().TimingJob(request,new News(newsDto.getContentTitle(),newsDto.getContent())
+                , newsDto.getTimeSelect());
         if (timing!=null) {
             return ResultVo.success(timing);
+        }*/
+        Claims token = JWTUtil.getClaimByToken(request.getHeader("token"));
+        Integer id = (Integer) token.get("id");
+        newsDto.setPublishId(id);
+        String stamp = Stamp2date.dateToStamp(newsDto.getTimeSelect());
+        //比较定时的时间于当前时间
+        long timeMillis = System.currentTimeMillis();
+        Long time = Long.parseLong(stamp)-timeMillis;
+        if(timeMillis<=Long.parseLong(stamp)) {
+            xdelaySender.send(newsDto, Math.toIntExact(time));
+            return ResultVo.success("定时任务设置成功");
         }
-        return ResultVo.fail("定时任务失败");
+        return ResultVo.fail("定时任务时间设置失败");
     }
 }

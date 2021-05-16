@@ -46,8 +46,8 @@ public class StaffController {
      * @return
      */
     @GetMapping("/findAll")
-    public ResultVo queryAllByLimit(int offset, int limit){
-        return ResultVo.success(staffService.queryAllByLimit(offset, limit));
+    public ResultVo queryAll(){
+        return ResultVo.success(staffService.queryAll(null));
     }
 
     /**
