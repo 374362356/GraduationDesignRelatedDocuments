@@ -99,7 +99,7 @@ public class ConferenceController {
         if (update!=null) {
             return ResultVo.success(update);
         }
-        return ResultVo.fail("会议名更新失败");
+        return ResultVo.fail("会议更新失败");
     }
 
     @DeleteMapping("/conference_delete")

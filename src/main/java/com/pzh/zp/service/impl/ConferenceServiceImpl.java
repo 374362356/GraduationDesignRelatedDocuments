@@ -118,10 +118,12 @@ public class ConferenceServiceImpl implements ConferenceService {
         if (conference!=null) {
             //更新地点表
             Locale locale = localeDao.queryByPlace(conference.getPlace());
-            locale.setConferId(conference.getId());
-            localeDao.update(locale);
-            this.conferenceDao.update(conference);
-            return this.queryById(conference.getId());
+            if(locale!=null) {
+                locale.setConferId(conference.getId());
+                localeDao.update(locale);
+                this.conferenceDao.update(conference);
+                return this.queryById(conference.getId());
+            }
         }
         return null;
     }
@@ -207,17 +209,19 @@ public class ConferenceServiceImpl implements ConferenceService {
                     //开始时间相同会报错
                     int sign = Stamp2date.compareToCurrentTime(d);
                     Integer conferId = collect.get(d);
-                    if (sign==1){
-                        conference.setOngoing(UserEnum.ENDGOING.getKey());
-                    }else if (sign==-1){
+                    if (sign==-1){
+                        conference.setOngoing(UserEnum.ONGOING.getKey());
+                    }else if (sign==1){
                         conference.setOngoing(UserEnum.UNGOING.getKey());
                     }else if (sign==0){
                         conference.setOngoing(UserEnum.ONGOING.getKey());
                     }
                 }
-            }else if (flag==-1){
+            }
+            if (flag==-1){
                 conference.setOngoing(UserEnum.ENDGOING.getKey());
-            }else if (flag==0){
+            }
+            if (flag==0){
                 conference.setOngoing(UserEnum.ONGOING.getKey());
             }
             conferenceDao.update(conference);

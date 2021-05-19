@@ -144,9 +144,9 @@ public class StaffServiceImpl implements StaffService {
                     StaffVo vo = new StaffVo(s.getId(), s.getSName(), s.getGender(), s.getEmail(), s.getPhone(), s.getPosition(), name,s.getLeave());
                     staffVos.add(vo);
                 }
-            }
-            if(staffVos.size()==staff.size()){      //还有问题
-                break;
+                if(staffVos.size()==staff.size()){      //还有问题
+                    break;
+                }
             }
         }
         return staffVos;
