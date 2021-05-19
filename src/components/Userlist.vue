@@ -303,11 +303,11 @@ export default {
 
     //用户状态改变
     userStateChange($event,row) {
-        alert(JSON.stringify(row))
+      //alert(JSON.stringify(row))
       this.$axios
       .put('user/update',row)
         .then((res) => {
-          alert(JSON.stringify(res.data.data))
+          //alert(JSON.stringify(res.data.data))
           this.$message.success('更新状态成功')
         })
         .catch((res) => {

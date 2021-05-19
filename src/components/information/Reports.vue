@@ -1,6 +1,8 @@
 <template>
+  <div>
     <div id="chartPie" class="pie-wrap"></div>
-
+    <!-- <el-button style="display:block;margin:14px auto" id="btn" type="primary" onclick="updateInfo()">更新按钮</el-button> -->
+  </div>
 </template>
 
 <script>
@@ -93,8 +95,18 @@
           .catch(()=>{
             this.$message.error('获取图标数据失败')
           })
-      },
-      
+      },  
+      // updateInfo(){
+      //   this.$axios
+      //   .put('reports/reports_update/' + this.conferenceId, this.editConferenceForm)
+      //     .then((res)=>{
+      //          this.getDataInfo()
+
+      //     })
+      //     .catch(()=>{
+      //       this.$message.error('获取图标数据失败')
+      //     })
+      // },
     }
   }
 

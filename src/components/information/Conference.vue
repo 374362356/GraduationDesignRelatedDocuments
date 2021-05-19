@@ -232,7 +232,7 @@ export default {
         pagesize: 5,
       },
       currentPage:1, //初始页
-      PageSize:6,
+      PageSize:5,
       userList: [],
       totalCount: 1,
       pageSizes:[5,10,20],
@@ -449,11 +449,13 @@ export default {
         }
         this.addDialogVisible = false
         this.getConferenceList()
+        this.updateConferStatus()
       })
     },
     //编辑会议
     editConference(row) {
-      this.editConferenceForm = { name: row.name,
+      this.editConferenceForm = { id: row.id,
+                                  name: row.name,
                                   startTime: row.startTime,
                                   endTime: row.endTime,
                                   place: row.place,
@@ -467,17 +469,17 @@ export default {
       this.$axios
         .put('conference/conference_update/' + this.conferenceId, this.editConferenceForm)
         .then((res) => {
-          this.getConferenceList()
           if(res.data.code == 200){
             this.$message.success('编辑成功')
           }else{
             this.$message.error(res.data.msg)
           }
+          this.getConferenceList()
         })
         .catch(() => {
           this.$$message.error('编辑失败')
         })
-
+      this.updateConferStatus()
       this.editDialogVisible = false
     },
     addDialogClose() {

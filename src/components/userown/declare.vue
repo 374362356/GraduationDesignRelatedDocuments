@@ -11,7 +11,7 @@
 
       <el-tabs v-model="activeName" type="card" @tab-click="handleClick">
           <el-tab-pane label="公告展示" name="first">
-              <el-table :data="tableData" style="width: 100%" stripe border>
+              <el-table :data="tableData.slice((currentPage-1)*PageSize,currentPage*PageSize)" style="width: 100%" stripe border>
               <el-table-column type="index"></el-table-column>
               <el-table-column prop="id" label="id" width="100"> </el-table-column>
               <el-table-column prop="contentTitle" label="公告标题" width="180"> </el-table-column>
@@ -73,6 +73,15 @@
           </el-tab-pane> -->
       </el-tabs>
     </el-card>
+    <div>
+      <el-pagination @size-change="handleSizeChange" 
+                      @current-change="handleCurrentChange" 
+                      :current-page="currentPage" 
+                      :page-sizes="pageSizes" 
+                      :page-size="PageSize" layout="total, sizes, prev, pager, next, jumper" 
+                      :total="totalCount">
+         </el-pagination>
+    </div>
 
     <!-- 编辑公告 -->
     <el-dialog title="提示" :visible.sync="editDialogVisible" width="30%">
@@ -111,6 +120,10 @@
 export default {
   data() {
     return {
+      currentPage:1, //初始页
+      PageSize:5,
+      totalCount: 1,
+      pageSizes:[5,10,20],
       activeName: 'first',
       tableData:[],
       editNewsForm: {},
@@ -232,6 +245,7 @@ export default {
         }
       }).then((res) => {
           _this.tableData = res.data
+          this.totalCount = res.data.length
           //alert(JSON.stringify(_this.tableData))
         })
         .catch(() => {
@@ -284,6 +298,18 @@ export default {
           })
         })
       },
+        // 每页显示的条数
+      handleSizeChange(val) {
+           // 改变每页显示的条数 
+           this.PageSize=val
+           // 注意：在改变每页显示的条数时，要将页码显示到第一页
+           this.currentPage=1
+       },
+         // 显示第几页
+       handleCurrentChange(val) {
+           // 改变默认的页数
+           this.currentPage=val
+       },
   },
 }
 </script>

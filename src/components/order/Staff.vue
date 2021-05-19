@@ -74,13 +74,28 @@
                     <el-table-column prop="position" label="职位"  width="100"></el-table-column>
                     <el-table-column prop="conferenceName" label="负责的会议名"  width="100"></el-table-column>
 
-                    <el-table-column label="状态" prop="status" width="100">
+                    <!-- <el-table-column label="状态" prop="status" width="100">
                         <template slot-scope="scope">
                             <el-tag v-if="scope.row.leave === 8">请假</el-tag>
                             <el-tag type="success" v-else-if="scope.row.leave === 9">工作</el-tag>
                             <el-tag type="warning" v-else>错误状态</el-tag>
                         </template>
-                    </el-table-column>
+                    </el-table-column> -->
+                    <el-table-column label="状态" width="140">
+                        <template slot-scope="scope">
+                          <el-switch
+                              v-model="scope.row.leave"
+                              :active-value="9"
+                              :inactive-value="8"
+                              @change="userStateChange($event, scope.row)"
+                              active-color="#13ce66"
+                              inactive-color="#ff4949"
+                              active-text="工作"
+                              inactive-text="请假"
+                                  >
+                          </el-switch>
+                        </template>
+                      </el-table-column>
 
                     <el-table-column label="操作" width="300">
                         <template slot-scope="scope">
@@ -486,7 +501,19 @@
 
                 this.editDialogVisible = false
             },
-        },
+             //用户状态改变
+    userStateChange($event,row) {
+        alert(JSON.stringify(row))
+      this.$axios
+      .put('staff/staff_update',row)
+        .then((res) => {
+          alert(JSON.stringify(res.data.data))
+          this.$message.success('更新状态成功')
+        })
+        .catch((res) => {
+          this.$message.error(res.msg)
+        })
+    },
         // 每页显示的条数
         handleSizeChange(val) {
            // 改变每页显示的条数 
@@ -499,6 +526,8 @@
            // 改变默认的页数
            this.currentPage=val
        },
+
+        },
     }
 </script>
 
