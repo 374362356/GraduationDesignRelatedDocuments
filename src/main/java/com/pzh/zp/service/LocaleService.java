@@ -53,5 +53,13 @@ public interface LocaleService {
      */
     boolean deleteById(Integer id);
 
+    /**
+     *
+     * @return
+     */
     List<String> findAllPlaces();
+
+    List<Locale> queryAll(Locale locale);
+
+    List<Locale> queryLocaleFuzzy(String locale);
 }

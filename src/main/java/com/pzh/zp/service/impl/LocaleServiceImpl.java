@@ -81,4 +81,14 @@ public class LocaleServiceImpl implements LocaleService {
     public List<String> findAllPlaces() {
         return localeDao.findAllPlaces();
     }
+
+    @Override
+    public List<Locale> queryAll(Locale locale) {
+        return localeDao.queryAll(locale);
+    }
+
+    @Override
+    public List<Locale> queryLocaleFuzzy(String locale) {
+        return localeDao.queryLocaleFuzzy(locale);
+    }
 }

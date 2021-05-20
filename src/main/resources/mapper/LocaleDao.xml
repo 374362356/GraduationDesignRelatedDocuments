@@ -110,5 +110,15 @@
         from pzh_meeting_management.locale
         where places = #{place}
     </select>
+    
+    <select id="queryLocaleFuzzy" parameterType="String" resultMap="LocaleMap">
+        select *
+        from pzh_meeting_management.locale
+        <where>
+            <if test="places!=null and places!=''">
+             places like concat('%',#{places},'%')
+            </if>
+        </where>
+    </select>
 </mapper>
 

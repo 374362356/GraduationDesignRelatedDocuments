@@ -1,6 +1,7 @@
 package com.pzh.zp.dao;
 
 import com.pzh.zp.entity.Locale;
+import com.pzh.zp.entity.Permission;
 import org.apache.ibatis.annotations.Param;
 
 import java.util.List;
@@ -36,8 +37,8 @@ public interface LocaleDao {
      *
      * @param locale 实例对象
      * @return 对象列表
-     */
-    List<Locale> queryAll(Locale locale);
+     */ List<Locale> queryAll(Locale locale);
+
 
     /**
      * 新增数据
@@ -79,8 +80,14 @@ public interface LocaleDao {
      */
     int deleteById(Integer id);
 
+    /**
+     *
+     * @return
+     */
     List<String> findAllPlaces();
 
     Locale queryByPlace(String place);
+
+    List<Locale> queryLocaleFuzzy(String locale);
 }
 
