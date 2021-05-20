@@ -225,7 +225,7 @@ export default {
         pagesize: 5,
       },
       currentPage:1, //初始页
-      PageSize:6,
+      PageSize:5,
       userList: [],
       totalCount: 1,
       pageSizes:[5,10,20],

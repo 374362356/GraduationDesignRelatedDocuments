@@ -170,7 +170,15 @@ export default {
                     id: 115,
                     order: 2,
                     path: "news"
-            },],
+            },
+            {
+                    authName: "地点管理",
+                    children: [],
+                    id: 116,
+                    order: 2,
+                    path: "locale"  
+            },
+            ],
                 id: 101,
                 order: 3,
                 path: "conference"

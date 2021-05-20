@@ -42,7 +42,7 @@
             <el-table-column prop="email" label="邮箱" width="140"></el-table-column>
             <el-table-column prop="phone" label="电话" width="120"></el-table-column>
             <el-table-column prop="title" label="职称" width="120"></el-table-column>
-            <el-table-column prop="roles" label="角色"></el-table-column>
+            <!-- <el-table-column prop="roles" label="角色"></el-table-column> -->
             <el-table-column label="状态">
               <template slot-scope="scope">
                 <el-switch v-model="scope.row.mg_state" @change="userStateChange(scope.row)"></el-switch>

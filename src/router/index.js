@@ -16,6 +16,7 @@ import Person from '../components/person/person';
 import Reports from '@/components/information/Reports'
 import Reports2 from '@/components/information/Reports2'
 import Upload from "../components/order/Upload"
+import Locale from "@/components/information/Locale"
 
 import File from "../components/userown/file"
 import Declare from "../components/userown/declare"
@@ -46,7 +47,8 @@ export default new Router({
         { path: '/staff',component: Staff},
         { path: '/reports',component: Reports},
         { path: '/reports2',component: Reports2},
-        { path: '/upload',component: Upload}
+        { path: '/upload',component: Upload},
+        { path: '/locale',component: Locale}
       ],
     },
     {
